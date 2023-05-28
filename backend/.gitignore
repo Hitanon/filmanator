@@ -1,0 +1,5 @@
+.mypy_cache
+venv
+**/__pycache__
+**/migrations/*
+!__init__.py
