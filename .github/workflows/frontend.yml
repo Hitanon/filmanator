@@ -1,0 +1,16 @@
+
+  name: Frontend
+  on:
+    push:
+      branches: [ main ]
+    pull_request:
+      branches: [ main ]
+
+  jobs:
+    Temp:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Echo
+          run: |
+            echo 'workflow working success'
