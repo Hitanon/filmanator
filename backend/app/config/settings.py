@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'filmanator.apps.FilmanatorConfig'
+    'filmanator.apps.FilmanatorConfig',
 ]
 
 MIDDLEWARE = [
