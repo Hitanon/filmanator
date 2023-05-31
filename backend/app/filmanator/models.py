@@ -1,15 +1,15 @@
-from django.db.models import *
+from django.db import models
 
 
-class Title(Model):
-    id = CharField(primary_key=True)
-    title = CharField(max_length=255)
-    year = IntegerField()
-    imdb_rating = FloatField()
-    votes_count = IntegerField(default=0)
-    is_movie = BooleanField()
-    runtime = IntegerField()
-    seasons_count = IntegerField(null=True)
+class Title(models.Model):
+    id = models.CharField(primary_key=True)
+    title = models.CharField(max_length=255)
+    year = models.IntegerField()
+    imdb_rating = models.FloatField()
+    votes_count = models.IntegerField(default=0)
+    is_movie = models.BooleanField()
+    runtime = models.IntegerField()
+    seasons_count = models.IntegerField(null=True)
 
     class Meta:
         ordering = ["title"]
@@ -18,89 +18,89 @@ class Title(Model):
         return self.title
 
 
-class SimularTitle(Model):
-    title = ManyToManyField(Title)
-    similar_title = ManyToManyField(Title)
+class SimularTitle(models.Model):
+    title = models.ManyToManyField(Title)
+    similar_title = models.ManyToManyField(Title)
 
 
-class TitleMixin(Model):
+class TitleMixin(models.Model):
     """
     Миксин для классов с отношением к фильму многие-ко-многим
     """
-    titles = ManyToManyField(Title)
+    titles = models.ManyToManyField(Title)
 
     class Meta:
         abstract = True
 
 
 class Actors(TitleMixin):
-    id = CharField(primary_key=True)
-    name = CharField(max_length=255)
+    id = models.CharField(primary_key=True)
+    name = models.CharField(max_length=255)
 
 
 class ContentRating(TitleMixin):
-    title = CharField(max_length=255)
+    title = models.CharField(max_length=255)
 
 
 class Country(TitleMixin):
-    title = CharField(max_length=255)
+    title = models.CharField(max_length=255)
 
 
 class Director(TitleMixin):
-    id = CharField(primary_key=True)
-    name = CharField(max_length=255)
+    id = models.CharField(primary_key=True)
+    name = models.CharField(max_length=255)
 
 
 class Genre(TitleMixin):
-    title = CharField(unique=True)
+    title = models.CharField(unique=True)
 
 
-class Users(Model):
+class Users(models.Model):
     # поля пользователя
-    username = CharField(max_length=50)
-    password = CharField(max_length=50)
-    email = CharField(null=True)
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    email = models.CharField(null=True)
 
     # связи с фильмом
-    history = ManyToManyField(Title)
-    liked_titles = ManyToManyField(Title)
-    disliked_titles = ManyToManyField(Title)
+    history = models.ManyToManyField(Title)
+    liked_titles = models.ManyToManyField(Title)
+    disliked_titles = models.ManyToManyField(Title)
 
     # связи с жанром
-    preferred_genres = ManyToManyField(Genre)
-    disfavored_genres = ManyToManyField(Genre)
+    preferred_genres = models.ManyToManyField(Genre)
+    disfavored_genres = models.ManyToManyField(Genre)
 
     def __str__(self):
         return self.username
 
 
-class Session(Model):
-    id = UUIDField(primary_key=True)
-    user = ForeignKey(Users, on_delete=CASCADE)
-    ends_at = DateTimeField()
+class Session(models.Model):
+    id = models.UUIDField(primary_key=True)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    ends_at = models.DateTimeField()
 
 
-class Category(Model):
-    priority = IntegerField()
+class Category(models.Model):
+    priority = models.IntegerField()
 
 
-class Question(Model):
-    category = ForeignKey(Category, on_delete=CASCADE)
+class Question(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
-class Answer(Model):
-    body = CharField()
-    questions = ManyToManyField(Question)
+class Answer(models.Model):
+    body = models.CharField()
+    questions = models.ManyToManyField(Question)
 
 
-class Criterion(Model):
-    title = CharField(unique=True)
-    body = CharField()
-    questions = ManyToManyField(Question)
+class Criterion(models.Model):
+    title = models.CharField(unique=True)
+    body = models.CharField()
+    questions = models.ManyToManyField(Question)
 
 
-class Result(Model):
-    session = ForeignKey(Session, on_delete=CASCADE)
-    category = ForeignKey(Category, on_delete=CASCADE)
-    criterion = ForeignKey(Criterion, on_delete=CASCADE)
+class Result(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    criterion = models.ForeignKey(Criterion, on_delete=models.CASCADE)
 
