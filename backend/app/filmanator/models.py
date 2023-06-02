@@ -19,8 +19,8 @@ class Title(models.Model):
 
 
 class SimularTitle(models.Model):
-    title = models.ManyToManyField(Title)
-    similar_title = models.ManyToManyField(Title)
+    title = models.ManyToManyField(Title, related_name='titles')
+    similar_title = models.ManyToManyField(Title, related_name='simular_titles')
 
 
 class TitleMixin(models.Model):
@@ -62,13 +62,13 @@ class Users(models.Model):
     email = models.CharField(null=True)
 
     # связи с фильмом
-    history = models.ManyToManyField(Title)
-    liked_titles = models.ManyToManyField(Title)
-    disliked_titles = models.ManyToManyField(Title)
+    history = models.ManyToManyField(Title, related_name='histories')
+    liked_titles = models.ManyToManyField(Title, related_name='liked_titles')
+    disliked_titles = models.ManyToManyField(Title, related_name='disliked_titles')
 
     # связи с жанром
-    preferred_genres = models.ManyToManyField(Genre)
-    disfavored_genres = models.ManyToManyField(Genre)
+    preferred_genres = models.ManyToManyField(Genre, related_name='preferred_genres')
+    disfavored_genres = models.ManyToManyField(Genre, related_name='disfavored_genres')
 
     def __str__(self):
         return self.username
