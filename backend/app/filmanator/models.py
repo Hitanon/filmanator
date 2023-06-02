@@ -12,7 +12,7 @@ class Title(models.Model):
     seasons_count = models.IntegerField(null=True)
 
     class Meta:
-        ordering = ["title"]
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -103,4 +103,3 @@ class Result(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     criterion = models.ForeignKey(Criterion, on_delete=models.CASCADE)
-
