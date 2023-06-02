@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Title(models.Model):
@@ -55,7 +56,8 @@ class Genre(TitleMixin):
     title = models.CharField(unique=True)
 
 
-class Users(models.Model):
+class CustomUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     # поля пользователя
     username = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
@@ -76,7 +78,7 @@ class Users(models.Model):
 
 class Session(models.Model):
     id = models.UUIDField(primary_key=True)
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     ends_at = models.DateTimeField()
 
 
