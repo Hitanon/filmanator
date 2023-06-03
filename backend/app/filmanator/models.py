@@ -3,14 +3,13 @@ from django.db import models
 
 
 class Title(models.Model):
-    id = models.CharField(primary_key=True)
     title = models.CharField(max_length=255)
     year = models.IntegerField()
     imdb_rating = models.FloatField()
     votes_count = models.IntegerField(default=0)
     is_movie = models.BooleanField()
     runtime = models.IntegerField()
-    seasons_count = models.IntegerField(null=True)
+    seasons_count = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['title']
@@ -20,8 +19,8 @@ class Title(models.Model):
 
 
 class SimularTitle(models.Model):
-    title = models.ManyToManyField(Title, related_name='titles')
-    similar_title = models.ManyToManyField(Title, related_name='simular_titles')
+    title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='titles')
+    simular_title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='simular_titles')
 
 
 class TitleMixin(models.Model):
@@ -35,7 +34,6 @@ class TitleMixin(models.Model):
 
 
 class Actors(TitleMixin):
-    id = models.CharField(primary_key=True)
     name = models.CharField(max_length=255)
 
 
@@ -48,7 +46,6 @@ class Country(TitleMixin):
 
 
 class Director(TitleMixin):
-    id = models.CharField(primary_key=True)
     name = models.CharField(max_length=255)
 
 
