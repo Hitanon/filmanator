@@ -4,7 +4,7 @@ django.setup()
 
 import environ
 import requests
-from backend.app.titles.models import *
+from titles.models import *
 
 env = environ.Env(
     TOKEN=(str, 'TOKEN'),

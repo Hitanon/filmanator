@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django_extensions',
 
     # Приложения проекта
-    'backend.app.questionnaire',
-    'backend.app.titles',
-    'backend.app.users',
+    'questionnaire',
+    'titles',
+    'users',
 ]
 
 MIDDLEWARE = [
