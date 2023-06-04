@@ -27,14 +27,21 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
+    # Встроенные django приложения
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Дополнительные django приложения
     'django_extensions',
-    'filmanator.apps.FilmanatorConfig',
+
+    # Приложения проекта
+    'backend.app.questionnaire',
+    'backend.app.titles',
+    'backend.app.users',
 ]
 
 MIDDLEWARE = [
@@ -104,3 +111,5 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
