@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 from django.db.models.constraints import CheckConstraint
 from django.utils import timezone
 
@@ -53,7 +53,7 @@ class Title(models.Model):
                 name='Duration isnt correct',
             ),
             CheckConstraint(
-                check=Q(duration__gte=0) | Q(seasons_count__gt=0),
+                check=Q(duration__gte=0) & Q(seasons_count__gt=0),
                 name='Duration or seasons count must be positive',
             ),
         )
@@ -73,29 +73,19 @@ class SimilarTitle(models.Model):
         related_name='similar_titles',
     )
 
-    # class Meta:
-    #     constraints = (
-    #         CheckConstraint(
-    #             check=~Q(title=F('similar_title')),
-    #             name='Title and similar_title is the same',
-    #         ),
-    #     )
+    class Meta:
+        constraints = (
+            CheckConstraint(
+                check=~Q(title=F('similar_title')),
+                name='Title and similar_title is the same',
+            ),
+        )
 
     def __str__(self):
         return self.title
 
 
-class TitleMixin(models.Model):
-    """
-    Миксин для классов с отношением к фильму многие-ко-многим
-    """
-    titles = models.ManyToManyField(Title)
-
-    class Meta:
-        abstract = True
-
-
-class Genre(TitleMixin):
+class Genre(models.Model):
     title = models.CharField(
         unique=True,
     )
@@ -104,7 +94,7 @@ class Genre(TitleMixin):
         return self.title
 
 
-class Director(TitleMixin):
+class Director(models.Model):
     name = models.CharField(
         max_length=64,
     )
@@ -113,7 +103,7 @@ class Director(TitleMixin):
         return self.name
 
 
-class Country(TitleMixin):
+class Country(models.Model):
     title = models.CharField(
         max_length=64,
     )
@@ -122,16 +112,17 @@ class Country(TitleMixin):
         return self.title
 
 
-class ContentRating(TitleMixin):
-    value = models.SmallIntegerField(
-        null=True,
+class ContentRating(models.Model):
+    title = models.CharField(
+        unique=True,
+        max_length=8,
     )
 
     def __str__(self):
-        return self.value
+        return self.title
 
 
-class Actor(TitleMixin):
+class Actor(models.Model):
     name = models.CharField(
         max_length=64,
     )
