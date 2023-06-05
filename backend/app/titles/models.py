@@ -5,6 +5,9 @@ from django.utils import timezone
 
 
 class Actor(models.Model):
+    """
+    Модель актера
+    """
     name = models.CharField(
         max_length=64,
     )
@@ -14,6 +17,9 @@ class Actor(models.Model):
 
 
 class Director(models.Model):
+    """
+    Модель режиссера
+    """
     name = models.CharField(
         max_length=64,
     )
@@ -23,6 +29,9 @@ class Director(models.Model):
 
 
 class Genre(models.Model):
+    """
+    Модель жанра
+    """
     title = models.CharField(
         unique=True,
         max_length=32,
@@ -33,6 +42,9 @@ class Genre(models.Model):
 
 
 class Country(models.Model):
+    """
+    Модель страны
+    """
     title = models.CharField(
         unique=True,
         max_length=64,
@@ -43,6 +55,9 @@ class Country(models.Model):
 
 
 class ContentRating(models.Model):
+    """
+    Модель возрастного ограничения
+    """
     title = models.CharField(
         unique=True,
         max_length=4,
@@ -65,6 +80,9 @@ class ContentRating(models.Model):
 
 
 class Title(models.Model):
+    """
+    Модель произведения
+    """
     title = models.CharField(
         max_length=255,
     )
@@ -153,6 +171,9 @@ class Title(models.Model):
 
 
 class SimilarTitle(models.Model):
+    """
+    Модель похожих произведений
+    """
     title = models.ForeignKey(
         Title,
         related_name='titles',
@@ -182,6 +203,9 @@ class SimilarTitle(models.Model):
 
 
 class TitleModelMixin(models.Model):
+    """
+    Модель миксин с внешним ключом произведением title
+    """
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
@@ -192,6 +216,9 @@ class TitleModelMixin(models.Model):
 
 
 class TitleDirector(TitleModelMixin):
+    """
+    Промежуточная модель для моделей Title и Director
+    """
     director = models.ForeignKey(
         Director,
         on_delete=models.CASCADE,
@@ -207,6 +234,9 @@ class TitleDirector(TitleModelMixin):
 
 
 class TitleCountry(TitleModelMixin):
+    """
+    Промежуточная модель для моделей Title и Country
+    """
     country = models.ForeignKey(
         Country,
         on_delete=models.CASCADE,
@@ -222,6 +252,9 @@ class TitleCountry(TitleModelMixin):
 
 
 class TitleActor(TitleModelMixin):
+    """
+    Промежуточная модель для моделей Title и Actor
+    """
     actor = models.ForeignKey(
         Actor,
         on_delete=models.CASCADE,
@@ -237,6 +270,9 @@ class TitleActor(TitleModelMixin):
 
 
 class TitleGenre(TitleModelMixin):
+    """
+    Промежуточная модель для моделей Title и Genre
+    """
     genre = models.ForeignKey(
         Genre,
         on_delete=models.CASCADE,

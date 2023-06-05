@@ -9,6 +9,9 @@ from users.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Модель пользователя
+    """
     username = models.CharField(
         unique=True,
         max_length=64,
@@ -44,6 +47,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class History(models.Model):
+    """
+    Модель истории опроса
+    """
     date = models.DateTimeField()
 
     user = models.ForeignKey(
@@ -69,6 +75,9 @@ class History(models.Model):
 
 
 class LikedTitle(models.Model):
+    """
+    Модель понравившегося произведения
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -92,6 +101,9 @@ class LikedTitle(models.Model):
 
 
 class DislikedTitle(models.Model):
+    """
+    Модель не понравившегося произведения
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -115,6 +127,9 @@ class DislikedTitle(models.Model):
 
 
 class PreferredGenre(models.Model):
+    """
+    Модель предпочитаемых жанров
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -138,6 +153,9 @@ class PreferredGenre(models.Model):
 
 
 class DisfavoredGenre(models.Model):
+    """
+    Модель не предпочитаемых жанров
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

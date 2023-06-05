@@ -7,6 +7,9 @@ from django.db.models.constraints import CheckConstraint, UniqueConstraint
 
 
 class Session(models.Model):
+    """
+    Модель сессии
+    """
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -32,6 +35,9 @@ class Session(models.Model):
 
 
 class Category(models.Model):
+    """
+    Модель категории
+    """
     priority = models.SmallIntegerField(
         default=1,
     )
@@ -54,6 +60,9 @@ class Category(models.Model):
 
 
 class Question(models.Model):
+    """
+    Модель вопроса
+    """
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
@@ -66,6 +75,9 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+    """
+    Модель ответа
+    """
     body = models.CharField(
         max_length=64,
     )
@@ -84,6 +96,9 @@ class Answer(models.Model):
 
 
 class Criterion(models.Model):
+    """
+    Модель критерия
+    """
     title = models.CharField(
         max_length=64,
     )
@@ -109,6 +124,9 @@ class Criterion(models.Model):
 
 
 class QuestionAnswer(models.Model):
+    """
+    Промежуточная модель для моделей Question и Answer
+    """
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
@@ -136,6 +154,9 @@ class QuestionAnswer(models.Model):
 
 
 class Result(models.Model):
+    """
+    Модель результата
+    """
     session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,
@@ -171,6 +192,9 @@ class Result(models.Model):
 
 
 def validate_unique_question_answer(instance):
+    """
+    Проверка уникальности ответа на вопрос
+    """
     if instance.answer.is_skip:
         return
     if QuestionAnswer.objects.filter(
@@ -181,6 +205,9 @@ def validate_unique_question_answer(instance):
 
 
 def check_is_criterion_concer_category(instance):
+    """
+    Проверка косвенной принадлежности критерия категории
+    """
     answers = instance.criterion.answer.all()
     categories = set([])
     for answer in answers:
