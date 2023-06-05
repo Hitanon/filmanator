@@ -124,7 +124,7 @@ class Country(TitleMixin):
 
 class ContentRating(TitleMixin):
     value = models.SmallIntegerField(
-        null=True
+        null=True,
     )
 
     def __str__(self):

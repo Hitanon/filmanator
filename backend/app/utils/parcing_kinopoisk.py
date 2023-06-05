@@ -1,18 +1,20 @@
-import environ
-
-import requests
-
-import time
-
-from django.core.exceptions import ObjectDoesNotExist
-
-from titles.models import Title, SimilarTitle, Actor, Director, Country, ContentRating, Genre
-
 import os
+
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.app.config.settings')
 django.setup()
+
+import environ
+
+import time
+
+import requests
+
+from django.core.exceptions import ObjectDoesNotExist
+
+from titles.models import Actor, ContentRating, Country, Director, Genre, SimilarTitle, Title
+
 
 env = environ.Env(
     TOKEN=(str, 'TOKEN'),
@@ -85,7 +87,7 @@ def add_title(data: dict) -> None:
             imdb_rating=data['rating']['imdb'],
             votes_count=data['votes']['imdb'],
             is_movie=False,
-            seasons_count=seasons_count
+            seasons_count=seasons_count,
         )
     else:
         title, _ = Title.objects.get_or_create(
@@ -95,7 +97,7 @@ def add_title(data: dict) -> None:
             imdb_rating=data['rating']['imdb'],
             votes_count=data['votes']['imdb'],
             is_movie=True,
-            duration=data['movieLength']
+            duration=data['movieLength'],
         )
 
 
@@ -172,7 +174,7 @@ def add_title_content_rating(data):
     title = Title.objects.get(id=data['id'])
     if data['ageRating']:
         age_rating, _ = ContentRating.objects.get_or_create(
-            value=data['ageRating']
+            value=data['ageRating'],
         )
         age_rating.titles.add(title)
 
@@ -190,16 +192,16 @@ def add_similar_titles(data):
 
             SimilarTitle.objects.update_or_create(
                 title_id=data['id'],
-                simular_title_id=title['id']
+                simular_title_id=title['id'],
             )
         except ObjectDoesNotExist:
             SimilarTitle.objects.update_or_create(
                 title_id=data['id'],
-                simular_title_id=None
+                simular_title_id=None,
             )
 
 
-def add_film(data):
+def add_film_to_database(data):
     """
     Добавление фильма в БД
     :param data: словарь с одним экземпляром
@@ -214,6 +216,28 @@ def add_film(data):
     # add_similar_titles(data)
 
     print(f"Фильм {data['name']} - успешно добавлен!")
+
+
+def add_film(film, cnt):
+    """
+    Добавление фильма в БД
+    :param film: словарь с одним экземпляром
+    :param cnt: порядковый номер загружаемого фильма
+    :return:
+    """
+    if check_params(film) and check_duration(film) and check_seasons(film):
+        try:
+            title = Title.objects.get(id=film['id'])
+            print(f'[INFO] Фильм {title.title} - уже существует!')
+        except ObjectDoesNotExist:
+            print(f'[{cnt}] ', sep='', end='')
+            add_film_to_database(film)
+    else:
+        if 'name' in film:
+            film_name = film['name']
+            print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
+        else:
+            print('[ERROR] Недостаточно данных для добавления фильма None!')
 
 
 def main():
@@ -233,19 +257,7 @@ def main():
 
         data = read_data_from_kinopoisk(url, headers)
         for film in data['docs']:
-            if check_params(film) and check_duration(film) and check_seasons(film):
-                try:
-                    title = Title.objects.get(id=film['id'])
-                    print(f'[INFO] Фильм {title.name} - уже существует!')
-                except ObjectDoesNotExist:
-                    print(f'[{cnt}] ', sep='', end='')
-                    add_film(film)
-            else:
-                if 'name' in film:
-                    film_name = film['name']
-                    print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
-                else:
-                    print('[ERROR] Недостаточно данных для добавления фильма None!')
+            add_film(film, cnt)
             cnt += 1
 
 
