@@ -1,7 +1,67 @@
 from django.db import models
 from django.db.models import F, Q
-from django.db.models.constraints import CheckConstraint
+from django.db.models.constraints import CheckConstraint, UniqueConstraint
 from django.utils import timezone
+
+
+class Actor(models.Model):
+    name = models.CharField(
+        max_length=64,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Director(models.Model):
+    name = models.CharField(
+        max_length=64,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Genre(models.Model):
+    title = models.CharField(
+        unique=True,
+        max_length=32,
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class Country(models.Model):
+    title = models.CharField(
+        unique=True,
+        max_length=64,
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class ContentRating(models.Model):
+    title = models.CharField(
+        unique=True,
+        max_length=4,
+    )
+
+    value = models.SmallIntegerField(
+        default=0,
+    )
+
+    class Meta:
+        constraints = (
+            CheckConstraint(
+                check=Q(value__gte=0) & Q(value__lte=18),
+                name='Content rating value must be in 0-18',
+            ),
+        )
+
+    def __str__(self):
+        return self.title
 
 
 class Title(models.Model):
@@ -31,6 +91,36 @@ class Title(models.Model):
     seasons_count = models.SmallIntegerField(
         blank=True,
         null=True,
+    )
+
+    director = models.ManyToManyField(
+        Director,
+        through='TitleDirector',
+        related_name='title_director',
+    )
+
+    country = models.ManyToManyField(
+        Country,
+        through='TitleCountry',
+        related_name='title_country',
+    )
+
+    actor = models.ManyToManyField(
+        Actor,
+        through='TitleActor',
+        related_name='title_actor',
+    )
+
+    genre = models.ManyToManyField(
+        Genre,
+        through='TitleGenre',
+        related_name='title_genre',
+    )
+
+    content_rating = models.ForeignKey(
+        ContentRating,
+        on_delete=models.PROTECT,
+        related_name='title_content_rating',
     )
 
     class Meta:
@@ -63,18 +153,24 @@ class Title(models.Model):
 
 
 class SimilarTitle(models.Model):
-    title = models.ManyToManyField(
+    title = models.ForeignKey(
         Title,
         related_name='titles',
+        on_delete=models.CASCADE,
     )
 
-    similar_title = models.ManyToManyField(
+    similar_title = models.ForeignKey(
         Title,
         related_name='similar_titles',
+        on_delete=models.CASCADE,
     )
 
     class Meta:
         constraints = (
+            UniqueConstraint(
+                fields=('title', 'similar_title'),
+                name='SimilarTitle record already exists',
+            ),
             CheckConstraint(
                 check=~Q(title=F('similar_title')),
                 name='Title and similar_title is the same',
@@ -82,50 +178,74 @@ class SimilarTitle(models.Model):
         )
 
     def __str__(self):
-        return self.title
+        return f'{self.title}: {self.similar_title}'
 
 
-class Genre(models.Model):
-    title = models.CharField(
-        unique=True,
+class TitleModelMixin(models.Model):
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
     )
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        abstract = True
 
 
-class Director(models.Model):
-    name = models.CharField(
-        max_length=64,
+class TitleDirector(TitleModelMixin):
+    director = models.ForeignKey(
+        Director,
+        on_delete=models.CASCADE,
     )
 
-    def __str__(self):
-        return self.name
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('title', 'director'),
+                name='Director already exists for title',
+            ),
+        )
 
 
-class Country(models.Model):
-    title = models.CharField(
-        max_length=64,
+class TitleCountry(TitleModelMixin):
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.CASCADE,
     )
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('title', 'country'),
+                name='Country already exists for title',
+            ),
+        )
 
 
-class ContentRating(models.Model):
-    title = models.CharField(
-        unique=True,
-        max_length=8,
+class TitleActor(TitleModelMixin):
+    actor = models.ForeignKey(
+        Actor,
+        on_delete=models.CASCADE,
     )
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('title', 'actor'),
+                name='Actor already exists for title',
+            ),
+        )
 
 
-class Actor(models.Model):
-    name = models.CharField(
-        max_length=64,
+class TitleGenre(TitleModelMixin):
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
     )
 
-    def __str__(self):
-        return self.name
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('title', 'genre'),
+                name='Genre already exists for title',
+            ),
+        )
