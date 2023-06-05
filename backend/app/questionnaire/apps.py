@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class FilmanatorConfig(AppConfig):
+class QuestionnaireConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'filmanator'
+    name = 'questionnaire'

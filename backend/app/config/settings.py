@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -6,15 +7,23 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
+    # Django
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-secret-key'),
     ALLOWED_HOST=(str, 'localhost'),
 
+    # Database
     DB_NAME=(str, 'DB_NAME'),
     DB_USER=(str, 'DB_USER'),
     DB_PASSWORD=(str, 'DB_PASSWORD'),
     DB_HOST=(str, 'DB_HOST'),
     DB_PORT=(int, 'DB_PORT'),
+
+    # Parser
+    TOKEN=(str, 'TOKEN'),
+    START_PAGE=(int, 1),
+    END_PAGE=(int, 10),
+    LIMIT=(int, 1000),
 )
 env.read_env(BASE_DIR.parent / '.env')
 
@@ -27,13 +36,21 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
+    # Встроенные django приложения
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'filmanator.apps.FilmanatorConfig',
+
+    # Дополнительные django приложения
+    'django_extensions',
+
+    # Приложения проекта
+    'questionnaire',
+    'titles',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -103,3 +120,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
+
+SESSION_LIFETIME = timedelta(hours=1)
+
+TOKEN = env('TOKEN')
+START_PAGE = env('START_PAGE')
+END_PAGE = env('END_PAGE')
+LIMIT = env('LIMIT')
