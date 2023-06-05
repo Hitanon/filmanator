@@ -1,27 +1,12 @@
-import os
-
-import django
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.app.config.settings')
-django.setup()
-
-import environ
-
 import time
 
-import requests
+from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
 
+import requests
+
 from titles.models import Actor, ContentRating, Country, Director, Genre, SimilarTitle, Title
-
-
-env = environ.Env(
-    TOKEN=(str, 'TOKEN'),
-    START_PAGE=(int, 1),
-    END_PAGE=(int, 10),
-    LIMIT=(int, 1000),
-)
 
 
 def read_data_from_kinopoisk(url: str, headers: dict) -> dict:
@@ -247,13 +232,17 @@ def main():
     :return:
     """
     cnt = 1
+    start_page = settings.START_PAGE
+    end_page = settings.END_PAGE
+    limit = settings.LIMIT
+    token = settings.TOKEN
 
-    for page in range(env('START_PAGE'), env('END_PAGE') + 1):
+    for page in range(start_page, end_page + 1):
         url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name similarMovies.id isSeries ' \
               'year rating.imdb votes.imdb movieLength countries ageRating director persons.id seasonsInfo ' \
-              f'persons.name persons.profession genres&sortField=id&sortType=1&limit={env("LIMIT")}&page={page}'
+              f'persons.name persons.profession genres&sortField=id&sortType=1&limit={limit}&page={page}'
 
-        headers = {'x-api-key': env('TOKEN')}
+        headers = {'x-api-key': token}
 
         data = read_data_from_kinopoisk(url, headers)
         for film in data['docs']:
