@@ -3,7 +3,7 @@ from config.settings import AUTH_USER_MODEL
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
-from django.db.models.constraints import UniqueConstraint
+from django.db.models.constraints import CheckConstraint, UniqueConstraint
 
 
 class Session(models.Model):
@@ -14,7 +14,9 @@ class Session(models.Model):
         null=True,
     )
 
-    ends_at = models.DateTimeField()
+    start_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         constraints = (
@@ -26,7 +28,7 @@ class Session(models.Model):
         )
 
     def __str__(self):
-        return f'{self.user}: {self.ends_at}'
+        return f'{self.user}: {self.start_at}'
 
 
 class Category(models.Model):
@@ -38,6 +40,14 @@ class Category(models.Model):
         unique=True,
         max_length=64,
     )
+
+    class Meta:
+        constraints = (
+            CheckConstraint(
+                check=Q(priority__gte=1) & Q(priority__lte=10),
+                name='Priority must be in 1-10',
+            ),
+        )
 
     def __str__(self):
         return f'{self.title} (pr={self.priority})'
@@ -75,12 +85,10 @@ class Answer(models.Model):
 
 class Criterion(models.Model):
     title = models.CharField(
-        unique=True,
         max_length=64,
     )
 
     body = models.CharField(
-        unique=True,
         max_length=64,
     )
 
