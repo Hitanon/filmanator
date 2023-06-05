@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 from django.utils import timezone
+
+from titles.models import Genre, Title
 
 from users.managers import UserManager
 
@@ -40,21 +43,118 @@ class User(AbstractBaseUser, PermissionsMixin):
         return True
 
 
-# class History(models.Model):
-#     pass
+class History(models.Model):
+    date = models.DateTimeField()
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('date', 'user', 'title'),
+                name='History record must be unique',
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user}: {self.title} ({self.date})'
 
 
-# class LikedTitle(models.Model):
-#     pass
+class LikedTitle(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('user', 'title'),
+                name='Liked title already exists',
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user}: {self.title}'
 
 
-# class DislikedTitle(models.Model):
-#     pass
+class DislikedTitle(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('user', 'title'),
+                name='Disliked title already exists',
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user}: {self.title}'
 
 
-# class PreferredGenre(models.Model):
-#     pass
+class PreferredGenre(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('user', 'genre'),
+                name='Preferred genre already exists',
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user}: {self.genre}'
 
 
-# class DisfavoredGenre(models.Model):
-#     pass
+class DisfavoredGenre(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('user', 'genre'),
+                name='Disfavored genre already exists',
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user}: {self.genre}'
