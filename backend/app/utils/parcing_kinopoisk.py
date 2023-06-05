@@ -1,18 +1,24 @@
-import os, django
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.app.config.settings")
-django.setup()
-
 import environ
+
 import requests
-from titles.models import *
+
 import time
+
+from django.core.exceptions import ObjectDoesNotExist
+
+from titles.models import Title, SimilarTitle, Actor, Director, Country, ContentRating, Genre
+
+import os
+import django
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.app.config.settings')
+django.setup()
 
 env = environ.Env(
     TOKEN=(str, 'TOKEN'),
     START_PAGE=(int, 1),
     END_PAGE=(int, 10),
-    LIMIT=(int, 1000)
+    LIMIT=(int, 1000),
 )
 
 
@@ -21,7 +27,7 @@ def read_data_from_kinopoisk(url: str, headers: dict) -> dict:
     Чтение данных с api кинопоиска
     :param url: адрес для нужного запроса к api
     :param headers: заголовок запроса с указанием токена
-    :return data: словарь со списком фильмов
+    :return: data - словарь со списком фильмов
     """
     response = requests.get(url, headers=headers)
     data = response.json()
@@ -32,7 +38,7 @@ def check_params(data: dict) -> bool:
     """
     Проверка значений необходимых полей для БД
     :param data: словарь с одним фильмом
-    :return bool:
+    :return: bool
     """
     if 'id' in data:
         if data['name'] and data['genres'] and data['year'] and data['rating'] and data['votes'] and \
@@ -45,7 +51,7 @@ def check_duration(data: dict) -> bool:
     """
     Проверка того что фильм имеет продолжительность
     :param data: словарь с одним фильмом
-    :return bool:
+    :return: bool
     """
     if not data['isSeries'] and not data['movieLength']:
         return False
@@ -56,14 +62,19 @@ def check_seasons(data: dict) -> bool:
     """
     Проверка того что сериал имеет сезоны
     :param data: словарь с одним фильмом
-    :return bool:
+    :return: bool
     """
     if data['isSeries'] and not data['seasonsInfo']:
         return False
     return True
 
 
-def add_title(data):
+def add_title(data: dict) -> None:
+    """
+    Добавление фильма или сериала в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     if data['isSeries']:
         seasons_count = data['seasonsInfo'][-1]['number']
 
@@ -89,6 +100,11 @@ def add_title(data):
 
 
 def add_title_genres(data):
+    """
+    Добавление жанров и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     title = Title.objects.get(id=data['id'])
     for genre in data['genres']:
         genre, _ = Genre.objects.get_or_create(title=genre['name'])
@@ -97,18 +113,28 @@ def add_title_genres(data):
 
 
 def add_title_directors(data):
+    """
+    Добавление режиссеров и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     title = Title.objects.get(id=data['id'])
     for director in data['persons']:
         if director['profession'] == 'режиссеры' and director['name']:
             try:
                 director = Director.objects.get(id=director['id'])
-            except:
+            except ObjectDoesNotExist:
                 director, _ = Director.objects.get_or_create(id=director['id'], name=director['name'])
 
             director.titles.add(title)
 
 
 def add_title_countries(data):
+    """
+    Добавление стран и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     title = Title.objects.get(id=data['id'])
     for country in data['countries']:
         country, _ = Country.objects.get_or_create(title=country['name'])
@@ -117,6 +143,11 @@ def add_title_countries(data):
 
 
 def add_title_actors(data):
+    """
+    Добавление актера и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     title = Title.objects.get(id=data['id'])
     cnt = 0
     for actor in data['persons']:
@@ -125,7 +156,7 @@ def add_title_actors(data):
                 break
             try:
                 actor = Actor.objects.get(id=actor['id'])
-            except:
+            except ObjectDoesNotExist:
                 actor, _ = Actor.objects.get_or_create(id=actor['id'], name=actor['name'])
 
             actor.titles.add(title)
@@ -133,6 +164,11 @@ def add_title_actors(data):
 
 
 def add_title_content_rating(data):
+    """
+    Добавление возрастного ограничения и его связи с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     title = Title.objects.get(id=data['id'])
     if data['ageRating']:
         age_rating, _ = ContentRating.objects.get_or_create(
@@ -142,6 +178,11 @@ def add_title_content_rating(data):
 
 
 def add_similar_titles(data):
+    """
+    Добавление похожих фильмов и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     title = Title.objects.get(id=data['id'])
     for title in data['simularTitles']:
         try:
@@ -151,7 +192,7 @@ def add_similar_titles(data):
                 title_id=data['id'],
                 simular_title_id=title['id']
             )
-        except:
+        except ObjectDoesNotExist:
             SimilarTitle.objects.update_or_create(
                 title_id=data['id'],
                 simular_title_id=None
@@ -159,6 +200,11 @@ def add_similar_titles(data):
 
 
 def add_film(data):
+    """
+    Добавление фильма в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
     add_title(data)
     add_title_genres(data)
     add_title_countries(data)
@@ -171,6 +217,11 @@ def add_film(data):
 
 
 def main():
+    """
+    Получение списка фильмов через api кинопоиска и их добавление в БД
+    :param:
+    :return:
+    """
     cnt = 1
 
     for page in range(env('START_PAGE'), env('END_PAGE') + 1):
@@ -184,20 +235,21 @@ def main():
         for film in data['docs']:
             if check_params(film) and check_duration(film) and check_seasons(film):
                 try:
-                    Title.objects.get(id=film['id'])
-                    print(f"[INFO] Фильм {film['name']} - уже существует!")
-                except:
-                    print(f"[{cnt}] ", sep='', end='')
+                    title = Title.objects.get(id=film['id'])
+                    print(f'[INFO] Фильм {title.name} - уже существует!')
+                except ObjectDoesNotExist:
+                    print(f'[{cnt}] ', sep='', end='')
                     add_film(film)
             else:
                 if 'name' in film:
-                    print(f"[ERROR] Недостаточно данных для добавления фильма {film['name']}!")
+                    film_name = film['name']
+                    print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
                 else:
-                    print("[ERROR] Недостаточно данных для добавления фильма None!")
+                    print('[ERROR] Недостаточно данных для добавления фильма None!')
             cnt += 1
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     start = time.time()
     main()
     end = time.time() - start
