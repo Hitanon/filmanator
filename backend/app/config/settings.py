@@ -24,7 +24,9 @@ env = environ.Env(
     START_PAGE=(int, 1),
     END_PAGE=(int, 10),
     LIMIT=(int, 1000),
+    UPDATE=(bool, False),
 )
+
 env.read_env(BASE_DIR.parent / '.env')
 
 SECRET_KEY = env('SECRET_KEY')
@@ -129,3 +131,4 @@ TOKEN = env('TOKEN')
 START_PAGE = env('START_PAGE')
 END_PAGE = env('END_PAGE')
 LIMIT = env('LIMIT')
+UPDATE = env('UPDATE')
