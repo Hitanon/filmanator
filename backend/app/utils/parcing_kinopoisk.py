@@ -3,7 +3,6 @@ import time
 from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
-
 from django.db import IntegrityError
 
 import requests
@@ -166,6 +165,32 @@ def add_title_content_rating(data):
         age_rating.titles.add(title)
 
 
+def add_similar_title(data, update_mode, similar_title, cnt_add):
+    """
+    Добавление одного похожего фильма в БД
+    :param data: словарь с одним экземпляром
+    :param update_mode: режим обновления или добавления похожих фильмов
+    :param similar_title: словарь с данными об одном похожем фильме
+    :param cnt_add: кол-во добавленных похожих фильмов
+    :return:
+    """
+    Title.objects.get(id=similar_title['id'])
+    if update_mode:
+        try:
+            SimilarTitle.objects.update(
+                title_id=data['id'],
+                similar_title_id=similar_title['id'],
+            )
+            cnt_add += 1
+        except IntegrityError:
+            pass
+    else:
+        SimilarTitle.objects.update_or_create(
+            title_id=data['id'],
+            similar_title_id=similar_title['id'],
+        )
+
+
 def add_similar_titles(data, update_mode):
     """
     Добавление похожих фильмов и их связей с фильмом в БД
@@ -174,31 +199,16 @@ def add_similar_titles(data, update_mode):
     :return:
     """
     cnt_add = 0
-    title = Title.objects.get(id=data['id'])
     for similar_title in data['similarMovies']:
         try:
-            Title.objects.get(id=similar_title['id'])
-            if update_mode:
-                try:
-                    SimilarTitle.objects.update(
-                        title_id=title.id,
-                        similar_title_id=similar_title['id'],
-                    )
-                    cnt_add += 1
-                except IntegrityError:
-                    pass
-            else:
-                SimilarTitle.objects.update_or_create(
-                    title_id=title.id,
-                    similar_title_id=similar_title['id'],
-                )
+            add_similar_title(data, update_mode, similar_title, cnt_add)
         except ObjectDoesNotExist:
             pass
     if update_mode:
         return cnt_add
 
 
-def add_film_to_database(data, update_mode):
+def fill_database(data, update_mode):
     """
     Добавление фильма в БД
     :param data: словарь с одним экземпляром
@@ -222,7 +232,7 @@ def add_film_to_database(data, update_mode):
         print(f"Фильм {data['name']} - успешно добавлен!")
 
 
-def add_film(film, cnt, update_mode):
+def add_film_to_database(film, cnt, update_mode):
     """
     Добавление фильма в БД
     :param film: словарь с одним экземпляром
@@ -230,22 +240,33 @@ def add_film(film, cnt, update_mode):
     :param update_mode: режим обновления или добавления похожих фильмов
     :return:
     """
+    if update_mode:
+        film_id = film['id']
+        try:
+            Title.objects.get(id=film_id)
+            print(f'[{cnt}] ', sep='', end='')
+            add_film_to_database(film, update_mode)
+        except ObjectDoesNotExist:
+            print(f'[INFO] Фильма c id - {film_id} нет в базе!')
+    else:
+        try:
+            title = Title.objects.get(id=film['id'])
+            print(f'[INFO] Фильм {title.title} - уже существует!')
+        except ObjectDoesNotExist:
+            print(f'[{cnt}] ', sep='', end='')
+            add_film_to_database(film, update_mode)
+
+
+def add_film(film, cnt, update_mode):
+    """
+    Проверка корректности полученных данных о фильме и добавление фильма
+    :param film: словарь с одним экземпляром
+    :param cnt: порядковый номер загружаемого фильма
+    :param update_mode: режим обновления или добавления похожих фильмов
+    :return:
+    """
     if check_params(film) and check_duration(film) and check_seasons(film):
-        if update_mode:
-            film_id = film['id']
-            try:
-                Title.objects.get(id=film_id)
-                print(f'[{cnt}] ', sep='', end='')
-                add_film_to_database(film, update_mode)
-            except ObjectDoesNotExist:
-                print(f'[INFO] Фильма c id - {film_id} нет в базе!')
-        else:
-            try:
-                title = Title.objects.get(id=film['id'])
-                print(f'[INFO] Фильм {title.title} - уже существует!')
-            except ObjectDoesNotExist:
-                print(f'[{cnt}] ', sep='', end='')
-                add_film_to_database(film, update_mode)
+        add_film_to_database(film, cnt, update_mode)
     else:
         if 'name' in film:
             film_name = film['name']
