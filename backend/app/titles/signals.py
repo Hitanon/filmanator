@@ -1,7 +1,8 @@
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
-from titles.models import *
+from titles.models import Acting, AmountOfDialogue, Audience, Graphics, Intellectuality, Mood, NarrativeMethod, \
+    ViewingMethod, ViewingTime, VisualAtmosphere
 
 mood = {
     'happy': 1,
@@ -18,7 +19,7 @@ mood = {
     'thrilling': 12,
     'suspenseful': 13,
     'nostalgic': 14,
-    'melancholic': 15
+    'melancholic': 15,
 }
 
 viewing_method = {
@@ -26,14 +27,14 @@ viewing_method = {
     'with friends': 2,
     'with family': 3,
     'with partner': 4,
-    'with strangers': 5
+    'with strangers': 5,
 }
 
 viewing_time = {
     'morning': 1,
     'day': 2,
     'evening': 3,
-    'night': 4
+    'night': 4,
 }
 
 visual_atmosphere = {
@@ -46,7 +47,7 @@ visual_atmosphere = {
     'bright': 7,
     'natural': 8,
     'artificial': 9,
-    'minimalist': 10
+    'minimalist': 10,
 }
 
 audience = {
@@ -58,7 +59,7 @@ audience = {
     'niche-specific': 6,
     'elderly': 7,
     'women': 8,
-    'men': 9
+    'men': 9,
 }
 
 intellectuality = {
@@ -75,7 +76,7 @@ intellectuality = {
     'historical': 11,
     'scientific': 12,
     'artistic': 13,
-    'cultural': 14
+    'cultural': 14,
 }
 
 narrative_method = {
@@ -93,21 +94,21 @@ narrative_method = {
     'flashback': 12,
     'flashforward': 13,
     'parallel': 14,
-    'omniscient': 15
+    'omniscient': 15,
 }
 
 acting = {
     'convincing': 1,
     'unconvincing': 2,
     'emotional': 3,
-    'expressive': 4
+    'expressive': 4,
 }
 
 amount_of_dialogue = {
     'many': 1,
     'few': 2,
     'balanced': 3,
-    'unconventional dialogue style': 4
+    'unconventional dialogue style': 4,
 }
 
 graphics = {
@@ -115,7 +116,7 @@ graphics = {
     'unrealistic': 2,
     'modern': 3,
     'outdated': 4,
-    'stylized': 5
+    'stylized': 5,
 }
 
 
