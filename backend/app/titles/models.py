@@ -175,3 +175,78 @@ class Actor(TitleMixin):
 
     def __str__(self):
         return self.name
+
+
+class AdditionalCriteria(TitleMixin):
+    """
+    Общая модель для всех дополнительных критериев
+    """
+    title = models.CharField(
+        max_length=64,
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        abstract = True
+
+
+class Mood(AdditionalCriteria):
+    """
+    Модель настроения
+    """
+
+
+class ViewingMethod(AdditionalCriteria):
+    """
+    Модель способа просмотра
+    """
+
+
+class ViewingTime(AdditionalCriteria):
+    """
+    Модель времени суток для просмотра
+    """
+
+
+class VisualAtmosphere(AdditionalCriteria):
+    """
+    Модель визуальной атмосферы
+    """
+
+
+class Audience(AdditionalCriteria):
+    """
+    Модель аудитории фильма
+    """
+
+
+class Intellectuality(AdditionalCriteria):
+    """
+    Модель интеллектуальности фильма
+    """
+
+
+class NarrativeMethod(AdditionalCriteria):
+    """
+    Модель метода повествования
+    """
+
+
+class Acting(AdditionalCriteria):
+    """
+    Модель игры актеров
+    """
+
+
+class AmountOfDialogue(AdditionalCriteria):
+    """
+    Модель кол-ва диалогов
+    """
+
+
+class Graphics(AdditionalCriteria):
+    """
+    Модель графики
+    """

@@ -165,13 +165,13 @@ def add_title_content_rating(data):
         age_rating.titles.add(title)
 
 
-def add_similar_title(data, update_mode, similar_title, cnt_add):
+def add_similar_title(data, update_mode, similar_title, cnt_changes):
     """
     Добавление одного похожего фильма в БД
     :param data: словарь с одним экземпляром
     :param update_mode: режим обновления или добавления похожих фильмов
     :param similar_title: словарь с данными об одном похожем фильме
-    :param cnt_add: кол-во добавленных похожих фильмов
+    :param cnt_changes: кол-во добавленных похожих фильмов
     :return:
     """
     Title.objects.get(id=similar_title['id'])
@@ -181,7 +181,7 @@ def add_similar_title(data, update_mode, similar_title, cnt_add):
                 title_id=data['id'],
                 similar_title_id=similar_title['id'],
             )
-            cnt_add += 1
+            cnt_changes += 1
         except IntegrityError:
             pass
     else:
@@ -191,36 +191,31 @@ def add_similar_title(data, update_mode, similar_title, cnt_add):
         )
 
 
-def add_similar_titles(data, update_mode):
+def add_similar_titles(data, update_mode, cnt_changes):
     """
     Добавление похожих фильмов и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
     :param update_mode: режим обновления или добавления похожих фильмов
+    :param cnt_changes: кол-во добавленных похожих фильмов
     :return:
     """
-    cnt_add = 0
     for similar_title in data['similarMovies']:
         try:
-            add_similar_title(data, update_mode, similar_title, cnt_add)
+            add_similar_title(data, update_mode, similar_title, cnt_changes)
         except ObjectDoesNotExist:
             pass
-    if update_mode:
-        return cnt_add
 
 
-def fill_database(data, update_mode):
+def fill_database(data, update_mode, cnt_changes):
     """
     Добавление фильма в БД
     :param data: словарь с одним экземпляром
     :param update_mode: режим обновления или добавления похожих фильмов
+    :param cnt_changes: кол-во добавленных похожих фильмов
     :return:
     """
     if update_mode:
-        cnt_add = add_similar_titles(data, update_mode)
-        if cnt_add > 0:
-            print(f"{cnt_add} похожих фильма для {data['name']} - успешно добавлено!")
-        else:
-            print(f"Изменений для {data['name']} - нет!")
+        add_similar_titles(data, update_mode, cnt_changes)
     else:
         add_title(data)
         add_title_genres(data)
@@ -228,51 +223,53 @@ def fill_database(data, update_mode):
         add_title_actors(data)
         add_title_directors(data)
         add_title_content_rating(data)
-        add_similar_titles(data, update_mode)
+        add_similar_titles(data, update_mode, cnt_changes)
         print(f"Фильм {data['name']} - успешно добавлен!")
 
 
-def add_film_to_database(film, cnt, update_mode):
+def add_film_to_database(film, cnt, update_mode, cnt_changes):
     """
     Добавление фильма в БД
     :param film: словарь с одним экземпляром
     :param cnt: порядковый номер загружаемого фильма
     :param update_mode: режим обновления или добавления похожих фильмов
+    :param cnt_changes: кол-во добавленных похожих фильмов
     :return:
     """
     if update_mode:
         film_id = film['id']
         try:
             Title.objects.get(id=film_id)
-            print(f'[{cnt}] ', sep='', end='')
-            add_film_to_database(film, update_mode)
+            fill_database(film, update_mode, cnt_changes)
         except ObjectDoesNotExist:
-            print(f'[INFO] Фильма c id - {film_id} нет в базе!')
+            pass
     else:
         try:
             title = Title.objects.get(id=film['id'])
             print(f'[INFO] Фильм {title.title} - уже существует!')
         except ObjectDoesNotExist:
             print(f'[{cnt}] ', sep='', end='')
-            add_film_to_database(film, update_mode)
+            fill_database(film, update_mode, cnt_changes)
 
 
-def add_film(film, cnt, update_mode):
+def add_film(film, cnt, update_mode, cnt_changes):
     """
     Проверка корректности полученных данных о фильме и добавление фильма
     :param film: словарь с одним экземпляром
     :param cnt: порядковый номер загружаемого фильма
     :param update_mode: режим обновления или добавления похожих фильмов
+    :param cnt_changes: кол-во добавленных похожих фильмов
     :return:
     """
     if check_params(film) and check_duration(film) and check_seasons(film):
-        add_film_to_database(film, cnt, update_mode)
+        add_film_to_database(film, cnt, update_mode, cnt_changes)
     else:
-        if 'name' in film:
-            film_name = film['name']
-            print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
-        else:
-            print('[ERROR] Недостаточно данных для добавления фильма None!')
+        if not update_mode:
+            if 'name' in film:
+                film_name = film['name']
+                print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
+            else:
+                print('[ERROR] Недостаточно данных для добавления фильма None!')
 
 
 def main():
@@ -296,9 +293,12 @@ def main():
         headers = {'x-api-key': token}
 
         data = read_data_from_kinopoisk(url, headers)
+        cnt_changes = 0
         for film in data['docs']:
-            add_film(film, cnt, update_mode)
+            add_film(film, cnt, update_mode, cnt_changes)
             cnt += 1
+        if update_mode:
+            print(f'Для {limit} фильмов добавлено {cnt_changes} похожих!')
 
 
 if __name__ == '__main__':
