@@ -54,7 +54,7 @@ audience = {
     'family-friendly': 1,
     'children': 2,
     'adult': 3,
-    "teenage": 4,
+    'teenage': 4,
     'universal': 5,
     'niche-specific': 6,
     'elderly': 7,
