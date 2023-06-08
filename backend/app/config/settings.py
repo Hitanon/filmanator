@@ -27,7 +27,7 @@ env = environ.Env(
     UPDATE=(bool, False),
 
     # ChatGPT
-    FULL_PATH_TO_FILES=(str, 'PATH')
+    FULL_PATH_TO_FILES=(str, 'PATH'),
 )
 
 env.read_env(BASE_DIR.parent / '.env')

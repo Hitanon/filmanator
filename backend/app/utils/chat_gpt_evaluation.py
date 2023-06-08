@@ -1,6 +1,6 @@
+import ast
 import os
 import time
-import ast
 
 from config import settings
 
