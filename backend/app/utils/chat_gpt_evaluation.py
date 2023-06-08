@@ -1,11 +1,10 @@
 import os
 import time
-
-from django.core.exceptions import ObjectDoesNotExist
+import ast
 
 from config import settings
 
-import ast
+from django.core.exceptions import ObjectDoesNotExist
 
 from titles.models import Acting, AmountOfDialogue, Audience, Graphics, Intellectuality, Mood, NarrativeMethod, \
     Title, ViewingMethod, ViewingTime, VisualAtmosphere
