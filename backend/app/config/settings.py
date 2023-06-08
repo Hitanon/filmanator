@@ -25,6 +25,9 @@ env = environ.Env(
     END_PAGE=(int, 10),
     LIMIT=(int, 1000),
     UPDATE=(bool, False),
+
+    # ChatGPT
+    FULL_PATH_TO_FILES=(str, 'PATH')
 )
 
 env.read_env(BASE_DIR.parent / '.env')
@@ -127,8 +130,12 @@ AUTH_USER_MODEL = 'users.User'
 
 SESSION_LIFETIME = timedelta(hours=1)
 
+# Parser
 TOKEN = env('TOKEN')
 START_PAGE = env('START_PAGE')
 END_PAGE = env('END_PAGE')
 LIMIT = env('LIMIT')
 UPDATE = env('UPDATE')
+
+# ChatGPT
+FULL_PATH_TO_FILES = env('FULL_PATH_TO_FILES')

@@ -87,7 +87,7 @@ def add_title(data: dict) -> None:
         )
 
 
-def add_title_genres(data):
+def add_title_genres(data: dict) -> None:
     """
     Добавление жанров и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -100,7 +100,7 @@ def add_title_genres(data):
         genre.titles.add(title)
 
 
-def add_title_directors(data):
+def add_title_directors(data: dict) -> None:
     """
     Добавление режиссеров и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -117,7 +117,7 @@ def add_title_directors(data):
             director.titles.add(title)
 
 
-def add_title_countries(data):
+def add_title_countries(data: dict) -> None:
     """
     Добавление стран и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -130,7 +130,7 @@ def add_title_countries(data):
         country.titles.add(title)
 
 
-def add_title_actors(data):
+def add_title_actors(data: dict) -> None:
     """
     Добавление актера и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -151,7 +151,7 @@ def add_title_actors(data):
             cnt += 1
 
 
-def add_title_content_rating(data):
+def add_title_content_rating(data: dict) -> None:
     """
     Добавление возрастного ограничения и его связи с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -165,7 +165,7 @@ def add_title_content_rating(data):
         age_rating.titles.add(title)
 
 
-def add_similar_title(data, update_mode, similar_title, cnt_changes):
+def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> None:
     """
     Добавление одного похожего фильма в БД
     :param data: словарь с одним экземпляром
@@ -191,7 +191,7 @@ def add_similar_title(data, update_mode, similar_title, cnt_changes):
         )
 
 
-def add_similar_titles(data, update_mode, cnt_changes):
+def add_similar_titles(data: dict, update_mode: bool, cnt_changes: int) -> None:
     """
     Добавление похожих фильмов и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -206,7 +206,7 @@ def add_similar_titles(data, update_mode, cnt_changes):
             pass
 
 
-def fill_database(data, update_mode, cnt_changes):
+def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> None:
     """
     Добавление фильма в БД
     :param data: словарь с одним экземпляром
@@ -227,7 +227,7 @@ def fill_database(data, update_mode, cnt_changes):
         print(f"Фильм {data['name']} - успешно добавлен!")
 
 
-def add_film_to_database(film, cnt, update_mode, cnt_changes):
+def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
     """
     Добавление фильма в БД
     :param film: словарь с одним экземпляром
@@ -252,7 +252,7 @@ def add_film_to_database(film, cnt, update_mode, cnt_changes):
             fill_database(film, update_mode, cnt_changes)
 
 
-def add_film(film, cnt, update_mode, cnt_changes):
+def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
     """
     Проверка корректности полученных данных о фильме и добавление фильма
     :param film: словарь с одним экземпляром
