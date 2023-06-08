@@ -1,10 +1,13 @@
 from django.db import models
-from django.db.models import Q
-from django.db.models.constraints import CheckConstraint
+from django.db.models import F, Q
+from django.db.models.constraints import CheckConstraint, UniqueConstraint
 from django.utils import timezone
 
 
 class Title(models.Model):
+    """
+    Модель произведения
+    """
     title = models.CharField(
         max_length=255,
     )
@@ -50,7 +53,7 @@ class Title(models.Model):
             CheckConstraint(
                 check=(Q(is_movie=True) & Q(duration__isnull=False) & Q(seasons_count__isnull=True))
                 | (Q(is_movie=False) & Q(duration__isnull=True) & Q(seasons_count__isnull=False)),
-                name='Duration isnt correct',
+                name='Duration isn`t correct',
             ),
             CheckConstraint(
                 check=Q(duration__gte=0) | Q(seasons_count__gt=0),
@@ -63,26 +66,35 @@ class Title(models.Model):
 
 
 class SimilarTitle(models.Model):
-    title = models.ManyToManyField(
+    """
+    Модель похожих произведений
+    """
+    title = models.ForeignKey(
         Title,
         related_name='titles',
+        on_delete=models.CASCADE,
     )
 
-    similar_title = models.ManyToManyField(
+    similar_title = models.ForeignKey(
         Title,
         related_name='similar_titles',
+        on_delete=models.CASCADE,
     )
 
-    # class Meta:
-    #     constraints = (
-    #         CheckConstraint(
-    #             check=~Q(title=F('similar_title')),
-    #             name='Title and similar_title is the same',
-    #         ),
-    #     )
+    class Meta:
+        constraints = (
+            UniqueConstraint(
+                fields=('title', 'similar_title'),
+                name='SimilarTitle record already exists',
+            ),
+            CheckConstraint(
+                check=~Q(title=F('similar_title')),
+                name='Title and similar_title is the same',
+            ),
+        )
 
     def __str__(self):
-        return self.title
+        return f'{self.title}: {self.similar_title}'
 
 
 class TitleMixin(models.Model):
@@ -96,8 +108,12 @@ class TitleMixin(models.Model):
 
 
 class Genre(TitleMixin):
+    """
+    Модель жанра
+    """
     title = models.CharField(
         unique=True,
+        max_length=32,
     )
 
     def __str__(self):
@@ -105,6 +121,9 @@ class Genre(TitleMixin):
 
 
 class Director(TitleMixin):
+    """
+    Модель режиссера
+    """
     name = models.CharField(
         max_length=64,
     )
@@ -114,7 +133,11 @@ class Director(TitleMixin):
 
 
 class Country(TitleMixin):
+    """
+    Модель страны
+    """
     title = models.CharField(
+        unique=True,
         max_length=64,
     )
 
@@ -123,18 +146,107 @@ class Country(TitleMixin):
 
 
 class ContentRating(TitleMixin):
+    """
+    Модель возрастного ограничения
+    """
     value = models.SmallIntegerField(
-        null=True,
+        default=0,
     )
+
+    class Meta:
+        constraints = (
+            CheckConstraint(
+                check=Q(value__gte=0) & Q(value__lte=18),
+                name='Content rating value must be in 0-18',
+            ),
+        )
 
     def __str__(self):
         return self.value
 
 
 class Actor(TitleMixin):
+    """
+    Модель актера
+    """
     name = models.CharField(
         max_length=64,
     )
 
     def __str__(self):
         return self.name
+
+
+class AdditionalCriteria(TitleMixin):
+    """
+    Общая модель для всех дополнительных критериев
+    """
+    title = models.CharField(
+        max_length=64,
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        abstract = True
+
+
+class Mood(AdditionalCriteria):
+    """
+    Модель настроения
+    """
+
+
+class ViewingMethod(AdditionalCriteria):
+    """
+    Модель способа просмотра
+    """
+
+
+class ViewingTime(AdditionalCriteria):
+    """
+    Модель времени суток для просмотра
+    """
+
+
+class VisualAtmosphere(AdditionalCriteria):
+    """
+    Модель визуальной атмосферы
+    """
+
+
+class Audience(AdditionalCriteria):
+    """
+    Модель аудитории фильма
+    """
+
+
+class Intellectuality(AdditionalCriteria):
+    """
+    Модель интеллектуальности фильма
+    """
+
+
+class NarrativeMethod(AdditionalCriteria):
+    """
+    Модель метода повествования
+    """
+
+
+class Acting(AdditionalCriteria):
+    """
+    Модель игры актеров
+    """
+
+
+class AmountOfDialogue(AdditionalCriteria):
+    """
+    Модель кол-ва диалогов
+    """
+
+
+class Graphics(AdditionalCriteria):
+    """
+    Модель графики
+    """
