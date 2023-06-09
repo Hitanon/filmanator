@@ -58,21 +58,21 @@ class History(models.Model):
         on_delete=models.CASCADE,
     )
 
-    title = models.ForeignKey(
+    title = models.ManyToManyField(
         Title,
-        on_delete=models.CASCADE,
+        related_name='history_title',
     )
 
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('date', 'user', 'title'),
-                name='History record must be unique',
-            ),
-        )
+    # class Meta:
+    #     constraints = (
+    #         UniqueConstraint(
+    #             fields=('date', 'user', 'title'),
+    #             name='History record must be unique',
+    #         ),
+    #     )
 
     def __str__(self):
-        return f'{self.user}: {self.title} ({self.date})'
+        return f'{self.user}: ({self.date})'
 
 
 class LikedTitle(models.Model):
@@ -84,18 +84,18 @@ class LikedTitle(models.Model):
         on_delete=models.CASCADE,
     )
 
-    title = models.ForeignKey(
+    title = models.ManyToManyField(
         Title,
-        on_delete=models.CASCADE,
+        related_name='liked_title_title',
     )
 
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('user', 'title'),
-                name='Liked title already exists',
-            ),
-        )
+    # class Meta:
+    #     constraints = (
+    #         UniqueConstraint(
+    #             fields=('user', 'title'),
+    #             name='Liked title already exists',
+    #         ),
+    #     )
 
     def __str__(self):
         return f'{self.user}: {self.title}'
@@ -110,18 +110,18 @@ class DislikedTitle(models.Model):
         on_delete=models.CASCADE,
     )
 
-    title = models.ForeignKey(
+    title = models.ManyToManyField(
         Title,
-        on_delete=models.CASCADE,
+        related_name='disliked_title_title',
     )
 
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('user', 'title'),
-                name='Disliked title already exists',
-            ),
-        )
+    # class Meta:
+    #     constraints = (
+    #         UniqueConstraint(
+    #             fields=('user', 'title'),
+    #             name='Disliked title already exists',
+    #         ),
+    #     )
 
     def __str__(self):
         return f'{self.user}: {self.title}'
@@ -136,18 +136,18 @@ class PreferredGenre(models.Model):
         on_delete=models.CASCADE,
     )
 
-    genre = models.ForeignKey(
+    genre = models.ManyToManyField(
         Genre,
-        on_delete=models.CASCADE,
+        related_name='preffered_genre_genre',
     )
 
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('user', 'genre'),
-                name='Preferred genre already exists',
-            ),
-        )
+    # class Meta:
+    #     constraints = (
+    #         UniqueConstraint(
+    #             fields=('user', 'genre'),
+    #             name='Preferred genre already exists',
+    #         ),
+    #     )
 
     def __str__(self):
         return f'{self.user}: {self.genre}'
@@ -162,18 +162,18 @@ class DisfavoredGenre(models.Model):
         on_delete=models.CASCADE,
     )
 
-    genre = models.ForeignKey(
+    genre = models.ManyToManyField(
         Genre,
-        on_delete=models.CASCADE,
+        related_name='disfavored_genre_genre',
     )
 
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('user', 'genre'),
-                name='Disfavored genre already exists',
-            ),
-        )
+    # class Meta:
+    #     constraints = (
+    #         UniqueConstraint(
+    #             fields=('user', 'genre'),
+    #             name='Disfavored genre already exists',
+    #         ),
+    #     )
 
     def __str__(self):
         return f'{self.user}: {self.genre}'

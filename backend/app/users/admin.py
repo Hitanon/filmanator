@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from users import models
-from users.forms import UserAdminForm
+from users import models, forms
 
 
 @admin.register(models.User)
@@ -9,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
     """
     Административная панель пользователей
     """
-    form = UserAdminForm
+    form = forms.UserAdminForm
     list_display = ('username', 'email', 'is_staff', 'is_active')
 
 
