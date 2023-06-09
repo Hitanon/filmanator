@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from users import exceptions, models
+from titles.serializers import GenreSerializer, TitleSerializer
 
-from titles.serializers import TitleSerializer
+from users import exceptions, models
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -38,23 +38,17 @@ class HistorySerializer(serializers.ModelSerializer):
         return serializer.data
 
 
-# class LikedTitleSerializer(serializers.Serializer):
-#     titles = serializers.SerializerMethodField()
-
-#     class Meta:
-#         fields = (
-#             'titles',
-#         )
-
-#     def get_titles(self, obj):
-#         titles = obj.title.all()
-#         serializer = TitleSerializer(titles, many=True)
-#         return serializer.data
-
-
 class LikedTitleSerializer(TitleSerializer):
     pass
 
 
 class DislikedTitleSerializer(TitleSerializer):
+    pass
+
+
+class PrefferedGenreSerializer(GenreSerializer):
+    pass
+
+
+class DisfavoredGenreSerializer(GenreSerializer):
     pass

@@ -2,7 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from users import serializers, services, permissions
+from users import permissions, serializers, services
+from users.mixins import BasePreferencesMixin
 
 
 class UserView(APIView):
@@ -41,51 +42,70 @@ class HistoryView(APIView):
         serializer = self.serializer_class(histories, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, request, id, *args, **kwargs):
-        services.delete_user_history(id)
+    def delete(self, request, history_id, *args, **kwargs):
+        services.delete_user_history(history_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-class LikedTitleView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+class LikedTitleView(BasePreferencesMixin):
     serializer_class = serializers.LikedTitleSerializer
+    getter = services.get_user_liked_titles
+    setter = services.add_user_liked_title
+    deleter = services.delete_user_liked_title
 
     def get(self, request, *args, **kwargs):
-        liked_titles = services.get_user_liked_titles(request.user.id)
-        serializer = self.serializer_class(liked_titles, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return super().get(request, user_id=request.user.id)
 
-    def post(self, request, id, *args, **kwargs):
-        services.add_user_liked_title(request.user.id, id)
-        return Response(status=status.HTTP_201_CREATED)
+    def post(self, request, title_id, *args, **kwargs):
+        return super().post(request, user_id=request.user.id, title_id=title_id)
 
-    def delete(self, request, id, *args, **kwargs):
-        services.delete_user_liked_title(request.user.id, id)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, title_id, *args, **kwargs):
+        return super().delete(request, user_id=request.user.id, title_id=title_id)
 
 
-class DislikedTitleView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+class DislikedTitleView(BasePreferencesMixin):
     serializer_class = serializers.DislikedTitleSerializer
+    getter = services.get_user_disliked_titles
+    setter = services.add_user_disliked_title
+    deleter = services.delete_user_disliked_title
 
     def get(self, request, *args, **kwargs):
-        disliked_titles = services.get_user_disliked_titles(request.user.id)
-        serializer = self.serializer_class(disliked_titles, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return super().get(request, user_id=request.user.id)
 
-    def post(self, request, id, *args, **kwargs):
-        services.add_user_disliked_title(request.user.id, id)
-        return Response(status=status.HTTP_201_CREATED)
+    def post(self, request, title_id, *args, **kwargs):
+        return super().post(request, user_id=request.user.id, title_id=title_id)
 
-    def delete(self, request, id, *args, **kwargs):
-        services.delete_user_disliked_title(request.user.id, id)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, title_id, *args, **kwargs):
+        return super().delete(request, user_id=request.user.id, title_id=title_id)
 
 
-class PreferredGenreView(APIView):
-    pass
+class PreferredGenreView(BasePreferencesMixin):
+    serializer_class = serializers.PrefferedGenreSerializer
+    getter = services.get_preffered_genre
+    setter = services.add_preffered_genre
+    deleter = services.delete_preffered_genre
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, user_id=request.user.id)
+
+    def post(self, request, genre_id, *args, **kwargs):
+        return super().post(request, user_id=request.user.id, genre_id=genre_id)
+
+    def delete(self, request, genre_id, *args, **kwargs):
+        return super().delete(request, user_id=request.user.id, genre_id=genre_id)
 
 
 class DisfavoredGenreView(APIView):
-    pass
+    serializer_class = serializers.DisfavoredGenreSerializer
+    getter = services.get_disfavored_genre
+    setter = services.add_disfavored_genre
+    deleter = services.delete_disfavored_genre
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, user_id=request.user.id)
+
+    def post(self, request, genre_id, *args, **kwargs):
+        return super().post(request, user_id=request.user.id, genre_id=genre_id)
+
+    def delete(self, request, genre_id, *args, **kwargs):
+        return super().delete(request, user_id=request.user.id, genre_id=genre_id)

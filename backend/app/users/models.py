@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
-from django.db.models.constraints import UniqueConstraint
 from django.utils import timezone
 
 from titles.models import Genre, Title

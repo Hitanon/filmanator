@@ -16,3 +16,12 @@ class TitleSerializer(serializers.ModelSerializer):
             'duration',
             'seasons_count',
         )
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Genre
+        fields = (
+            'id',
+            'title',
+        )
