@@ -97,7 +97,7 @@ def add_title_genres(data: dict) -> None:
     for genre in data['genres']:
         genre, _ = Genre.objects.get_or_create(title=genre['name'])
 
-        genre.titles.add(title)
+        title.genre.add(genre)
 
 
 def add_title_directors(data: dict) -> None:
@@ -114,7 +114,7 @@ def add_title_directors(data: dict) -> None:
             except ObjectDoesNotExist:
                 director, _ = Director.objects.get_or_create(id=director['id'], name=director['name'])
 
-            director.titles.add(title)
+            title.director.add(director)
 
 
 def add_title_countries(data: dict) -> None:
@@ -127,7 +127,7 @@ def add_title_countries(data: dict) -> None:
     for country in data['countries']:
         country, _ = Country.objects.get_or_create(title=country['name'])
 
-        country.titles.add(title)
+        title.country.add(country)
 
 
 def add_title_actors(data: dict) -> None:
@@ -147,7 +147,7 @@ def add_title_actors(data: dict) -> None:
             except ObjectDoesNotExist:
                 actor, _ = Actor.objects.get_or_create(id=actor['id'], name=actor['name'])
 
-            actor.titles.add(title)
+            title.actor.add(actor)
             cnt += 1
 
 
@@ -162,7 +162,8 @@ def add_title_content_rating(data: dict) -> None:
         age_rating, _ = ContentRating.objects.get_or_create(
             value=data['ageRating'],
         )
-        age_rating.titles.add(title)
+        title.content_rating = age_rating
+        title.save()
 
 
 def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> None:
