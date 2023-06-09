@@ -105,23 +105,3 @@ def delete_preffered_genre(user_id, genre_id):
     genre = get_genre(genre_id)
     preffred_genre, _ = models.PreferredGenre.objects.get_or_create(user=user)
     preffred_genre.genre.remove(genre)
-
-
-def get_disfavored_genre(user_id):
-    user = models.User.objects.get(id=user_id)
-    disfavored_genre, _ = models.DisfavoredGenre.objects.get_or_create(user=user)
-    return disfavored_genre.genre.all()
-
-
-def add_disfavored_genre(user_id, genre_id):
-    user = models.User.objects.get(id=user_id)
-    genre = get_genre(genre_id)
-    disfavored_genre, _ = models.DisfavoredGenre.objects.get_or_create(user=user)
-    disfavored_genre.genre.add(genre)
-
-
-def delete_disfavored_genre(user_id, genre_id):
-    user = models.User.objects.get(id=user_id)
-    genre = get_genre(genre_id)
-    disfavored_genre, _ = models.DisfavoredGenre.objects.get_or_create(user=user)
-    disfavored_genre.genre.remove(genre)

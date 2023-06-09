@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users import permissions, serializers, services
-from users.mixins import BasePreferencesMixin
+from users.mixins.view_mixins import BasePreferencesMixin
 
 
 class UserView(APIView):
@@ -25,7 +25,7 @@ class UserView(APIView):
         serializer = self.get_serializer_class()(data=request.data)
         serializer.is_valid(raise_exception=True)
         services.create_user(**serializer.data)
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
     def delete(self, request, *args, **kwargs):
         self.check_permissions(request)
@@ -84,22 +84,6 @@ class PreferredGenreView(BasePreferencesMixin):
     getter = services.get_preffered_genre
     setter = services.add_preffered_genre
     deleter = services.delete_preffered_genre
-
-    def get(self, request, *args, **kwargs):
-        return super().get(request, user_id=request.user.id)
-
-    def post(self, request, genre_id, *args, **kwargs):
-        return super().post(request, user_id=request.user.id, genre_id=genre_id)
-
-    def delete(self, request, genre_id, *args, **kwargs):
-        return super().delete(request, user_id=request.user.id, genre_id=genre_id)
-
-
-class DisfavoredGenreView(APIView):
-    serializer_class = serializers.DisfavoredGenreSerializer
-    getter = services.get_disfavored_genre
-    setter = services.add_disfavored_genre
-    deleter = services.delete_disfavored_genre
 
     def get(self, request, *args, **kwargs):
         return super().get(request, user_id=request.user.id)

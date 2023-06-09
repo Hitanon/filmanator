@@ -26,8 +26,5 @@ urlpatterns = [
     path('api/v1/users/title/disliked/<int:title_id>/', views.DislikedTitleView.as_view(), name='disliked_title'),
 
     path('api/v1/users/genre/preffered/', views.PreferredGenreView.as_view(), name='preffered_genres'),
-    path('api/v1/users/genre/preffered/<int:id>/', views.PreferredGenreView.as_view(), name='preffered_genre'),
-
-    path('api/v1/users/genre/disfavored/', views.DisfavoredGenreView.as_view(), name='disfavored_genres'),
-    path('api/v1/users/genre/disfavored/<int:id>/', views.DisfavoredGenreView.as_view(), name='disfavored_genre'),
+    path('api/v1/users/genre/preffered/<int:genre_id>/', views.PreferredGenreView.as_view(), name='preffered_genre'),
 ]

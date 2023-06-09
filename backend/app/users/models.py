@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from titles.models import Genre, Title
 
+from users import validators
 from users.managers import UserManager
 
 
@@ -14,13 +15,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
         unique=True,
         max_length=64,
+        validators=[validators.validate_username],
     )
 
     email = models.EmailField(
         unique=True,
     )
 
-    is_staff = models.BooleanField(
+    is_staff = models.CharField(
         default=False,
     )
 
@@ -145,32 +147,6 @@ class PreferredGenre(models.Model):
     #         UniqueConstraint(
     #             fields=('user', 'genre'),
     #             name='Preferred genre already exists',
-    #         ),
-    #     )
-
-    def __str__(self):
-        return f'{self.user}: {self.genre}'
-
-
-class DisfavoredGenre(models.Model):
-    """
-    Модель не предпочитаемых жанров
-    """
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
-
-    genre = models.ManyToManyField(
-        Genre,
-        related_name='disfavored_genre_genre',
-    )
-
-    # class Meta:
-    #     constraints = (
-    #         UniqueConstraint(
-    #             fields=('user', 'genre'),
-    #             name='Disfavored genre already exists',
     #         ),
     #     )
 

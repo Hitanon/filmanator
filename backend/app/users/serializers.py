@@ -1,11 +1,13 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from titles.serializers import GenreSerializer, TitleSerializer
 
-from users import exceptions, models
+from users import models
+from users.mixins.serializer_mixins import ExceptionParserMixin
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class CreateUserSerializer(ExceptionParserMixin, serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = (
@@ -15,10 +17,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         )
 
     def is_valid(self, raise_exception=False):
-        is_valid = super().is_valid()
-        if not is_valid and raise_exception:
-            raise exceptions.IncorrectUserData()
-        return is_valid
+        try:
+            super().is_valid(raise_exception=raise_exception)
+        except ValidationError as exc:
+            self._parse_exception(exc)
+            raise exc
 
 
 class HistorySerializer(serializers.ModelSerializer):
@@ -47,8 +50,4 @@ class DislikedTitleSerializer(TitleSerializer):
 
 
 class PrefferedGenreSerializer(GenreSerializer):
-    pass
-
-
-class DisfavoredGenreSerializer(GenreSerializer):
     pass

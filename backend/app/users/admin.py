@@ -42,11 +42,3 @@ class PreferredGenreAdmin(admin.ModelAdmin):
     Административная панель предпочитаемых жанров
     """
     pass
-
-
-@admin.register(models.DisfavoredGenre)
-class DisfavoredGenreAdmin(admin.ModelAdmin):
-    """
-    Административная панель не предпочитаемых жанров
-    """
-    pass
