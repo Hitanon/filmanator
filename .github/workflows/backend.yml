@@ -41,8 +41,7 @@
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: db_test
           ports:
-            - 5432/tcp
-          options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+            - 5432:5432
 
       steps:
         - name: Checkout
@@ -60,6 +59,11 @@
             pip install wheel
             pip install -r requirements.txt
             pip install -r tests.requirements.txt
+
+        - name: Make migrations
+          working-directory: 'backend/app'
+          run: |
+            python manage.py makemigrations
 
         - name: Testing
           working-directory: 'backend/app'
