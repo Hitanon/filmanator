@@ -1,0 +1,96 @@
+body {
+    padding-top: 72px;
+    font-family: 'Muller', sans-serif;
+    margin: 0;
+    display: flex;
+    background-color: var(--bg-color);
+}
+
+:root {
+    --light-orange-color: #FF8E0A;
+    --dark-bg-color: #2C1146;
+    --main-color: #F66004;
+    --bg-color: #4B0A62;
+}
+
+@font-face {
+    font-family: 'Muller';
+    src: url('../public/fonts/MullerRegular.woff2') format('woof2'),
+        url('../public/fonts/MullerRegular.woff') format('woof');
+    font-weight: normal;
+    font-style: normal;
+    color: white;
+}
+
+@font-face {
+    font-family: 'Muller';
+    src: url('../public/fonts/MullerMedium.woff2') format('woof2'),
+        url('../public/fonts/MullerMedium.woff') format('woof');
+    font-weight: 500;
+    font-style: normal;
+    color: white;
+}
+
+@font-face {
+    font-family: 'Muller';
+    src: url('../public/fonts/MullerBold.woff2') format('woof2'),
+        url('../public/fonts/MullerBold.woff') format('woof');
+    font-weight: bold;
+    font-style: normal;
+    color: white;
+}
+
+h1 {
+    font-weight: bold;
+    color: white;
+}
+
+h2 {
+    font-weight: 500;
+    color: white;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.filmanator-main-image {
+    display: block;
+    max-width: 70%;
+    height: auto;
+    margin: 0% 15%;
+}
+
+.filmanator-questionnaire-image {
+    display: block;
+    max-width: 60%;
+    height: auto;
+    margin-top: 1%;
+    margin-right: 15%;
+    margin-bottom: 0%;
+    margin-left: 15%;
+}
+
+.homepage {
+    background-image: url('../public/img/home_bg.png');
+    background-size: 110%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.questionnairepage {
+    background-image: url('../public/img/questionnaire_bg.png');
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.image-container {
+    position: relative;
+}
+
+.image-container .text-button {
+    position: absolute;
+    top: 24%;
+    left: 20%;
+}
