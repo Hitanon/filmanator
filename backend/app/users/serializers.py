@@ -1,10 +1,30 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from titles.serializers import GenreSerializer, TitleSerializer
 
-from users import models
+from users import exceptions, models
 from users.mixins.serializer_mixins import ExceptionParserMixin
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['email'] = user.email
+        return token
+
+    def is_valid(self, *, raise_exception=False):
+        user_data = dict(self.initial_data)
+        if raise_exception:
+            if user_data.get('email', None) is None:
+                raise exceptions.IncorrectEmailField()
+            if user_data.get('password', None) is None:
+                raise exceptions.IncorrectPasswordField()
+        return super().is_valid(raise_exception=raise_exception)
 
 
 class CreateUserSerializer(ExceptionParserMixin, serializers.ModelSerializer):

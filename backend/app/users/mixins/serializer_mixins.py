@@ -10,7 +10,7 @@ class ExceptionParserMixin:
 
     def _get_detail(self, code, key):
         return {
-            'detail': f'пользователь с таким {key} уже существует',
+            'detail': f'Пользователь с таким {key} уже существует',
             'code': code,
         } if code == 'unique' else {
             'detail': f'Неверный {key}',

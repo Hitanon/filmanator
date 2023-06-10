@@ -14,6 +14,7 @@ class IncorrectEmailField(BaseExceptionMixin):
         'code': 'incorrect email field',
         'detail': 'Неверный email',
     }
+    alternative_detail = 'Пользователь с таким email уже существует'
 
 
 class IncorrectUsernameField(BaseExceptionMixin):
@@ -22,6 +23,7 @@ class IncorrectUsernameField(BaseExceptionMixin):
         'code': 'incorrect username field',
         'detail': 'Неверный username',
     }
+    alternative_detail = 'Пользователь с таким username уже существует'
 
 
 class IncorrectPasswordField(BaseExceptionMixin):
@@ -39,9 +41,6 @@ class IncorrectUserData(BaseExceptionMixin):
         'detail': 'Неправильные данные',
     }
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
 
 class AlreadyAuthorized(APIException):
     status_code = 401
@@ -50,9 +49,8 @@ class AlreadyAuthorized(APIException):
     }
 
 
-class UserNotFound(APIException):
-    status_code = 404
+class IsAnonymous(APIException):
+    status_code = 401
     default_detail = {
-        'status': 'fail',
-        'detail': 'Пользователь не найден',
+        'detail': 'Вы не авторизованы. В доступе отказано',
     }
