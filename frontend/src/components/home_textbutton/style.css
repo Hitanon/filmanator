@@ -1,0 +1,45 @@
+@keyframes slide {
+    0% {
+        background-position: 150% 0;
+    }
+
+    100% {
+        background-position: -50% 0;
+    }
+}
+
+.text-button-heading {
+    width: 35%;
+    font-size: 1.75vw;
+    line-height: 1.9vw;
+}
+
+.start-button {
+    border: none;
+    font-weight: 500;
+    font-size: 1.5vw;
+    color: white;
+    background: var(--main-color);
+    width: 20%;
+    height: 2.6em;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.start-button:hover {
+    /* Set up a linear gradient with an orange stripe */
+    background: linear-gradient(65deg,
+            /* Adjust the angle of the gradient here */
+            var(--main-color),
+            var(--main-color) calc(50% - 1.5vw),
+            /* Increase the width of the stripe here */
+            var(--light-orange-color) calc(50% - 1.5vw),
+            var(--light-orange-color) calc(50% + 1.5vw),
+            var(--main-color) calc(50% + 1.5vw),
+            var(--main-color));
+
+    /* Apply the slide animation */
+    animation: slide 0.5s linear forwards;
+
+    /* Set the background size so that the gradient repeats */
+    background-size: 200%;
+}
