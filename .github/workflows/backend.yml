@@ -35,7 +35,7 @@
 
       services:
         postgres:
-          image: postgres:10.10
+          image: postgres:latest
           env:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
