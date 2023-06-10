@@ -1,5 +1,7 @@
 import time
 
+from django.utils import timezone
+
 from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -35,6 +37,17 @@ def check_params(data: dict) -> bool:
     return False
 
 
+def check_constraints(data: dict) -> bool:
+    """
+    Проверка ограничений полей для БД
+    :param data: словарь с одним фильмом
+    :return: bool
+    """
+    if 1896 <= data['year'] <= timezone.now().year and 0 <= data['rating']['imdb'] <= 10 and data['votes']['imdb'] >= 0:
+        return True
+    return False
+
+
 def check_duration(data: dict) -> bool:
     """
     Проверка того что фильм имеет продолжительность
@@ -65,6 +78,8 @@ def add_title(data: dict) -> None:
     """
     if data['isSeries']:
         seasons_count = data['seasonsInfo'][-1]['number']
+        if seasons_count == 0:
+            seasons_count = data['seasonsInfo'][-2]['number']
 
         title, _ = Title.objects.get_or_create(
             id=data['id'],
@@ -241,7 +256,8 @@ def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: i
         film_id = film['id']
         try:
             Title.objects.get(id=film_id)
-            fill_database(film, update_mode, cnt_changes)
+            if check_constraints(film):
+                fill_database(film, update_mode, cnt_changes)
         except ObjectDoesNotExist:
             pass
     else:
@@ -250,7 +266,10 @@ def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: i
             print(f'[INFO] Фильм {title.title} - уже существует!')
         except ObjectDoesNotExist:
             print(f'[{cnt}] ', sep='', end='')
-            fill_database(film, update_mode, cnt_changes)
+            if check_constraints(film):
+                fill_database(film, update_mode, cnt_changes)
+            else:
+                print(f"Фильм {film['name']} - не соответствуют ограничениям!")
 
 
 def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
