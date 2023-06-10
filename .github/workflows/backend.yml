@@ -8,14 +8,14 @@
 
   env:
     SECRET_KEY: ${{ secrets.SECRET_KEY }}
-    DEBUG: ${{ secrets.DEGUB }}
+    DEBUG: False
     ALLOWED_HOST: ${{ secrets.ALLOWED_HOST }}
 
-    DB_NAME: ${{ secrets.DB_NAME }}
-    DB_USER: ${{ secrets.DB_USER }}
-    DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-    DB_HOST: ${{ secrets.DB_HOST }}
-    DB_PORT: ${{ secrets.DB_PORT }}
+    DB_NAME: db_test
+    DB_USER: postgres
+    DB_PASSWORD: postgres
+    DB_HOST: localhost
+    DB_PORT: 5432
 
     TOKEN: ${{ secrets.TOKEN }}
     START_PAGE: ${{ secrets.START_PAGE }}
@@ -37,9 +37,9 @@
         postgres:
           image: postgres:latest
           env:
-            POSTGRES_USER: ${{ env.DB_USER }}
-            POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
-            POSTGRES_DB: ${{ env.DB_NAME }}
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: db_test
           ports:
             - 5432:5432
           options: -health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
