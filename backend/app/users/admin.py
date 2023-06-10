@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users import models, forms
+from users import forms, models
 
 
 @admin.register(models.User)
