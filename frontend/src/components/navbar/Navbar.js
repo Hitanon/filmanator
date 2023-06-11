@@ -1,12 +1,14 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import styles from './style.css'
+import {HOME_ROUTE} from "../../utils/Consts";
 
 const Navbar = () => {
     return (
         <nav className={styles.nav}>
-            <a href="/" className="logo-link">
+            <Link to={HOME_ROUTE} className="logo-link">
                 <img src="/img/filmanator_logo.svg" alt="Filmanator" />
-            </a>
+            </Link>
             <button>
                 ВОЙТИ
             </button>

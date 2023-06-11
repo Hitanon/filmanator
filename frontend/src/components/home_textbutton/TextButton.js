@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import './style.css';
+import {QUESTIONNAIRE_ROUTE} from "../../utils/Consts";
 
 const TextButton = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/questionnaire')
+        navigate(QUESTIONNAIRE_ROUTE)
     }
     return (
         <div className="text-button">

@@ -20,6 +20,5 @@ footer a {
 }
 
 footer a:hover {
-    /* opacity: 0.9; */
     color: var(--main-color);
 }

@@ -2,20 +2,17 @@ import React, { useEffect } from "react";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
 import Question from "../components/question/Question";
+import {addBodyClass, removeBodyClass} from "../utils/BodyClassLoader";
+
 
 const Questionnaire = () => {
 
     useEffect(() => {
-        document.body.classList.add('questionnairepage');
+        addBodyClass('questionnairepage')
         return () => {
-            document.body.classList.remove('questionnairepage');
+            removeBodyClass('questionnairepage')
         }
     }, []);
-
-    const handleBackClick = () => {
-        // Handle back button click here
-        console.log('Back button clicked');
-    };
 
     return (
         <>
@@ -25,12 +22,7 @@ const Questionnaire = () => {
                     src="/img/filmanator_questionnaire.png"
                     alt="Filmanator for questionnaire"
                 />
-                <Question
-                    questionNumber={1}
-                    questionText="Фильмы какого жанра тебе нравятся больше?"
-                    buttonTexts={['Комедии', 'Документальные', 'Ужасы', 'Исторические', 'Другое']}
-                    onBackClick={handleBackClick}
-                />
+                <Question/>
             </div>
             <Footer />
         </>
