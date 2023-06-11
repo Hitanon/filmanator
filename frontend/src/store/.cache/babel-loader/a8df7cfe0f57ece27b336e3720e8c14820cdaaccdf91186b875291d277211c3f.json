@@ -1,1 +1,0 @@
-{"ast":null,"code":"export { default } from './Skeleton';","map":{"version":3,"names":["default"],"sources":["F:/Study/test_project/LinkShortener/frontend/node_modules/@mui/lab/Skeleton/index.js"],"sourcesContent":["export { default } from './Skeleton';"],"mappings":"AAAA,SAASA,OAAO,QAAQ,YAAY"},"metadata":{},"sourceType":"module","externalDependencies":[]}
