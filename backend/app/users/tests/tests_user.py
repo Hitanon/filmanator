@@ -15,18 +15,18 @@ from users import exceptions
 
 class UserViewTests(APITestCase):
     def setUp(self):
-        # Urls
+        # Data
+        self.user_model = get_user_model()
+
+        # URLs
         self.users_url = reverse('users')
         self.token_obtain_pair_url = reverse('token_obtain_pair')
         self.token_verify_url = reverse('token_verify')
 
-        # Data
-        self.user_model = get_user_model()
-
-        # API client
+        # API Client
         self.client = APIClient()
 
-    def _get_exception_detail(self, exc):
+    def _get_exception_details(self, exc):
         return exc.default_detail
 
     def _create_user(self, **kwargs):
@@ -70,7 +70,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.users_url, data=user_data)
 
-        details = self._get_exception_detail(exceptions.IncorrectEmailField())
+        details = self._get_exception_details(exceptions.IncorrectEmailField())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.user_model.objects.count(), 0)
         self.assertEqual(json.loads(response.content), details)
@@ -104,7 +104,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.users_url, data=user_data)
 
-        details = self._get_exception_detail(exceptions.IncorrectUsernameField())
+        details = self._get_exception_details(exceptions.IncorrectUsernameField())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.user_model.objects.count(), 0)
         self.assertEqual(json.loads(response.content), details)
@@ -121,7 +121,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.users_url, data=user_data)
 
-        details = self._get_exception_detail(exceptions.IncorrectPasswordField())
+        details = self._get_exception_details(exceptions.IncorrectPasswordField())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.user_model.objects.count(), 0)
         self.assertEqual(json.loads(response.content), details)
@@ -140,8 +140,8 @@ class UserViewTests(APITestCase):
         response = self.client.post(path=self.users_url, data=user_data)
 
         details = {
-            'username': self._get_exception_detail(exceptions.IncorrectUsernameField(code='unique')),
-            'email': self._get_exception_detail(exceptions.IncorrectEmailField(code='unique')),
+            'username': self._get_exception_details(exceptions.IncorrectUsernameField(code='unique')),
+            'email': self._get_exception_details(exceptions.IncorrectEmailField(code='unique')),
         }
         response_content = json.loads(response.content)
         self.assertEqual(response.status_code, 400)
@@ -162,7 +162,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.users_url, data=user_data)
 
-        details = self._get_exception_detail(exceptions.IncorrectEmailField(code='unique'))
+        details = self._get_exception_details(exceptions.IncorrectEmailField(code='unique'))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.user_model.objects.count(), 1)
         self.assertEqual(json.loads(response.content), details)
@@ -181,7 +181,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.users_url, data=user_data)
 
-        details = self._get_exception_detail(exceptions.IncorrectUsernameField(code='unique'))
+        details = self._get_exception_details(exceptions.IncorrectUsernameField(code='unique'))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.user_model.objects.count(), 1)
         self.assertEqual(json.loads(response.content), details)
@@ -205,7 +205,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.users_url, data=user_data_2)
 
-        details = self._get_exception_detail(exceptions.AlreadyAuthorized())
+        details = self._get_exception_details(exceptions.AlreadyAuthorized())
         self.assertEqual(response.status_code, 401)
         self.assertEqual(self.user_model.objects.count(), 1)
         self.assertEqual(json.loads(response.content), details)
@@ -243,7 +243,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.token_obtain_pair_url, data=user_data)
 
-        detailts = self._get_exception_detail(exceptions.IncorrectEmailField())
+        detailts = self._get_exception_details(exceptions.IncorrectEmailField())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content), detailts)
 
@@ -261,7 +261,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.post(path=self.token_obtain_pair_url, data=user_data)
 
-        detailts = self._get_exception_detail(exceptions.IncorrectPasswordField())
+        detailts = self._get_exception_details(exceptions.IncorrectPasswordField())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content), detailts)
 
@@ -313,7 +313,7 @@ class UserViewTests(APITestCase):
 
         response = self.client.delete(path=self.users_url)
 
-        details = self._get_exception_detail(exceptions.IsAnonymous())
+        details = self._get_exception_details(exceptions.IsAnonymous())
         self.assertEqual(response.status_code, 401)
         self.assertEqual(json.loads(response.content), details)
         self.assertEqual(self.user_model.objects.count(), 1)
