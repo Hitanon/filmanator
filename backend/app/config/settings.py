@@ -133,14 +133,6 @@ AUTH_USER_MODEL = 'users.User'
 SESSION_LIFETIME = timedelta(hours=1)
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        # 'rest_framework.renderers.BrowsableAPIRenderer',
-    ]
-}
-
-
 # Parser
 TOKEN = env('TOKEN')
 START_PAGE = env('START_PAGE')
@@ -154,6 +146,10 @@ FULL_PATH_TO_FILES = env('FULL_PATH_TO_FILES')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+            # 'rest_framework.renderers.BrowsableAPIRenderer',
     ),
 }
 
