@@ -21,23 +21,25 @@ class QuestionnaireView(APIView):
         serializer = serializers.SessionStateSerializer(session_state)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    def _get_titles(self, session_id):
+        titles = services.get_titles(session_id)
+        services.stop_session(session_id)
+        serializer = TitleSerializer(titles, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def _get_next_question(session_id):
+        question = services.get_next_question(session_id)
+        serializer = serializers.QuestionSerializer(question)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
     def get(self, request, *args, **kwargs):
         session_id = request.data.get('session', None)
+        print(session_id)
         return self._get_session_state(session_id) if session_id else self._start_session()
 
     def post(self, request, *args, **kwargs):
-        # print('\n\n1\n\n')
         session_id = services.write_result(**request.data)
-        if services.is_end(session_id=session_id):
-            titles = services.get_titles(session_id)
-            services.stop_session(session_id)
-            serializer = TitleSerializer(titles, many=True)
-            response_status_code = status.HTTP_200_OK
-        else:
-            question = services.get_next_question(session_id)
-            serializer = serializers.QuestionSerializer(question)
-            response_status_code = status.HTTP_201_CREATED
-        return Response(data=serializer.data, status=response_status_code)
+        return self._get_titles(session_id) if services.is_end(session_id) else self._get_next_question(session_id)
 
     def delete(self, request, session_id, *args, **kwargs):
         services.stop_session(session_id)
