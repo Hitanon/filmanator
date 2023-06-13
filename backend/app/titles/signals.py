@@ -1,8 +1,7 @@
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
-from titles.models import Acting, AmountOfDialogue, Audience, Graphics, Intellectuality, Mood, NarrativeMethod, \
-    ViewingMethod, ViewingTime, VisualAtmosphere
+from titles.models import Criterion, TypeCriterion
 
 mood = {
     'happy': 1,
@@ -120,21 +119,22 @@ graphics = {
 }
 
 
-def add_data(data, model):
+def add_data(data, title):
+    type_criterion, _ = TypeCriterion.objects.get_or_create(title=title)
     for key, value in data.items():
-        if not model.objects.filter(title=key).exists():
-            model.objects.create(title=key)
+        if not Criterion.objects.filter(title=key, type=type_criterion).exists():
+            Criterion.objects.create(title=key, type=type_criterion)
 
 
 @receiver(post_migrate)
 def add_initial_data(**kwargs):
-    add_data(mood, Mood)
-    add_data(viewing_method, ViewingMethod)
-    add_data(viewing_time, ViewingTime)
-    add_data(visual_atmosphere, VisualAtmosphere)
-    add_data(audience, Audience)
-    add_data(intellectuality, Intellectuality)
-    add_data(narrative_method, NarrativeMethod)
-    add_data(acting, Acting)
-    add_data(amount_of_dialogue, AmountOfDialogue)
-    add_data(graphics, Graphics)
+    add_data(mood, 'mood')
+    add_data(viewing_method, 'viewing_method')
+    add_data(viewing_time, 'viewing_time')
+    add_data(visual_atmosphere, 'visual_atmosphere')
+    add_data(audience, 'audience')
+    add_data(intellectuality, 'intellectuality')
+    add_data(narrative_method, 'narrative_method')
+    add_data(acting, 'acting')
+    add_data(amount_of_dialogue, 'amount_of_dialogue')
+    add_data(graphics, 'graphics')

@@ -4,50 +4,31 @@ from django.db.models.constraints import CheckConstraint, UniqueConstraint
 from django.utils import timezone
 
 
-class Actor(models.Model):
+class TypeCriterion(models.Model):
     """
-    Модель актера
-    """
-    name = models.CharField(
-        max_length=64,
-    )
-
-    def __str__(self):
-        return self.name
-
-
-class Director(models.Model):
-    """
-    Модель режиссера
-    """
-    name = models.CharField(
-        max_length=64,
-    )
-
-    def __str__(self):
-        return self.name
-
-
-class Genre(models.Model):
-    """
-    Модель жанра
+    Модель типа критерия
     """
     title = models.CharField(
-        unique=True,
-        max_length=32,
+        max_length=64,
+        unique=True
     )
 
     def __str__(self):
         return self.title
 
 
-class Country(models.Model):
+class Criterion(models.Model):
     """
-    Модель страны
+    Модель критерия
     """
     title = models.CharField(
-        unique=True,
         max_length=64,
+    )
+
+    type = models.ForeignKey(
+        TypeCriterion,
+        on_delete=models.PROTECT,
+        related_name='title_type_criterion'
     )
 
     def __str__(self):
@@ -72,81 +53,6 @@ class ContentRating(models.Model):
 
     def __str__(self):
         return self.value
-
-
-class AdditionalCriteria(models.Model):
-    """
-    Общая модель для всех дополнительных критериев
-    """
-    title = models.CharField(
-        max_length=64,
-    )
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        abstract = True
-
-
-class Mood(AdditionalCriteria):
-    """
-    Модель настроения
-    """
-
-
-class ViewingMethod(AdditionalCriteria):
-    """
-    Модель способа просмотра
-    """
-
-
-class ViewingTime(AdditionalCriteria):
-    """
-    Модель времени суток для просмотра
-    """
-
-
-class VisualAtmosphere(AdditionalCriteria):
-    """
-    Модель визуальной атмосферы
-    """
-
-
-class Audience(AdditionalCriteria):
-    """
-    Модель аудитории фильма
-    """
-
-
-class Intellectuality(AdditionalCriteria):
-    """
-    Модель интеллектуальности фильма
-    """
-
-
-class NarrativeMethod(AdditionalCriteria):
-    """
-    Модель метода повествования
-    """
-
-
-class Acting(AdditionalCriteria):
-    """
-    Модель игры актеров
-    """
-
-
-class AmountOfDialogue(AdditionalCriteria):
-    """
-    Модель кол-ва диалогов
-    """
-
-
-class Graphics(AdditionalCriteria):
-    """
-    Модель графики
-    """
 
 
 class Title(models.Model):
@@ -181,30 +87,6 @@ class Title(models.Model):
         null=True,
     )
 
-    director = models.ManyToManyField(
-        Director,
-        through='TitleDirector',
-        related_name='title_director',
-    )
-
-    country = models.ManyToManyField(
-        Country,
-        through='TitleCountry',
-        related_name='title_country',
-    )
-
-    actor = models.ManyToManyField(
-        Actor,
-        through='TitleActor',
-        related_name='title_actor',
-    )
-
-    genre = models.ManyToManyField(
-        Genre,
-        through='TitleGenre',
-        related_name='title_genre',
-    )
-
     content_rating = models.ForeignKey(
         ContentRating,
         on_delete=models.PROTECT,
@@ -212,65 +94,12 @@ class Title(models.Model):
         null=True,
     )
 
-    mood = models.ManyToManyField(
-        Mood,
-        through='TitleMood',
-        related_name='titles',
+    criterion = models.ManyToManyField(
+        Criterion,
+        through='TitleCriterion',
+        related_name='title_criterion',
     )
 
-    viewing_method = models.ManyToManyField(
-        ViewingMethod,
-        through='TitleViewingMethod',
-        related_name='titles',
-    )
-
-    viewing_time = models.ManyToManyField(
-        ViewingTime,
-        through='TitleViewingTime',
-        related_name='titles',
-    )
-
-    visual_atmosphere = models.ManyToManyField(
-        VisualAtmosphere,
-        through='TitleVisualAtmosphere',
-        related_name='titles',
-    )
-
-    audience = models.ManyToManyField(
-        Audience,
-        through='TitleAudience',
-        related_name='titles',
-    )
-
-    intellectuality = models.ManyToManyField(
-        Intellectuality,
-        through='TitleIntellectuality',
-        related_name='titles',
-    )
-
-    narrative_method = models.ManyToManyField(
-        NarrativeMethod,
-        through='TitleNarrativeMethod',
-        related_name='titles',
-    )
-
-    acting = models.ManyToManyField(
-        Acting,
-        through='TitleActing',
-        related_name='titles',
-    )
-
-    amount_of_dialogue = models.ManyToManyField(
-        AmountOfDialogue,
-        through='TitleAmountOfDialogue',
-        related_name='titles',
-    )
-
-    graphics = models.ManyToManyField(
-        Graphics,
-        through='TitleGraphics',
-        related_name='titles',
-    )
 
     class Meta:
         constraints = (
@@ -333,268 +162,24 @@ class SimilarTitle(models.Model):
         return f'{self.title}: {self.similar_title}'
 
 
-class TitleModelMixin(models.Model):
+class TitleCriterion(models.Model):
     """
-    Модель миксин с внешним ключом произведением title
+    Промежуточная модель для моделей Title и Criterion
     """
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
     )
 
-    class Meta:
-        abstract = True
-
-
-class TitleDirector(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Director
-    """
-    director = models.ForeignKey(
-        Director,
+    criterion = models.ForeignKey(
+        Criterion,
         on_delete=models.CASCADE,
     )
 
     class Meta:
         constraints = (
             UniqueConstraint(
-                fields=('title', 'director'),
-                name='Director already exists for title',
+                fields=('title', 'criterion'),
+                name='Criterion already exists for title',
             ),
         )
-
-
-class TitleCountry(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Country
-    """
-    country = models.ForeignKey(
-        Country,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'country'),
-                name='Country already exists for title',
-            ),
-        )
-
-
-class TitleActor(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Actor
-    """
-    actor = models.ForeignKey(
-        Actor,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'actor'),
-                name='Actor already exists for title',
-            ),
-        )
-
-
-class TitleGenre(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Genre
-    """
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'genre'),
-                name='Genre already exists for title',
-            ),
-        )
-
-
-class TitleMood(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Mood
-    """
-    mood = models.ForeignKey(
-        Mood,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'mood'),
-                name='Mood already exists for title',
-            ),
-        )
-
-
-class TitleViewingMethod(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и ViewingMethod
-    """
-    viewing_method = models.ForeignKey(
-        ViewingMethod,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'viewing_method'),
-                name='Viewing method already exists for title',
-            ),
-        )
-
-
-class TitleViewingTime(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и ViewingTime
-    """
-    viewing_time = models.ForeignKey(
-        ViewingTime,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'viewing_time'),
-                name='Viewing time already exists for title',
-            ),
-        )
-
-
-class TitleVisualAtmosphere(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и VisualAtmosphere
-    """
-    visual_atmosphere = models.ForeignKey(
-        VisualAtmosphere,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'visual_atmosphere'),
-                name='Visual atmosphere already exists for title',
-            ),
-        )
-
-
-class TitleAudience(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Audience
-    """
-    audience = models.ForeignKey(
-        Audience,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'audience'),
-                name='Audience already exists for title',
-            ),
-        )
-
-
-class TitleIntellectuality(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Intellectuality
-    """
-    intellectuality = models.ForeignKey(
-        Intellectuality,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'intellectuality'),
-                name='Intellectuality already exists for title',
-            ),
-        )
-
-
-class TitleNarrativeMethod(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и NarrativeMethod
-    """
-    narrative_method = models.ForeignKey(
-        NarrativeMethod,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'narrative_method'),
-                name='Narrative method already exists for title',
-            ),
-        )
-
-
-class TitleActing(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Acting
-    """
-    acting = models.ForeignKey(
-        Acting,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'acting'),
-                name='Acting already exists for title',
-            ),
-        )
-
-
-class TitleAmountOfDialogue(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и AmountOfDialogue
-    """
-    amount_of_dialogue = models.ForeignKey(
-        AmountOfDialogue,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'amount_of_dialogue'),
-                name='AmountOfDialogue already exists for title',
-            ),
-        )
-
-
-class TitleGraphics(TitleModelMixin):
-    """
-    Промежуточная модель для моделей Title и Graphics
-    """
-    graphics = models.ForeignKey(
-        Graphics,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'graphics'),
-                name='Graphics already exists for title',
-            ),
-        )
-
-
