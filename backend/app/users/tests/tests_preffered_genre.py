@@ -1,5 +1,5 @@
 import json
-from random import sample, choice
+from random import choice, sample
 
 from django.urls import reverse
 
