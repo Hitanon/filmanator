@@ -115,7 +115,7 @@ class SessionState(models.Model):
 class Result(models.Model):
     session = models.ForeignKey(
         Session,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
 
     category = models.ForeignKey(

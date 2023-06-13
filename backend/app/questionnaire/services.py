@@ -6,6 +6,8 @@ from questionnaire import exceptions, models
 
 from users.services import get_user
 
+from titles.services import get_titles_by_attrs
+
 
 def create_session(user_id):
     user = get_user(user_id)
@@ -98,11 +100,13 @@ def update_result(session_id, question_id, answer_id):
 
 
 def write_result(**kwargs):
+    check_session_id(**kwargs)
     session_id = int(kwargs['session'][0])
     question_id = int(kwargs['question'][0])
     answer_id = int(kwargs['answer'][0])
     check_answer(question_id, answer_id)
     update_result(session_id, question_id, answer_id)
+    return session_id
 
 
 def is_end(session_id):
@@ -118,3 +122,13 @@ def get_next_question(session_id):
     print(question)
     update_session_state(session_id, question.id)
     return question
+
+
+def stop_session(session_id):
+    session = get_session(session_id)
+    session.delete()
+
+
+def get_titles(session_id):
+    session = get_session(session_id)
+    return get_titles_by_attrs()

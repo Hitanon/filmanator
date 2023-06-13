@@ -22,7 +22,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
 
-    is_staff = models.CharField(
+    is_staff = models.BooleanField(
         default=False,
     )
 
