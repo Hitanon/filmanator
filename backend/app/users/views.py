@@ -43,7 +43,7 @@ class HistoryView(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, history_id, *args, **kwargs):
-        services.delete_user_history(history_id)
+        services.delete_user_history(request.user.id, history_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -56,7 +56,8 @@ class LikedTitleView(BasePreferencesMixin):
     def get(self, request, *args, **kwargs):
         return super().get(request, user_id=request.user.id)
 
-    def post(self, request, title_id, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        title_id = services.check_title_id(**request.data)
         return super().post(request, user_id=request.user.id, title_id=title_id)
 
     def delete(self, request, title_id, *args, **kwargs):
@@ -72,7 +73,8 @@ class DislikedTitleView(BasePreferencesMixin):
     def get(self, request, *args, **kwargs):
         return super().get(request, user_id=request.user.id)
 
-    def post(self, request, title_id, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        title_id = services.check_title_id(**request.data)
         return super().post(request, user_id=request.user.id, title_id=title_id)
 
     def delete(self, request, title_id, *args, **kwargs):
@@ -88,7 +90,8 @@ class PreferredGenreView(BasePreferencesMixin):
     def get(self, request, *args, **kwargs):
         return super().get(request, user_id=request.user.id)
 
-    def post(self, request, genre_id, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        genre_id = services.check_genre_id(**request.data)
         return super().post(request, user_id=request.user.id, genre_id=genre_id)
 
     def delete(self, request, genre_id, *args, **kwargs):
