@@ -1,12 +1,15 @@
 import time
 
-import requests
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import IntegrityError
 from django.utils import timezone
 
 from config import settings
-from titles.models import ContentRating, Criterion, SimilarTitle, Title, TypeCriterion
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
+
+import requests
+
+from titles.models import Actor, ContentRating, Country, Director, Genre, SimilarTitle, Title
 
 
 def read_data_from_kinopoisk(url: str, headers: dict) -> dict:
@@ -104,63 +107,83 @@ def add_title(data: dict) -> None:
         )
 
 
-def add_persons(data: dict, title: Title) -> None:
+def add_title_genres(data: dict) -> None:
     """
-    Добавление актеров и режиссеров и их связей с фильмом в БД
-    :param data: словарь с одним экземпляром
-    :param title: экземпляр фильма
-    :return:
-    """
-    cnt = 0
-    for person in data:
-        if person['profession'] in ['актеры', 'режиссеры'] and person['name']:
-            if person['profession'] == 'актеры':
-                if cnt == 3:
-                    continue
-                criterion_type, _ = TypeCriterion.objects.get_or_create(title='actors')
-                cnt += 1
-            else:
-                criterion_type, _ = TypeCriterion.objects.get_or_create(title='directors')
-            try:
-                criterion = Criterion.objects.get(title=person['id'])
-            except ObjectDoesNotExist:
-                criterion, _ = Criterion.objects.get_or_create(title=person['name'], type=criterion_type)
-
-            title.criterion.add(criterion)
-
-
-def add_title_content_rating(data: dict, title: Title) -> None:
-    """
-    Добавление возрастного ограничения и его связи с фильмом в БД
-    :param data: словарь с одним экземпляром
-    :param title: экземпляр фильма
-    :return:
-    """
-    if data:
-        age_rating, _ = ContentRating.objects.get_or_create(
-            value=data,
-        )
-        title.content_rating = age_rating
-        title.save()
-
-
-def add_criteria(data: dict) -> None:
-    """
-    Добавление критериев и их связей с фильмом в БД
+    Добавление жанров и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
     :return:
     """
     title = Title.objects.get(id=data['id'])
-    for type_criterion in data.keys():
-        if type_criterion in ['genres', 'countries']:
-            criterion_type, _ = TypeCriterion.objects.get_or_create(title=type_criterion)
-            for criterion in data[type_criterion]:
-                criterion, _ = Criterion.objects.get_or_create(title=criterion['name'], type=criterion_type)
-                title.criterion.add(criterion)
-        elif type_criterion == 'persons':
-            add_persons(data[type_criterion], title)
-        elif type_criterion == 'ageRating':
-            add_title_content_rating(data[type_criterion], title)
+    for genre in data['genres']:
+        genre, _ = Genre.objects.get_or_create(title=genre['name'])
+
+        title.genre.add(genre)
+
+
+def add_title_directors(data: dict) -> None:
+    """
+    Добавление режиссеров и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
+    title = Title.objects.get(id=data['id'])
+    for director in data['persons']:
+        if director['profession'] == 'режиссеры' and director['name']:
+            try:
+                director = Director.objects.get(id=director['id'])
+            except ObjectDoesNotExist:
+                director, _ = Director.objects.get_or_create(id=director['id'], name=director['name'])
+
+            title.director.add(director)
+
+
+def add_title_countries(data: dict) -> None:
+    """
+    Добавление стран и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
+    title = Title.objects.get(id=data['id'])
+    for country in data['countries']:
+        country, _ = Country.objects.get_or_create(title=country['name'])
+
+        title.country.add(country)
+
+
+def add_title_actors(data: dict) -> None:
+    """
+    Добавление актера и их связей с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
+    title = Title.objects.get(id=data['id'])
+    cnt = 0
+    for actor in data['persons']:
+        if actor['profession'] == 'актеры' and actor['name']:
+            if cnt == 3:
+                break
+            try:
+                actor = Actor.objects.get(id=actor['id'])
+            except ObjectDoesNotExist:
+                actor, _ = Actor.objects.get_or_create(id=actor['id'], name=actor['name'])
+
+            title.actor.add(actor)
+            cnt += 1
+
+
+def add_title_content_rating(data: dict) -> None:
+    """
+    Добавление возрастного ограничения и его связи с фильмом в БД
+    :param data: словарь с одним экземпляром
+    :return:
+    """
+    title = Title.objects.get(id=data['id'])
+    if data['ageRating']:
+        age_rating, _ = ContentRating.objects.get_or_create(
+            value=data['ageRating'],
+        )
+        title.content_rating = age_rating
+        title.save()
 
 
 def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> int:
@@ -218,7 +241,11 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
         cnt_changes = add_similar_titles(data, update_mode, cnt_changes)
     else:
         add_title(data)
-        add_criteria(data)
+        add_title_genres(data)
+        add_title_countries(data)
+        add_title_actors(data)
+        add_title_directors(data)
+        add_title_content_rating(data)
         add_similar_titles(data, update_mode, cnt_changes)
         print(f"Фильм {data['name']} - успешно добавлен!")
     return cnt_changes

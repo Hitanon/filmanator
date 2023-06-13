@@ -6,7 +6,8 @@ from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from titles.models import Criterion, Title
+from titles.models import Acting, AmountOfDialogue, Audience, Graphics, Intellectuality, Mood, NarrativeMethod, \
+    Title, ViewingMethod, ViewingTime, VisualAtmosphere
 
 
 def read_dicts_from_file(file_path: str) -> list:
@@ -24,18 +25,39 @@ def read_dicts_from_file(file_path: str) -> list:
     return films
 
 
+def add_additional_criteria(film_dict: dict, title: Title, criteria_name: str, criteria_class) -> None:
+    """
+    Добавления связи фильма с одним из его параметров
+    :param film_dict: словарь с параметрами по одному фильму
+    :param title: экземпляр фильма
+    :param criteria_name: названия параметра
+    :param criteria_class: класс параметра
+    :return:
+    """
+    if film_dict[criteria_name]:
+        for property_id in film_dict[criteria_name]:
+            if property_id and str(property_id).isdigit():
+                property_obj = criteria_class.objects.get(id=property_id)
+                property_obj.titles.add(title)
+
+
 def add_additional_criteries(film_dict: dict, title: Title):
     """
-    Добавления связей фильма со всеми его параметрами
+    Добавления связей фильма со всеми его параметров
     :param film_dict: словарь с параметрами по одному фильму
     :param title: экземпляр фильма
     :return:
     """
-    if film_dict['criteria']:
-        for criterion_id in film_dict['criteria']:
-            if criterion_id and str(criterion_id).isdigit():
-                criterion = Criterion.objects.get(id=criterion_id)
-                title.criterion.add(criterion)
+    add_additional_criteria(film_dict, title, 'mood', Mood)
+    add_additional_criteria(film_dict, title, 'viewing_method', ViewingMethod)
+    add_additional_criteria(film_dict, title, 'viewing_time', ViewingTime)
+    add_additional_criteria(film_dict, title, 'visual_atmosphere', VisualAtmosphere)
+    add_additional_criteria(film_dict, title, 'audience', Audience)
+    add_additional_criteria(film_dict, title, 'intellectuality', Intellectuality)
+    add_additional_criteria(film_dict, title, 'narrative_method', NarrativeMethod)
+    add_additional_criteria(film_dict, title, 'acting', Acting)
+    add_additional_criteria(film_dict, title, 'amount_of_dialogue', AmountOfDialogue)
+    add_additional_criteria(film_dict, title, 'graphics', Graphics)
 
 
 def main():
