@@ -54,3 +54,45 @@ class IsAnonymous(APIException):
     default_detail = {
         'detail': 'Вы не авторизованы. В доступе отказано',
     }
+
+
+class HistoryNotFound(APIException):
+    status_code = 404
+    default_detail = {
+        'detail': 'История не найдена',
+    }
+
+
+class GenreIdNotFound(APIException):
+    status_code = 400
+    default_detail = {
+        'detail': 'ID жанра не найдено',
+    }
+
+
+class GenreNotFound(APIException):
+    status_code = 400
+    default_detail = {
+        'detail': 'Жанр не найден',
+    }
+
+
+class TitleIdNotFound(APIException):
+    status_code = 400
+    default_detail = {
+        'detail': 'ID произведения не найдено',
+    }
+
+
+class TitleNotFound(APIException):
+    status_code = 400
+    default_detail = {
+        'detail': 'Произведение не найдено',
+    }
+
+
+class UserNotFound(APIException):
+    status_code = 401
+    default_detail = {
+        'detail': 'Пользователь не найден',
+    }

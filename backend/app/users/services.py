@@ -7,7 +7,7 @@ def get_title(title_id):
     try:
         title = Title.objects.get(id=title_id)
     except Title.DoesNotExist:
-        raise exceptions.UserNotFound()
+        raise exceptions.TitleNotFound()
     return title
 
 
@@ -15,7 +15,7 @@ def get_genre(genre_id):
     try:
         genre = models.Genre.objects.get(id=genre_id)
     except models.Genre.DoesNotExist:
-        raise exceptions.UserNotFound()
+        raise exceptions.GenreNotFound()
     return genre
 
 
@@ -36,12 +36,11 @@ def get_user_histories(user_id):
     return histories
 
 
-def delete_user_history(history_id):
+def delete_user_history(user_id, history_id):
     try:
-        history = models.History.objects.get(id=history_id)
+        get_user_histories(user_id).get(id=history_id).delete()
     except models.History.DoesNotExist:
-        raise exceptions.UserNotFound()
-    history.delete()
+        raise exceptions.HistoryNotFound()
 
 
 def get_user_liked_titles(user_id):
@@ -63,7 +62,7 @@ def delete_user_liked_title(user_id, title_id):
     try:
         liked_title = models.LikedTitle.objects.get(user=user)
     except models.LikedTitle.DoesNotExist:
-        raise exceptions.UserNotFound()
+        raise exceptions.TitleNotFound()
     liked_title.title.remove(title)
 
 
@@ -89,7 +88,7 @@ def delete_user_disliked_title(user_id, title_id):
 
 def get_preffered_genre(user_id):
     user = models.User.objects.get(id=user_id)
-    preffered_genre = models.PreferredGenre.objects.get_or_create(user=user)
+    preffered_genre, _ = models.PreferredGenre.objects.get_or_create(user=user)
     return preffered_genre.genre.all()
 
 
@@ -105,3 +104,17 @@ def delete_preffered_genre(user_id, genre_id):
     genre = get_genre(genre_id)
     preffred_genre, _ = models.PreferredGenre.objects.get_or_create(user=user)
     preffred_genre.genre.remove(genre)
+
+
+def check_genre_id(**kwargs):
+    genre_id = kwargs.get('genre', None)
+    if genre_id is None:
+        raise exceptions.GenreIdNotFound()
+    return int(genre_id[0])
+
+
+def check_title_id(**kwargs):
+    title_id = kwargs.get('title', None)
+    if title_id is None:
+        raise exceptions.TitleIdNotFound()
+    return int(title_id[0])
