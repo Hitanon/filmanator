@@ -4,6 +4,7 @@ from titles import models
 
 
 class TitleSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Title
         fields = (
