@@ -7,6 +7,7 @@ from questionnaire import exceptions, models
 from titles.services import get_titles_by_attrs
 
 from users.services import get_user
+from users.models import History
 
 
 def create_session(user_id):
@@ -129,5 +130,23 @@ def stop_session(session_id):
     session.delete()
 
 
+def get_criterions(session_id):
+    result_criterions = models.ResultCriterions()
+    session = get_session(session_id)
+    for result in models.Result.objects.filter(session=session):
+        result_criterions.add_result(result)
+    return result_criterions.data
+
+
 def get_titles(session_id):
-    return get_titles_by_attrs()
+    criterions = get_criterions(session_id)
+    return get_titles_by_attrs(criterions)
+
+
+def write_result_titles_to_history(user, session_id, result_titles):
+    if not user.is_authenticated:
+        return
+    session = get_session(session_id)
+    history = History.objects.create(user=user, date=session.ends_at)
+    for result_title in result_titles:
+        history.title.add(*[title['id'] for title in result_title['titles']])

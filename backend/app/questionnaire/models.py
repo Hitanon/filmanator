@@ -33,6 +33,20 @@ class Criterion(models.Model):
         max_length=64,
     )
 
+    has_limits = models.BooleanField(
+        default=False,
+    )
+
+    more = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+
+    less = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+
     body = models.CharField(
         max_length=64,
     )
@@ -132,3 +146,42 @@ class Result(models.Model):
 
     def __str__(self):
         return str(self.session)
+
+
+class ResultCriterions:
+    def __init__(self):
+        self._data = {}
+
+    # Data property is trash
+    @property
+    def data(self):
+        return self._data
+
+    @data.getter
+    def data(self):
+        temp = self._data
+        keys = ['votes_count']
+        for key in keys:
+            if key in temp.keys():
+                del temp[key]
+        return temp
+
+    def get_limited_criterion(self, criterion):
+        return criterion.more, criterion.less
+
+    def get_unlimited_criterion(self, criterion):
+        return [criterion.id]
+
+    def get_single_criterion(self, criterion):
+        if criterion.has_limits:
+            return self.get_limited_criterion(criterion)
+        return self.get_unlimited_criterion(criterion)
+
+    def add_result(self, result: Result):
+        key = result.category.title
+        criterions = result.criterion.all()
+        if criterions.count() == 1:
+            value = self.get_single_criterion(criterions[0])
+        else:
+            value = [criterion.id for criterion in criterions]
+        self.data[key] = value
