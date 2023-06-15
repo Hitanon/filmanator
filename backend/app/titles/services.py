@@ -63,45 +63,51 @@ def apply_basic_filters(queryset, criteria, sum_points):
             sum_points += priority['actor']
         queryset = result_queryset
     if 'content_rating' in criteria:
-        queryset = queryset.filter(content_rating=criteria['content_rating'])
+        result_queryset = queryset
+        for value in criteria['content_rating']:
+            queryset = queryset.filter(content_rating=value)
+            result_queryset.union(queryset)
+            sum_points += priority['content_rating']
+        queryset = result_queryset
+        queryset = queryset.filter()
         sum_points += priority['content_rating']
     if 'is_movie' in criteria:
         queryset = queryset.filter(is_movie=criteria['is_movie'])
         sum_points += priority['is_movie']
     if 'year' in criteria:
-        if 'more' in criteria['year']:
-            queryset = queryset.filter(year__gt=criteria['year']['more'])
+        if criteria['year'][0]:
+            queryset = queryset.filter(year__gt=criteria['year'][0])
             sum_points += priority['year']
-        if 'less' in criteria['year']:
-            queryset = queryset.filter(year__lt=criteria['year']['less'])
+        if criteria['year'][1]:
+            queryset = queryset.filter(year__lt=criteria['year'][1])
             sum_points += priority['year']
     if 'imdb_rating' in criteria:
-        if 'more' in criteria['imdb_rating']:
-            queryset = queryset.filter(imdb_rating__gt=criteria['imdb_rating']['more'])
+        if criteria['imdb_rating'][0]:
+            queryset = queryset.filter(imdb_rating__gt=criteria['imdb_rating'][0])
             sum_points += priority['imdb_rating']
-        if 'less' in criteria['imdb_rating']:
-            queryset = queryset.filter(imdb_rating__lt=criteria['imdb_rating']['less'])
+        if criteria['imdb_rating'][1]:
+            queryset = queryset.filter(imdb_rating__lt=criteria['imdb_rating'][1])
             sum_points += priority['imdb_rating']
     if 'votes_count' in criteria:
-        if 'more' in criteria['votes_count']:
-            queryset = queryset.filter(votes_count__gt=criteria['votes_count']['more'])
+        if criteria['votes_count'][0]:
+            queryset = queryset.filter(votes_count__gt=criteria['votes_count'][0])
             sum_points += priority['votes_count']
-        if 'less' in criteria['votes_count']:
-            queryset = queryset.filter(votes_count__lt=criteria['votes_count']['less'])
+        if criteria['votes_count'][1]:
+            queryset = queryset.filter(votes_count__lt=criteria['votes_count'][1])
             sum_points += priority['votes_count']
     if 'duration' in criteria:
-        if 'more' in criteria['duration']:
-            queryset = queryset.filter(duration__gt=criteria['duration']['more'])
+        if criteria['duration'][0]:
+            queryset = queryset.filter(duration__gt=criteria['duration'][0])
             sum_points += priority['duration']
-        if 'less' in criteria['duration']:
-            queryset = queryset.filter(duration__lt=criteria['duration']['less'])
+        if criteria['duration'][1]:
+            queryset = queryset.filter(duration__lt=criteria['duration'][1])
             sum_points += priority['duration']
     if 'seasons_count' in criteria:
-        if 'more' in criteria['seasons_count']:
-            queryset = queryset.filter(seasons_count__gt=criteria['seasons_count']['more'])
+        if criteria['seasons_count'][0]:
+            queryset = queryset.filter(seasons_count__gt=criteria['seasons_count'][0])
             sum_points += priority['seasons_count']
-        if 'less' in criteria['seasons_count']:
-            queryset = queryset.filter(seasons_count__lt=criteria['seasons_count']['less'])
+        if criteria['seasons_count'][1]:
+            queryset = queryset.filter(seasons_count__lt=criteria['seasons_count'][1])
             sum_points += priority['seasons_count']
 
     return queryset, sum_points
@@ -203,16 +209,17 @@ def remove_filter(criteria):
         if key in criteria.keys():
             if type(criteria[key]) == bool:
                 del criteria[key]
-            elif 'more' in criteria[key]:
-                del criteria[key]['more']
-            elif 'less' in criteria[key]:
-                del criteria[key]['less']
+            elif key in ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count']:
+                if criteria[key][1]:
+                    criteria[key][1] = None
+                elif criteria[key][0]:
+                    criteria[key][0] = None
+                if not criteria[key][0] and not criteria[key][1]:
+                    del criteria[key]
             elif type(criteria[key]) == list:
                 criteria[key].pop()
                 if not criteria[key]:
                     del criteria[key]
-            else:
-                del criteria[key]
             return criteria
 
 
