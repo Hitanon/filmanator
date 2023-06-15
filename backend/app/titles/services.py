@@ -35,21 +35,33 @@ def apply_basic_filters(queryset, criteria, sum_points):
     Применение к списку фильмов базовых фильтров
     """
     if 'genre' in criteria:
+        result_queryset = queryset
         for value in criteria['genre']:
             queryset = queryset.filter(genre=value)
+            result_queryset.union(queryset)
             sum_points += priority['genre']
+        queryset = result_queryset
     if 'director' in criteria:
+        result_queryset = queryset
         for value in criteria['director']:
             queryset = queryset.filter(director=value)
+            result_queryset.union(queryset)
             sum_points += priority['director']
+        queryset = result_queryset
     if 'country' in criteria:
+        result_queryset = queryset
         for value in criteria['country']:
             queryset = queryset.filter(country=value)
+            result_queryset.union(queryset)
             sum_points += priority['country']
+        queryset = result_queryset
     if 'actor' in criteria:
+        result_queryset = queryset
         for value in criteria['actor']:
             queryset = queryset.filter(actor=value)
+            result_queryset.union(queryset)
             sum_points += priority['actor']
+        queryset = result_queryset
     if 'content_rating' in criteria:
         queryset = queryset.filter(content_rating=criteria['content_rating'])
         sum_points += priority['content_rating']
@@ -100,45 +112,75 @@ def apply_additional_filters(queryset, criteria, sum_points):
     Применение к списку фильмов дополнительных фильтров
     """
     if 'mood' in criteria:
+        result_queryset = queryset
         for value in criteria['mood']:
             queryset = queryset.filter(mood=value)
+            result_queryset.union(queryset)
             sum_points += priority['mood']
+        queryset = result_queryset
     if 'viewing_method' in criteria:
+        result_queryset = queryset
         for value in criteria['viewing_method']:
             queryset = queryset.filter(viewing_method=value)
+            result_queryset.union(queryset)
             sum_points += priority['viewing_method']
+        queryset = result_queryset
     if 'viewing_time' in criteria:
+        result_queryset = queryset
         for value in criteria['viewing_time']:
             queryset = queryset.filter(viewing_time=value)
+            result_queryset.union(queryset)
             sum_points += priority['viewing_time']
+        queryset = result_queryset
     if 'visual_atmosphere' in criteria:
+        result_queryset = queryset
         for value in criteria['visual_atmosphere']:
             queryset = queryset.filter(visual_atmosphere=value)
+            result_queryset.union(queryset)
             sum_points += priority['visual_atmosphere']
+        queryset = result_queryset
     if 'audience' in criteria:
+        result_queryset = queryset
         for value in criteria['audience']:
             queryset = queryset.filter(audience=value)
+            result_queryset.union(queryset)
             sum_points += priority['audience']
+        queryset = result_queryset
     if 'intellectuality' in criteria:
+        result_queryset = queryset
         for value in criteria['intellectuality']:
             queryset = queryset.filter(intellectuality=value)
+            result_queryset.union(queryset)
             sum_points += priority['intellectuality']
+        queryset = result_queryset
     if 'narrative_method' in criteria:
+        result_queryset = queryset
         for value in criteria['narrative_method']:
             queryset = queryset.filter(narrative_method=value)
+            result_queryset.union(queryset)
             sum_points += priority['narrative_method']
+        queryset = result_queryset
     if 'acting' in criteria:
+        result_queryset = queryset
         for value in criteria['acting']:
             queryset = queryset.filter(acting=value)
+            result_queryset.union(queryset)
             sum_points += priority['acting']
+        queryset = result_queryset
     if 'amount_of_dialogue' in criteria:
+        result_queryset = queryset
         for value in criteria['amount_of_dialogue']:
             queryset = queryset.filter(amount_of_dialogue=value)
+            result_queryset.union(queryset)
             sum_points += priority['amount_of_dialogue']
+        queryset = result_queryset
     if 'graphics' in criteria:
+        result_queryset = queryset
         for value in criteria['graphics']:
             queryset = queryset.filter(graphics=value)
+            result_queryset.union(queryset)
             sum_points += priority['graphics']
+        queryset = result_queryset
 
     return queryset, sum_points
 
@@ -178,7 +220,7 @@ def get_titles_by_attrs(criteria):
     """
     Получение словаря с отборными фильмами
     """
-    title_output = {'100': {'length': 0, 'data': []}, '85': {'length': 0, 'data': []}}
+    title_output = [{'match_percentage': 85, 'length': 0, 'titles': []}, {'match_percentage': 100, 'length': 0, 'titles': []}]
     titles = Title.objects.all()
     sum_points = 0
     # отборка для 100% совпадения
@@ -194,8 +236,8 @@ def get_titles_by_attrs(criteria):
         serialized_titles_to_100.append(serializer_data)
     length_to_100 = len(serialized_titles_to_100)
 
-    title_output['100']['length'] = length_to_100
-    title_output['100']['data'] = serialized_titles_to_100
+    title_output[1]['length'] = length_to_100
+    title_output[1]['titles'] = serialized_titles_to_100
 
     # отборка для меньшего совпадения
     serialized_titles_to_85 = []
@@ -215,7 +257,7 @@ def get_titles_by_attrs(criteria):
             serialized_titles_to_85.append(serializer_data)
         selected_titles = selected_titles.union(filtered_titles_to_85)
 
-    title_output['85']['length'] = len(serialized_titles_to_85)
-    title_output['85']['data'] = serialized_titles_to_85
+    title_output[0]['length'] = len(serialized_titles_to_85)
+    title_output[0]['titles'] = serialized_titles_to_85
 
     return title_output
