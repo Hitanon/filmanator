@@ -1,6 +1,5 @@
 from config.settings import AUTH_USER_MODEL
 
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.db.models.constraints import UniqueConstraint
@@ -29,63 +28,13 @@ class Session(models.Model):
         return f'{self.user}: {self.ends_at}'
 
 
-class Category(models.Model):
-    priority = models.SmallIntegerField(
-        default=1,
-    )
-
-    title = models.CharField(
-        unique=True,
-        max_length=64,
-    )
-
-    def __str__(self):
-        return f'{self.title} (pr={self.priority})'
-
-
-class Question(models.Model):
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.PROTECT,
-    )
-
-    body = models.TextField()
-
-    def __str__(self):
-        return f'{self.body} Cat: {self.category}'
-
-
-class Answer(models.Model):
-    body = models.CharField(
-        max_length=64,
-    )
-
-    question = models.ManyToManyField(
-        Question,
-        through='QuestionAnswer',
-    )
-
-    is_skip = models.BooleanField(
-        default=False,
-    )
-
-    def __str__(self):
-        return self.body
-
-
 class Criterion(models.Model):
     title = models.CharField(
-        unique=True,
         max_length=64,
     )
 
     body = models.CharField(
-        unique=True,
         max_length=64,
-    )
-
-    answer = models.ManyToManyField(
-        Answer,
     )
 
     class Meta:
@@ -100,31 +49,67 @@ class Criterion(models.Model):
         return f'{self.title}: {self.body}'
 
 
-class QuestionAnswer(models.Model):
+class Answer(models.Model):
+    body = models.CharField(
+        max_length=64,
+    )
+
+    is_skip = models.BooleanField(
+        default=False,
+    )
+
+    criterion = models.ManyToManyField(
+        Criterion,
+    )
+
+    def __str__(self):
+        return self.body
+
+
+class Question(models.Model):
+    body = models.TextField()
+
+    answer = models.ManyToManyField(
+        Answer,
+    )
+
+    def __str__(self):
+        return self.body
+
+
+class Category(models.Model):
+    priority = models.SmallIntegerField(
+        default=1,
+    )
+
+    title = models.CharField(
+        unique=True,
+        max_length=64,
+    )
+
+    question = models.ManyToManyField(
+        Question,
+    )
+
+    def __str__(self):
+        return f'{self.title} (pr={self.priority})'
+
+
+class SessionState(models.Model):
+    session = models.OneToOneField(
+        Session,
+        on_delete=models.CASCADE,
+    )
+
     question = models.ForeignKey(
         Question,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
     )
 
-    answer = models.ForeignKey(
-        Answer,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('question', 'answer'),
-                name='answer and question are unique',
-            ),
-        )
-
-    def clean(self):
-        validate_unique_question_answer(self)
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
+    def __str__(self):
+        return f'{self.session}: {self.question}'
 
 
 class Result(models.Model):
@@ -136,48 +121,14 @@ class Result(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
+        blank=True,
+        null=True,
     )
 
-    criterion = models.ForeignKey(
+    criterion = models.ManyToManyField(
         Criterion,
-        on_delete=models.PROTECT,
+        blank=True,
     )
-
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('session', 'category'),
-                name='session and category are unique',
-            ),
-        )
 
     def __str__(self):
-        return f's_id={self.session.pk} : cat={self.category} : crit={self.criterion}'
-
-    def clean(self):
-        check_is_criterion_concer_category(self)
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
-
-
-def validate_unique_question_answer(instance):
-    if instance.answer.is_skip:
-        return
-    if QuestionAnswer.objects.filter(
-        question=instance.question,
-        answer=instance.answer,
-    ).exists():
-        raise ValidationError('Question and answer are unique when is_skip=False')
-
-
-def check_is_criterion_concer_category(instance):
-    answers = instance.criterion.answer.all()
-    categories = set([])
-    for answer in answers:
-        questions = answer.question.all()
-        for question in questions:
-            categories.add(question.category)
-    if instance.category not in categories:
-        raise ValidationError('Criterion not in this category')
+        return str(self.session)

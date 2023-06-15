@@ -19,6 +19,13 @@ def get_genre(genre_id):
     return genre
 
 
+def get_user(user_id):
+    try:
+        return models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return None
+
+
 def create_user(**data):
     return models.User.objects.create_user(**data)
 
