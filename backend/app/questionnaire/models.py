@@ -128,7 +128,6 @@ class Result(models.Model):
     criterion = models.ManyToManyField(
         Criterion,
         blank=True,
-        null=True,
     )
 
     def __str__(self):
