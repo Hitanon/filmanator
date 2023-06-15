@@ -1,13 +1,11 @@
-
 import { makeAutoObservable } from "mobx";
 
 
 class QuestionStore {
-    questionNumber = 1;
-    questionText = "Фильмы какого жанра тебе нравятся больше?"
-    answers = ['Комедии', 'Документальные', 'Ужасы', 'Исторические', 'Другое'];
-
     constructor() {
+        this.questionNumber = 1;
+        this.questionText = "Фильмы какого жанра тебе нравятся больше?"
+        this.answers = ['Комедии', 'Документальные', 'Ужасы', 'Исторические', 'Другое'];
         makeAutoObservable(this);
     }
 
@@ -19,7 +17,7 @@ class QuestionStore {
         this.questionText = text;
     }
 
-    setAnswers (answers) {
+    setAnswers(answers) {
         this.answers = answers;
     }
 }

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import {addBodyClass, removeBodyClass} from "../utils/BodyClassLoader";
+import { addBodyClass, removeBodyClass } from "../utils/BodyClassLoader";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
-import Question from "../components/question/Question";
+import FilmInfo from "../components/film_info/FilmInfo";
 
 
-const Questionnaire = () => {
+
+const Result = () => {
 
     useEffect(() => {
         addBodyClass('questionnaire-bg');
@@ -18,15 +19,15 @@ const Questionnaire = () => {
         <>
             <Navbar />
             <div className="image-container">
-                <img className="filmanator-questionnaire-image"
-                    src="/img/filmanator_questionnaire.png"
+                <img className="filmanator-result-image"
+                    src="/img/filmanator_result.png"
                     alt="Filmanator for questionnaire"
                 />
-                <Question/>
+                <FilmInfo />
             </div>
             <Footer />
         </>
     );
 }
 
-export default Questionnaire;
+export default Result;

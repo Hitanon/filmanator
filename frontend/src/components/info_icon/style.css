@@ -1,0 +1,22 @@
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 2vw;
+    padding: 0.1vw 0.5vw;
+
+    background: var(--icon-bg-color);
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 0.3vw;
+
+    font-size: 0.9vw;
+}
+
+
+.icon img {
+    flex-shrink: 1;
+    max-height: 80%;
+    max-width: 80%;
+    margin-right: 0.5vw;
+}

@@ -11,6 +11,8 @@ body {
     --dark-bg-color: #2C1146;
     --main-color: #F66004;
     --bg-color: #4B0A62;
+    --icon-bg-color: #3F0852;
+    --grey-color: #D9D9D9;
 }
 
 @font-face {
@@ -61,6 +63,10 @@ button:hover {
     margin: 0% 15%;
 }
 
+.image-container {
+    position: relative;
+}
+
 .filmanator-questionnaire-image {
     display: block;
     max-width: 60%;
@@ -71,22 +77,30 @@ button:hover {
     margin-left: 15%;
 }
 
-.homepage {
+
+.filmanator-result-image {
+    display: block;
+    max-width: 70%;
+    height: auto;
+    margin-top: 1%;
+    margin-right: 15%;
+    margin-bottom: 8%;
+    margin-left: 15%;
+}
+
+
+.home-bg {
     background-image: url('../public/img/home_bg.png');
     background-size: 110%;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.questionnairepage {
+.questionnaire-bg {
     background-image: url('../public/img/questionnaire_bg.png');
     background-size: 100%;
-    background-position: center;
+    background-position: top center;
     background-repeat: no-repeat;
-}
-
-.image-container {
-    position: relative;
 }
 
 .image-container .text-button {

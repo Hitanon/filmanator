@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
+import {addBodyClass, removeBodyClass} from "../utils/BodyClassLoader";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
 import TextButton from "../components/home_textbutton/TextButton";
-import {addBodyClass, removeBodyClass} from "../utils/BodyClassLoader";
 
 const handleMouseMove = (event) => {
     const x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -14,17 +14,12 @@ const handleMouseMove = (event) => {
 const Home = () => {
 
     useEffect(() => {
+        addBodyClass('home-bg');
         document.addEventListener('mousemove', handleMouseMove);
         return () => {
+            removeBodyClass('homge-bg');
             document.removeEventListener('mousemove', handleMouseMove);
         };
-    }, []);
-
-    useEffect(() => {
-        addBodyClass('homepage');
-        return () => {
-            removeBodyClass('homgepage');
-        }
     }, []);
 
     return (

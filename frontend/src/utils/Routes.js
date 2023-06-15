@@ -3,9 +3,11 @@ import Home from "../pages/Home";
 import PersonalData from "../pages/PersonalData";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import Questionnaire from "../pages/Questionnaire";
+import Result from "../pages/Result";
 import {
     HOME_ROUTE,
     QUESTIONNAIRE_ROUTE,
+    RESULT_ROUTE,
     PRIVACY_POLICY_ROUTE,
     PERSONAL_DATA_ROUTE,
     ABOUT_ROUTE
@@ -32,4 +34,8 @@ export const publicRoutes = [
         path: ABOUT_ROUTE,
         element: <About />,
     },
+    {
+        path: RESULT_ROUTE,
+        element: <Result/>,
+    }
 ];
