@@ -4,9 +4,9 @@ from django.utils import timezone
 
 from questionnaire import exceptions, models
 
-from users.services import get_user
-
 from titles.services import get_titles_by_attrs
+
+from users.services import get_user
 
 
 def create_session(user_id):
@@ -130,5 +130,4 @@ def stop_session(session_id):
 
 
 def get_titles(session_id):
-    session = get_session(session_id)
     return get_titles_by_attrs()
