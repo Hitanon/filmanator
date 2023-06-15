@@ -33,7 +33,6 @@ class QuestionnaireView(APIView):
         return self._get_session_state(session_id) if session_id else self._start_session()
 
     def post(self, request, *args, **kwargs):
-        # session_id = int(request.data['session'][0])
         session_id = services.write_result(**request.data)
         return self._get_titles(session_id) if services.is_end(session_id) else self._get_next_question(session_id)
 
