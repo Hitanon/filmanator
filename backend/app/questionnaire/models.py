@@ -37,11 +37,13 @@ class Criterion(models.Model):
         default=False,
     )
 
+    # Change to Float
     more = models.IntegerField(
         blank=True,
         null=True,
     )
 
+    # Change to Float
     less = models.IntegerField(
         blank=True,
         null=True,
