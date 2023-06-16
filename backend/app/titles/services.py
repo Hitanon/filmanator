@@ -40,9 +40,10 @@ def apply_basic_filters(queryset, criteria, sum_points):
         if key == 'is_movie':
             queryset = queryset.filter(**{key: values})
         elif key in ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count']:
-            for value in values:
-                if value:
-                    queryset = queryset.filter(**{key + '__gte': value})
+            if values[0]:
+                queryset = queryset.filter(**{key + '__gte': values[0]})
+            if values[1]:
+                queryset = queryset.filter(**{key + '__lte': values[1]})
         else:
             queryset = queryset.filter(**{key + '__in': values})
         sum_points += priority[key]
