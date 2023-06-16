@@ -2,7 +2,8 @@ import json
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics, status
+
+from rest_framework import generics
 
 from titles.models import Title
 from titles.serializers import TitleSerializer

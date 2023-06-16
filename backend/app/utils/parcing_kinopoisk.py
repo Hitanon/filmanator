@@ -1,11 +1,10 @@
 import time
 
-from django.utils import timezone
-
 from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
+from django.utils import timezone
 
 import requests
 
