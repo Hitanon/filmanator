@@ -1,5 +1,7 @@
 import random
 
+from django.db.models import Q
+
 from titles.models import Title
 from titles.serializers import TitleSerializer
 
@@ -34,82 +36,16 @@ def apply_basic_filters(queryset, criteria, sum_points):
     """
     Применение к списку фильмов базовых фильтров
     """
-    if 'genre' in criteria:
-        result_queryset = queryset
-        for value in criteria['genre']:
-            queryset = queryset.filter(genre=value)
-            result_queryset.union(queryset)
-            sum_points += priority['genre']
-        queryset = result_queryset
-    if 'director' in criteria:
-        result_queryset = queryset
-        for value in criteria['director']:
-            queryset = queryset.filter(director=value)
-            result_queryset.union(queryset)
-            sum_points += priority['director']
-        queryset = result_queryset
-    if 'country' in criteria:
-        result_queryset = queryset
-        for value in criteria['country']:
-            queryset = queryset.filter(country=value)
-            result_queryset.union(queryset)
-            sum_points += priority['country']
-        queryset = result_queryset
-    if 'actor' in criteria:
-        result_queryset = queryset
-        for value in criteria['actor']:
-            queryset = queryset.filter(actor=value)
-            result_queryset.union(queryset)
-            sum_points += priority['actor']
-        queryset = result_queryset
-    if 'content_rating' in criteria:
-        result_queryset = queryset
-        for value in criteria['content_rating']:
-            queryset = queryset.filter(content_rating=value)
-            result_queryset.union(queryset)
-            sum_points += priority['content_rating']
-        queryset = result_queryset
-        queryset = queryset.filter()
-        sum_points += priority['content_rating']
-    if 'is_movie' in criteria:
-        queryset = queryset.filter(is_movie=criteria['is_movie'])
-        sum_points += priority['is_movie']
-    if 'year' in criteria:
-        if criteria['year'][0]:
-            queryset = queryset.filter(year__gt=criteria['year'][0])
-            sum_points += priority['year']
-        if criteria['year'][1]:
-            queryset = queryset.filter(year__lt=criteria['year'][1])
-            sum_points += priority['year']
-    if 'imdb_rating' in criteria:
-        if criteria['imdb_rating'][0]:
-            queryset = queryset.filter(imdb_rating__gt=criteria['imdb_rating'][0])
-            sum_points += priority['imdb_rating']
-        if criteria['imdb_rating'][1]:
-            queryset = queryset.filter(imdb_rating__lt=criteria['imdb_rating'][1])
-            sum_points += priority['imdb_rating']
-    if 'votes_count' in criteria:
-        if criteria['votes_count'][0]:
-            queryset = queryset.filter(votes_count__gt=criteria['votes_count'][0])
-            sum_points += priority['votes_count']
-        if criteria['votes_count'][1]:
-            queryset = queryset.filter(votes_count__lt=criteria['votes_count'][1])
-            sum_points += priority['votes_count']
-    if 'duration' in criteria:
-        if criteria['duration'][0]:
-            queryset = queryset.filter(duration__gt=criteria['duration'][0])
-            sum_points += priority['duration']
-        if criteria['duration'][1]:
-            queryset = queryset.filter(duration__lt=criteria['duration'][1])
-            sum_points += priority['duration']
-    if 'seasons_count' in criteria:
-        if criteria['seasons_count'][0]:
-            queryset = queryset.filter(seasons_count__gt=criteria['seasons_count'][0])
-            sum_points += priority['seasons_count']
-        if criteria['seasons_count'][1]:
-            queryset = queryset.filter(seasons_count__lt=criteria['seasons_count'][1])
-            sum_points += priority['seasons_count']
-
+    for key, values in criteria.items():
+        if key == 'is_movie':
+            queryset = queryset.filter(**{key: values})
+        elif key in ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count']:
+            for value in values:
+                if value:
+                    queryset = queryset.filter(**{key + '__gte': value})
+        else:
+            queryset = queryset.filter(**{key + '__in': values})
+        sum_points += priority[key]
     return queryset, sum_points
 
 
@@ -117,76 +53,15 @@ def apply_additional_filters(queryset, criteria, sum_points):
     """
     Применение к списку фильмов дополнительных фильтров
     """
-    if 'mood' in criteria:
-        result_queryset = queryset
-        for value in criteria['mood']:
-            queryset = queryset.filter(mood=value)
-            result_queryset.union(queryset)
-            sum_points += priority['mood']
-        queryset = result_queryset
-    if 'viewing_method' in criteria:
-        result_queryset = queryset
-        for value in criteria['viewing_method']:
-            queryset = queryset.filter(viewing_method=value)
-            result_queryset.union(queryset)
-            sum_points += priority['viewing_method']
-        queryset = result_queryset
-    if 'viewing_time' in criteria:
-        result_queryset = queryset
-        for value in criteria['viewing_time']:
-            queryset = queryset.filter(viewing_time=value)
-            result_queryset.union(queryset)
-            sum_points += priority['viewing_time']
-        queryset = result_queryset
-    if 'visual_atmosphere' in criteria:
-        result_queryset = queryset
-        for value in criteria['visual_atmosphere']:
-            queryset = queryset.filter(visual_atmosphere=value)
-            result_queryset.union(queryset)
-            sum_points += priority['visual_atmosphere']
-        queryset = result_queryset
-    if 'audience' in criteria:
-        result_queryset = queryset
-        for value in criteria['audience']:
-            queryset = queryset.filter(audience=value)
-            result_queryset.union(queryset)
-            sum_points += priority['audience']
-        queryset = result_queryset
-    if 'intellectuality' in criteria:
-        result_queryset = queryset
-        for value in criteria['intellectuality']:
-            queryset = queryset.filter(intellectuality=value)
-            result_queryset.union(queryset)
-            sum_points += priority['intellectuality']
-        queryset = result_queryset
-    if 'narrative_method' in criteria:
-        result_queryset = queryset
-        for value in criteria['narrative_method']:
-            queryset = queryset.filter(narrative_method=value)
-            result_queryset.union(queryset)
-            sum_points += priority['narrative_method']
-        queryset = result_queryset
-    if 'acting' in criteria:
-        result_queryset = queryset
-        for value in criteria['acting']:
-            queryset = queryset.filter(acting=value)
-            result_queryset.union(queryset)
-            sum_points += priority['acting']
-        queryset = result_queryset
-    if 'amount_of_dialogue' in criteria:
-        result_queryset = queryset
-        for value in criteria['amount_of_dialogue']:
-            queryset = queryset.filter(amount_of_dialogue=value)
-            result_queryset.union(queryset)
-            sum_points += priority['amount_of_dialogue']
-        queryset = result_queryset
-    if 'graphics' in criteria:
-        result_queryset = queryset
-        for value in criteria['graphics']:
-            queryset = queryset.filter(graphics=value)
-            result_queryset.union(queryset)
-            sum_points += priority['graphics']
-        queryset = result_queryset
+    for key, values in criteria.items():
+        if key in ['mood', 'viewing_method', 'viewing_time', 'visual_atmosphere', 'audience', 'intellectuality',
+                   'narrative_method', 'acting', 'amount_of_dialogue', 'graphics']:
+            filters = Q()
+            for value in values:
+                filter_q = Q(**{key: value})
+                filters |= filter_q
+            queryset = queryset.filter(filters)
+            sum_points += priority[key]
 
     return queryset, sum_points
 
@@ -205,29 +80,38 @@ def remove_filter(criteria):
     """
     Удаление одного фильтра с наименьшим приоритетом
     """
-    for key in priority.keys():
-        if key in criteria.keys():
-            if type(criteria[key]) == bool:
+    type_handlers = {
+        bool: lambda value: None,
+        list: lambda value: value[:-1] if value else None,
+        'year': lambda value: [None if v is not None else None for v in value] if any(value) else None,
+        'imdb_rating': lambda value: [None if v is not None else None for v in value] if any(value) else None,
+        'votes_count': lambda value: [None if v is not None else None for v in value] if any(value) else None,
+        'duration': lambda value: [None if v is not None else None for v in value] if any(value) else None,
+        'seasons_count': lambda value: [None if v is not None else None for v in value] if any(value) else None,
+    }
+
+    for key, value in criteria.items():
+        if isinstance(value, bool):
+            del criteria[key]
+        elif key in type_handlers:
+            handler = type_handlers[key]
+            criteria[key] = handler(value)
+        elif isinstance(value, list):
+            criteria[key] = value[:-1] if value else None
+            if not criteria[key]:
                 del criteria[key]
-            elif key in ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count']:
-                if criteria[key][1]:
-                    criteria[key][1] = None
-                elif criteria[key][0]:
-                    criteria[key][0] = None
-                if not criteria[key][0] and not criteria[key][1]:
-                    del criteria[key]
-            elif type(criteria[key]) == list:
-                criteria[key].pop()
-                if not criteria[key]:
-                    del criteria[key]
-            return criteria
+
+        return criteria
 
 
 def get_titles_by_attrs(criteria):
     """
     Получение словаря с отборными фильмами
     """
-    title_output = [{'match_percentage': 85, 'length': 0, 'titles': []}, {'match_percentage': 100, 'length': 0, 'titles': []}]
+    title_output = [
+        {'match_percentage': 85, 'length': 0, 'titles': []},
+        {'match_percentage': 100, 'length': 0, 'titles': []},
+    ]
     titles = Title.objects.all()
     sum_points = 0
     # отборка для 100% совпадения
