@@ -1,11 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils import timezone
+from config.settings import SESSION_LIFETIME
 
 from rest_framework.test import APIClient, APITestCase
 
 from rest_framework_simplejwt.tokens import AccessToken
 
-from questionnaire import models
+from questionnaire import models, serializers, exceptions
+
+import json
+
+from parameterized import parameterized
 
 
 class QuestionnaireTests(APITestCase):
@@ -19,6 +25,7 @@ class QuestionnaireTests(APITestCase):
 
         # Urls
         self.questionnaires_url = reverse('questionnaires')
+        self.questionnaire_url = lambda session_id: reverse('questionnaire', kwargs={'session_id': session_id})
 
         # API client
         self.client = APIClient()
@@ -156,23 +163,70 @@ class QuestionnaireTests(APITestCase):
     def _get_exception_details(self, exc):
         return exc.default_detail
 
-    def test_success_start_session(self):
+    def _create_session(self, ends_at=timezone.now() + SESSION_LIFETIME):
+        session = models.Session.objects.create(user=self.user, ends_at=ends_at)
+        question = models.Question.objects.first()
+        models.SessionState.objects.create(session=session, question=question)
+        return session
+
+    def _add_answer(self, session):
+        # session_state = models.SessionState.objects.get(session=session)
+        # category = models.Category.objects.exclude()
+        # result = models.Result.objects.filter(session=session)
+        # models.Result.objects.create(session=session)
         pass
+
+    def test_success_start_session(self):
+        response = self.client.get(path=self.questionnaires_url)
+
+        session_state = models.SessionState.objects.first()
+        serializer = serializers.SessionStateSerializer(session_state)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(models.Session.objects.count(), 1)
+        self.assertEqual(models.SessionState.objects.count(), 1)
+        self.assertEqual(session_state.question.category_set.first().priority, 1)
+        self.assertEqual(json.loads(response.content), serializer.data)
 
     def test_success_get_session_state(self):
-        pass
+        session = self._create_session()
 
-    def test_failure_get_session_state_incorrect_session_id(self):
-        pass
+        response = self.client.get(path=self.questionnaire_url(session.id))
 
-    def test_failure_get_session_state_session_id_not_found(self):
-        pass
+        session_state = models.SessionState.objects.get(session=session)
+        serializer = serializers.SessionStateSerializer(session_state)
+        self.assertEqual(response.status_code, 200, self.questionnaire_url(session.id))
+        self.assertEqual(json.loads(response.content), serializer.data)
+
+    @parameterized.expand([
+        (999, ),
+    ])
+    def test_failure_get_session_state_incorrect_session_id(self, session_id):
+        response = self.client.get(path=self.questionnaire_url(session_id))
+
+        details = self._get_exception_details(exceptions.SessionNotFound())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(json.loads(response.content), details)
 
     def test_success_auto_delete_expire_session(self):
-        pass
+        session = self._create_session(timezone.now() - SESSION_LIFETIME)
+
+        response = self.client.get(path=self.questionnaire_url(session.id))
+
+        details = self._get_exception_details(exceptions.SessionNotFound())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(json.loads(response.content), details)
+        self.assertEqual(models.Session.objects.count(), 0)
+        self.assertEqual(models.SessionState.objects.count(), 0)
+        self.assertEqual(models.Result.objects.count(), 0)
 
     def test_success_get_next_question(self):
-        pass
+        session = self._create_session()
+        self._add_answer(session)
+        data = {
+            'session': session.id,
+        }
+
+        response = self.client.post(path=self.questionnaires_url, data=data)
 
     def test_failure_get_next_question_incorrect_session_id(self):
         pass

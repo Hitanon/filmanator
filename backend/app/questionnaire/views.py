@@ -8,10 +8,12 @@ from rest_framework.views import APIView
 class QuestionnaireView(APIView):
     def _start_session(self):
         session = services.start_session(self.request.user.id)
-        serializer = serializers.SessionSerializer(session)
+        session_state = services.get_session_state(session.id)
+        serializer = serializers.SessionStateSerializer(session_state)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def _get_session_state(self, session_id):
+        services.check_session_not_over(session_id)
         session_state = services.get_session_state(session_id)
         serializer = serializers.SessionStateSerializer(session_state)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -28,11 +30,11 @@ class QuestionnaireView(APIView):
         serializer = serializers.QuestionSerializer(question)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def get(self, request, *args, **kwargs):
-        session_id = request.data.get('session', None)
+    def get(self, request, session_id=None, *args, **kwargs):
         return self._get_session_state(session_id) if session_id else self._start_session()
 
     def post(self, request, *args, **kwargs):
+        # print(f'\n\n{request.data}\n\n')
         session_id = services.write_result(**request.data)
         return self._get_titles(session_id) if services.is_end(session_id) else self._get_next_question(session_id)
 

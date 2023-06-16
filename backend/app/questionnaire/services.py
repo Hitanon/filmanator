@@ -8,11 +8,13 @@ from titles.services import get_titles_by_attrs
 
 from users.services import get_user
 from users.models import History
+from config.settings import SESSION_LIFETIME
 
 
 def create_session(user_id):
     user = get_user(user_id)
-    return models.Session.objects.create(user=user, ends_at=timezone.now())
+    ends_at = timezone.now() + SESSION_LIFETIME
+    return models.Session.objects.create(user=user, ends_at=ends_at)
 
 
 def select_first_question():
@@ -43,9 +45,9 @@ def start_session(user_id):
 def get_session_state(session_id):
     try:
         session = models.Session.objects.get(id=session_id)
-        session_state = models.SessionState.objects.get(session=session)
-    except Exception as e:
-        raise e
+    except models.Session.DoesNotExist:
+        raise exceptions.SessionNotFound()
+    session_state = models.SessionState.objects.get(session=session)
     return session_state
 
 
@@ -150,3 +152,10 @@ def write_result_titles_to_history(user, session_id, result_titles):
     history = History.objects.create(user=user, date=session.ends_at)
     for result_title in result_titles:
         history.title.add(*[title['id'] for title in result_title['titles']])
+
+
+def check_session_not_over(session_id):
+    session = get_session(session_id)
+    if session.ends_at < timezone.now():
+        stop_session(session.id)
+        raise exceptions.SessionNotFound()
