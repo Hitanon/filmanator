@@ -193,5 +193,5 @@ Methods: Get, Post
 
 #### Url: api/v1/questionnaire/`session_id`/
 
-Description: Delete session
-Methods: Delete
+* Description: Delete session
+* Methods: Delete
