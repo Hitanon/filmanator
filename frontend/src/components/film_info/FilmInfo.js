@@ -83,7 +83,7 @@ const FilmInfo = observer(() => {
                     <InfoIcon icon="/img/metacritic_icon.svg" text={`${filmInfoStore.metacritic}`} color='#FFFFFF' />
                 </div>
                 <div className="icon-row">
-                    <InfoIcon icon="/img/time_icon.svg" text={`${filmInfoStore.lengthFormatted}`} color='#FFFFFF' />
+                    <InfoIcon icon="/img/time_icon.svg" text={`${filmInfoStore.durationFormatted}`} color='#FFFFFF' />
                     <InfoIcon text={`${filmInfoStore.age}+`} color='#FFFFFF' />
                 </div>
             </div>
@@ -101,7 +101,7 @@ const FilmInfo = observer(() => {
 
             <div className="rate_buttons-container">
                 <SquareButton onClick={handleLikeClick} icon="/img/like_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="like" />
-                <SquareButton onClick={handleDislikeClick} icon="/img/dislike_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="dilike" />
+                <SquareButton onClick={handleDislikeClick} icon="/img/dislike_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="dislike" />
                 <SquareButton onClick={handleShareClick} icon="/img/share_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="share" />
             </div>
 
@@ -111,7 +111,7 @@ const FilmInfo = observer(() => {
             </div>
 
             <div className="actions_container">
-                <button onClick={handleBackwardsClick}  className="nav-button"
+                <button onClick={handleBackwardsClick} className="nav-button"
                     onMouseEnter={() => handleBackwardsEnter(setBackwardsSrc)}
                     onMouseLeave={() => handleBackwardsLeave(setBackwardsSrc)}
                 >
@@ -133,8 +133,6 @@ const FilmInfo = observer(() => {
                     <img src={forwardsSrc} alt="Forward" />
                 </button>
             </div>
-
-
         </div>
     );
 });

@@ -1,0 +1,32 @@
+/* transparent navbar */
+.nav {
+    height: 72px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+    margin-bottom: 0;
+}
+
+.close-button {
+    margin-right: 15%;
+    background: none;
+    border: none;
+}
+
+.close-button:hover {
+    background: none;
+    opacity: 0.8;
+}
+
+.logo-link {
+    margin-left: 15%
+}
+
+.logo-link :hover {
+    opacity: 0.8;
+}

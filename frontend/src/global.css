@@ -6,6 +6,7 @@ body {
     background-color: var(--bg-color);
 }
 
+
 :root {
     --light-orange-color: #FF8E0A;
     --dark-bg-color: #2C1146;
@@ -56,6 +57,7 @@ button:hover {
     cursor: pointer;
 }
 
+/* filmanator */
 .filmanator-main-image {
     display: block;
     max-width: 70%;
@@ -63,44 +65,28 @@ button:hover {
     margin: 0% 15%;
 }
 
-.image-container {
-    position: relative;
-}
-
 .filmanator-questionnaire-image {
     display: block;
     max-width: 60%;
     height: auto;
-    margin-top: 1%;
     margin-right: 15%;
     margin-bottom: 0%;
     margin-left: 15%;
 }
 
-
 .filmanator-result-image {
     display: block;
     max-width: 70%;
     height: auto;
-    margin-top: 1%;
+    margin-top: 0%;
     margin-right: 15%;
     margin-bottom: 8%;
     margin-left: 15%;
 }
 
-
-.home-bg {
-    background-image: url('../public/img/home_bg.png');
-    background-size: 110%;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.questionnaire-bg {
-    background-image: url('../public/img/questionnaire_bg.png');
-    background-size: 100%;
-    background-position: top center;
-    background-repeat: no-repeat;
+/* container for filmanator */
+.image-container {
+    position: relative;
 }
 
 .image-container .text-button {
@@ -108,3 +94,47 @@ button:hover {
     top: 24%;
     left: 20%;
 }
+
+
+/* pages */
+.home-page {
+    background-image: url('../public/img/home_bg.png');
+    background-size: 110%;
+    background-position: center;
+}
+
+.questionnaire-page{
+    background-image: url('../public/img/questionnaire_bg.png');
+    background-size: cover;
+    background-position: cover;
+    background-repeat: no-repeat;
+}
+
+.personal-account-page{
+    background-image: linear-gradient(
+        to bottom,
+        var(--dark-bg-color) 0%,
+        var(--dark-bg-color) 30vh,
+        var(--bg-color) 30vh,
+        var(--bg-color) 100%
+      );
+}
+
+.signin-page{
+    margin: 0;
+    background-image: url('../public/img/signin_bg.png');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-color: var(--dark-bg-color);
+}
+
+.signin-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    width: 100vw;
+}
+
+

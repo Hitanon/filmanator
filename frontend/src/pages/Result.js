@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { addBodyClass, removeBodyClass } from "../utils/BodyClassLoader";
+import React from "react";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
 import FilmInfo from "../components/film_info/FilmInfo";
@@ -8,15 +7,8 @@ import FilmInfo from "../components/film_info/FilmInfo";
 
 const Result = () => {
 
-    useEffect(() => {
-        addBodyClass('questionnaire-bg');
-        return () => {
-            removeBodyClass('questionnaire-bg');
-        }
-    }, []);
-
     return (
-        <>
+        <div className="questionnaire-page">
             <Navbar />
             <div className="image-container">
                 <img className="filmanator-result-image"
@@ -26,7 +18,7 @@ const Result = () => {
                 <FilmInfo />
             </div>
             <Footer />
-        </>
+        </div>
     );
 }
 
