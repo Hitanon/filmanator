@@ -250,6 +250,24 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
     return cnt_changes
 
 
+def add_film_to_database_update_mode(film: dict, update_mode: bool, cnt_changes: int) -> int:
+    """
+    Добавление фильма в БД в режиме обновления
+    :param film: словарь с одним экземпляром
+    :param update_mode: режим обновления или добавления похожих фильмов
+    :param cnt_changes: кол-во добавленных похожих фильмов
+    :return:
+    """
+    film_id = film['id']
+    try:
+        Title.objects.get(id=film_id)
+        if check_constraints(film):
+            cnt_changes = fill_database(film, update_mode, cnt_changes)
+    except ObjectDoesNotExist:
+        pass
+    return cnt_changes
+
+
 def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> int:
     """
     Добавление фильма в БД
@@ -260,13 +278,7 @@ def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: i
     :return:
     """
     if update_mode:
-        film_id = film['id']
-        try:
-            Title.objects.get(id=film_id)
-            if check_constraints(film):
-                cnt_changes = fill_database(film, update_mode, cnt_changes)
-        except ObjectDoesNotExist:
-            pass
+        cnt_changes = add_film_to_database_update_mode(film, update_mode, cnt_changes)
     else:
         try:
             title = Title.objects.get(id=film['id'])
