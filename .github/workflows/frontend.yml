@@ -21,6 +21,7 @@
         
         - name: Install dependecies
           run: npm ci
+          working-directory: ./frontend
         
         - name: Run ESLint
           run: npm run lint
