@@ -9,6 +9,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     z-index: 9999;
+    margin-bottom: 0;
 }
 
 button {
@@ -35,5 +36,5 @@ button:hover {
 }
 
 .logo-link :hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }

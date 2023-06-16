@@ -1,0 +1,21 @@
+.agreement-text {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+}
+
+.agreement-text div {
+    margin-bottom: 15px;
+  }
+
+.agreement-text a {
+    color: white;
+    text-decoration: none;
+}
+
+.agreement-text a:hover {
+    color: var(--main-color);
+}

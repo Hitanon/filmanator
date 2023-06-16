@@ -1,16 +1,27 @@
+name: Frontend
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-  name: Frontend
-  on:
-    push:
-      branches: [ main ]
-    pull_request:
-      branches: [ main ]
+jobs:
+  Temp:
+    runs-on: ubuntu-latest
 
-  jobs:
-    Temp:
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Echo
-          run: |
-            echo 'workflow working success'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+      
+      - name: Run ESLint
+        run: npm run lint
+        working-directory: ./frontend

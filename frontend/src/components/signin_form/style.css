@@ -1,0 +1,106 @@
+.sign-form {
+  margin-bottom: 150px;
+  display: flex;
+  justify-content: center;
+}
+
+.sign-form form {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.input-container input {
+  font-family: "Muller";
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--dark-bg-color);
+  width: 280px;
+  height: 40px;
+  display: block;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+.password-input-container {
+  position: relative;
+}
+
+.password-input-container input {
+  padding-right: 25px;
+}
+
+.password-input-container button {
+  position: absolute;
+  top: calc(50% - (35px /2));
+  right: -60px;
+  background-color: transparent;
+  border: none;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.links a {
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.links a:hover {
+  color: var(--main-color);
+}
+
+/* submit button */
+@keyframes slide {
+  0% {
+    background-position: 150% 0;
+  }
+
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+.submit {
+  border: none;
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  background-color: var(--main-color);
+  width: 200px;
+  height: 55px;
+  margin: 0;
+}
+
+.submit:hover {
+  /* Set up a linear gradient with an orange stripe */
+  background: linear-gradient(65deg,
+      /* Adjust the angle of the gradient here */
+      var(--main-color),
+      var(--main-color) calc(50% - 1vw),
+      /* Increase the width of the stripe here */
+      var(--light-orange-color) calc(50% - 1vw),
+      var(--light-orange-color) calc(50% + 1vw),
+      var(--main-color) calc(50% + 1vw),
+      var(--main-color));
+
+  /* Apply the slide animation */
+  animation: slide 0.5s linear forwards;
+
+  /* Set the background size so that the gradient repeats */
+  background-size: 200%;
+}

@@ -1,0 +1,181 @@
+.film-info-container {
+    position: absolute;
+    top: 19%;
+    left: 32%;
+    right: 0;
+}
+
+/* title */
+.film-info-container h1 {
+    margin-top: 0%;
+    font-size: 2vw;
+    position: absolute;
+    margin-left: 16%;
+}
+
+/* en title */
+.film-info-container h2 {
+    font-size: 1.1vw;
+    color: var(--grey-color);
+    position: absolute;
+    margin-left: 16%;
+    margin-top: 3.6%;
+}
+
+/* icons */
+.icon-container {
+    position: absolute;
+    margin-top: 7%;
+    left: 16%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.icon-row {
+    margin-bottom: 0.4vw;
+    display: flex;
+    justify-content: center;
+}
+
+.icon-row .icon {
+    margin-right: 0.4vw;
+}
+
+/* info */
+.info-container {
+    position: absolute;
+    margin-top: 15%;
+    left: 16%;
+    color: white;
+    font-size: 1vw ;
+}
+
+/* plot */
+.description-container {
+    position: absolute;
+    margin-top: 25%;
+    left: 16%;
+    color: white;
+    font-size: 1vw ;
+    max-width: 35vw;
+}
+
+/* like, dislike, share buttons */
+.rate_buttons-container {
+    position: absolute;
+    margin-top: 22%;
+}
+
+/* watch button */
+.watch_buttons-container {
+    position: absolute;
+    margin-top: 26.8%;
+    display: flex;
+
+}
+
+.watch_buttons-container p {
+    color: white;
+    font-weight: 500;
+    font-size: 1.13vw;
+    margin-left: 0.3vw;
+    margin-right: 0.5vw;
+}
+
+/* container for bottom buttons */
+.actions_container {
+    position: absolute;
+    margin-top: 40%;
+    display: flex;
+    align-items: center;
+    max-width: 28vw;
+}
+
+/* repreat button */
+.repeat-button {
+    border: none;
+    height: auto;
+    width: auto;
+    padding: 1.2vw 2vw ;
+    background-color: white;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    
+    font-weight: 500;
+    font-size: 1.1vw;
+    color: var(--bg-color);
+    margin-right: 1vw;
+    margin-left: 2vw;
+}
+
+.repeat-button:hover {
+    color: var(--main-color);
+    background-color: white;
+}
+
+
+/* learn more button */
+.learn-more-button {
+    margin: none;
+    border: none;
+    height: auto;
+    width: auto;
+    padding: 1.2vw 4vw ;
+    margin-right: 2vw;
+    background: var(--main-color);
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+    
+    font-weight: 500;
+    font-size: 1.1vw;
+    color: white;
+}
+
+@keyframes slide {
+    0% {
+        background-position: 150% 0;
+    }
+
+    100% {
+        background-position: -50% 0;
+    }
+}
+
+.learn-more-button:hover {
+    /* Set up a linear gradient with an orange stripe */
+    background: linear-gradient(65deg,
+            /* Adjust the angle of the gradient here */
+            var(--main-color),
+            var(--main-color) calc(50% - 1.5vw),
+            /* Increase the width of the stripe here */
+            var(--light-orange-color) calc(50% - 1vw),
+            var(--light-orange-color) calc(50% + 1vw),
+            var(--main-color) calc(50% + 1vw),
+            var(--main-color));
+
+    /* Apply the slide animation */
+    animation: slide 0.5s linear forwards;
+
+    /* Set the background size so that the gradient repeats */
+    background-size: 200%;
+}
+
+/* nav buttons */
+.nav-button {
+    border: none;
+    margin: 0;
+    margin-top: 0.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+}
+
+.nav-button img {
+    width: 5vw;
+    height: auto;
+}
+
+.nav-button:hover {
+    border: none;
+    background: none;
+}

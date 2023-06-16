@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import {React, useState, useEffect } from 'react';
 
 const AnimatedText = ({ text, speed = 10, onComplete }) => {
     const [displayedText, setDisplayedText] = useState('');

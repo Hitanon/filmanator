@@ -1,0 +1,29 @@
+.button-group {
+    margin: 80px;
+    display: flex;
+}
+
+.button {
+    margin-top: 20 px;
+    margin-left: 30px;
+    width: 200px;
+    height: 50px;
+    background-color: var(--icon-bg-color);
+    color: white;
+    font-size: 16px;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 6px;
+    box-shadow: 0px 3.27168px 3.27168px rgba(0, 0, 0, 0.25);
+}
+
+.button:hover {
+    opacity: 0.8;
+    background-color: var(--icon-bg-color);
+}
+
+
+.button.active {
+    background-color: var(--main-color);
+}
