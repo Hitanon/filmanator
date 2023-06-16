@@ -7,10 +7,10 @@
 1. Create virtual enviroment
    `python3 -m venv backend/venv`
 2. Activate virtual enviroment
-   Linux:
-   `source backend/venv/bin/activate`
-   Windows(PowerShell):
-   `.\backend\venv\Scripts\activate.ps1`
+   - Linux:
+     `source backend/venv/bin/activate`
+   - Windows(PowerShell):
+     `.\backend\venv\Scripts\activate.ps1`
 3. Install dependencies
    `pip install -r requirements/requerements.txt`
 4. Fill .env file
