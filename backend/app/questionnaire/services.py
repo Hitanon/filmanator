@@ -1,14 +1,15 @@
 import random
 
+from config.settings import SESSION_LIFETIME
+
 from django.utils import timezone
 
 from questionnaire import exceptions, models
 
 from titles.services import get_titles_by_attrs
 
-from users.services import get_user
 from users.models import History
-from config.settings import SESSION_LIFETIME
+from users.services import get_user
 
 
 def create_session(user_id):

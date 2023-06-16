@@ -1,17 +1,18 @@
+import json
+
+from config.settings import SESSION_LIFETIME
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
-from config.settings import SESSION_LIFETIME
+
+from parameterized import parameterized
+
+from questionnaire import exceptions, models, serializers
 
 from rest_framework.test import APIClient, APITestCase
 
 from rest_framework_simplejwt.tokens import AccessToken
-
-from questionnaire import models, serializers, exceptions
-
-import json
-
-from parameterized import parameterized
 
 
 class QuestionnaireTests(APITestCase):
@@ -226,7 +227,7 @@ class QuestionnaireTests(APITestCase):
             'session': session.id,
         }
 
-        response = self.client.post(path=self.questionnaires_url, data=data)
+        self.client.post(path=self.questionnaires_url, data=data)
 
     def test_failure_get_next_question_incorrect_session_id(self):
         pass
