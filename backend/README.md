@@ -101,7 +101,7 @@
 ###### Delete
 
 * Headers:
-* Authorization: Bearer (token)
+* Authorization: Bearer `token`
 
 ---
 
@@ -114,22 +114,44 @@ Methods: Get, Post
 
 ###### Get
 
-* Response:
-  ```
-  {
-    'id': session_id,
-    'question': {
-      'id': id,
-      'body': body,
-      'answer':[
-        {
-          'id': id,
-          'body': body
-        }
-      ]
+* Start session
+  * Response:
+    ```
+    {
+      'id': session_id,
+      'question': {
+        'body': body,
+        'answers': [
+          {
+            'id': id,
+            'body': body
+          }
+        ]
+      }
     }
-  }
-  ```
+    ```
+
+* Get session state
+  * Request body:
+    ```
+    {
+      'session': session_id
+    }
+    ```
+  * Response:
+    ```
+    {
+      'question': {
+        'body': body,
+        'answers':[
+          {
+            'id': id,
+            'body': body
+          }
+        ]
+      }
+    }
+    ```
 
 ###### Post
 
@@ -137,7 +159,6 @@ Methods: Get, Post
   ```
   {
     'session': session_id,
-    'question': question_id,
     'answer': answer_id,
   }
   ```
@@ -158,11 +179,9 @@ Methods: Get, Post
   * Response:
     ```
     {
-      'id': session_id,
       'question': {
-        'id': id,
         'body': body,
-        'answer':[
+        'answers':[
           {
             'id': id,
             'body': body
@@ -174,5 +193,5 @@ Methods: Get, Post
 
 #### Url: api/v1/questionnaire/`session_id`/
 
-Description: Delete session
-Methods: Delete
+* Description: Delete session
+* Methods: Delete
