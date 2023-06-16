@@ -32,6 +32,39 @@ priority = {
 }
 
 
+def apply_content_rating(queryset, values):
+    """
+    Применение фильтра к возрастному ограничению
+    """
+    id_content_rating = {16: 1, 18: 2, 12: 3, 6: 4}
+    all_list = [6, 12, 16, 18]
+
+    if values[0] in all_list:
+        all_list = all_list[all_list.index(values[0]):]
+
+    if values[1] in all_list:
+        all_list = all_list[:all_list.index(values[1]) + 1]
+
+    id_list = []
+    for item in all_list:
+        id_list.append(id_content_rating[item])
+    id_list.append(None)
+    queryset = queryset.filter(content_rating__in=id_list)
+
+    return queryset
+
+
+def apply_range_filters(queryset, values, key):
+    """
+    Применение фильтров к критериям с диапазоном значений
+    """
+    if values[0]:
+        queryset = queryset.filter(**{key + '__gte': values[0]})
+    if values[1]:
+        queryset = queryset.filter(**{key + '__lte': values[1]})
+    return queryset
+
+
 def apply_basic_filters(queryset, criteria, sum_points):
     """
     Применение к списку фильмов базовых фильтров
@@ -39,11 +72,10 @@ def apply_basic_filters(queryset, criteria, sum_points):
     for key, values in criteria.items():
         if key == 'is_movie':
             queryset = queryset.filter(**{key: values})
+        elif key == 'content_rating':
+            queryset = apply_content_rating(queryset, values)
         elif key in ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count']:
-            if values[0]:
-                queryset = queryset.filter(**{key + '__gte': values[0]})
-            if values[1]:
-                queryset = queryset.filter(**{key + '__lte': values[1]})
+            queryset = apply_range_filters(queryset, values, key)
         else:
             queryset = queryset.filter(**{key + '__in': values})
         sum_points += priority[key]
@@ -77,32 +109,42 @@ def apply_filters(queryset, criteria, sum_points=0):
     return queryset, sum_points
 
 
+def remove_two_values(criteria, key, value):
+    """
+    Удаление одного значения из двух
+    """
+    if value[1]:
+        criteria[key] = [value[0], None]
+    else:
+        del criteria[key]
+    return criteria
+
+
+def remove_list_values(criteria, key, value):
+    """
+    Удаление одного значения из списка
+    """
+    criteria[key] = value[:-1] if value else None
+    if not criteria[key]:
+        del criteria[key]
+    return criteria
+
+
 def remove_filter(criteria):
     """
     Удаление одного фильтра с наименьшим приоритетом
     """
-    type_handlers = {
-        bool: lambda value: None,
-        list: lambda value: value[:-1] if value else None,
-        'year': lambda value: [None if v is not None else None for v in value] if any(value) else None,
-        'imdb_rating': lambda value: [None if v is not None else None for v in value] if any(value) else None,
-        'votes_count': lambda value: [None if v is not None else None for v in value] if any(value) else None,
-        'duration': lambda value: [None if v is not None else None for v in value] if any(value) else None,
-        'seasons_count': lambda value: [None if v is not None else None for v in value] if any(value) else None,
-    }
-
-    for key, value in criteria.items():
-        if isinstance(value, bool):
-            del criteria[key]
-        elif key in type_handlers:
-            handler = type_handlers[key]
-            criteria[key] = handler(value)
-        elif isinstance(value, list):
-            criteria[key] = value[:-1] if value else None
-            if not criteria[key]:
+    criteries = ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count', 'content_rating']
+    for category in priority.keys():
+        if category in criteria:
+            key, value = category, criteria[category]
+            if isinstance(value, bool):
                 del criteria[key]
-
-        return criteria
+            elif key in criteries:
+                criteria = remove_two_values(criteria, key, value)
+            elif isinstance(value, list):
+                criteria = remove_list_values(criteria, key, value)
+            return criteria
 
 
 def get_titles_by_attrs(criteria):
