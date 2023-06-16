@@ -52,18 +52,6 @@ def get_session_state(session_id):
     return session_state
 
 
-def check_session_id(**kwargs):
-    session_id = kwargs.get('session', None)
-    question_id = kwargs.get('question', None)
-    answer_id = kwargs.get('answer', None)
-    if not session_id:
-        raise exceptions.SessionIdNotFound()
-    if not question_id:
-        raise exceptions.QuestionIdNotFound()
-    if not answer_id:
-        raise exceptions.AnswerIdNotFound()
-
-
 def get_session(session_id):
     try:
         return models.Session.objects.get(id=session_id)
@@ -92,25 +80,35 @@ def check_answer(question_id, answer_id):
         raise exceptions.AnswerNotInQuestionAnswers()
 
 
-def update_result(session_id, question_id, answer_id):
+def write_result(session_id, answer_id):
     session = get_session(session_id)
-    question = get_question(question_id)
+    session_state = get_session_state(session.id)
     answer = get_answer(answer_id)
     result = models.Result.objects.create(
         session=session,
-        category=question.category_set.get(),
+        category=session_state.question.category_set.first(),
     )
     result.criterion.set(answer.criterion.all())
 
 
-def write_result(**kwargs):
-    check_session_id(**kwargs)
-    session_id = int(kwargs['session'][0])
-    question_id = int(kwargs['question'][0])
-    answer_id = int(kwargs['answer'][0])
-    check_answer(question_id, answer_id)
-    update_result(session_id, question_id, answer_id)
-    return session_id
+def check_session_id(**kwargs):
+    session_id = kwargs.get('session', None)
+    if session_id is None:
+        raise exceptions.SessionIdNotFound()
+    session_id = int(session_id[0])
+    return get_session(session_id)
+
+
+def check_answer_id(**kwargs):
+    answer_id = kwargs.get('answer', None)
+    if answer_id is None:
+        raise exceptions.SessionIdNotFound()
+    answer_id = int(answer_id[0])
+    return get_answer(answer_id)
+
+
+def check_questionnaire_post_data(**kwargs):
+    return check_session_id(**kwargs), check_answer_id(**kwargs)
 
 
 def is_end(session_id):
@@ -123,7 +121,6 @@ def get_next_question(session_id):
     used_categories = models.Result.objects.filter(session=session).values_list('category')
     not_used_categories = models.Category.objects.exclude(id__in=used_categories).order_by('priority')
     question = random.choice(not_used_categories[0].question.all())
-    print(question)
     update_session_state(session_id, question.id)
     return question
 

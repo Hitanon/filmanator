@@ -3,14 +3,6 @@ from questionnaire import models
 from rest_framework import serializers
 
 
-class SessionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Session
-        fields = (
-            'id',
-        )
-
-
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Answer
@@ -21,14 +13,27 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    answer = AnswerSerializer(many=True, read_only=True)
+    answers = serializers.SerializerMethodField('get_answers')
 
     class Meta:
         model = models.Question
         fields = (
-            'id',
             'body',
-            'answer',
+            'answers',
+        )
+
+    def get_answers(self, obj):
+        return AnswerSerializer(obj.answer.all(), many=True).data
+
+
+class StartedSessionSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(read_only=True)
+
+    class Meta:
+        model = models.SessionState
+        fields = (
+            'session',
+            'question',
         )
 
 
@@ -38,12 +43,11 @@ class SessionStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SessionState
         fields = (
-            'id',
             'question',
         )
 
 
-class ResultTitlesSerializer(serializers.Serializer):
+class SelectedTitlesSerializer(serializers.Serializer):
     match_percentage = serializers.IntegerField()
     length = serializers.IntegerField()
     titles = serializers.SerializerMethodField('get_titles')
