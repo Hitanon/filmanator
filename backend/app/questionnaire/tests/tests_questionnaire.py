@@ -171,17 +171,13 @@ class QuestionnaireTests(APITestCase):
         return session
 
     def _add_answer(self, session):
-        # session_state = models.SessionState.objects.get(session=session)
-        # category = models.Category.objects.exclude()
-        # result = models.Result.objects.filter(session=session)
-        # models.Result.objects.create(session=session)
         pass
 
     def test_success_start_session(self):
         response = self.client.get(path=self.questionnaires_url)
 
         session_state = models.SessionState.objects.first()
-        serializer = serializers.SessionStateSerializer(session_state)
+        serializer = serializers.StartedSessionSerializer(session_state)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(models.Session.objects.count(), 1)
         self.assertEqual(models.SessionState.objects.count(), 1)
