@@ -109,10 +109,7 @@ def get_titles_by_attrs(criteria):
     """
     Получение словаря с отборными фильмами
     """
-    title_output = [
-        {'match_percentage': 85, 'length': 0, 'titles': []},
-        {'match_percentage': 100, 'length': 0, 'titles': []},
-    ]
+    title_output = []
     titles = Title.objects.all()
     sum_points = 0
     # отборка для 100% совпадения
@@ -128,8 +125,7 @@ def get_titles_by_attrs(criteria):
         serialized_titles_to_100.append(serializer_data)
     length_to_100 = len(serialized_titles_to_100)
 
-    title_output[1]['length'] = length_to_100
-    title_output[1]['titles'] = serialized_titles_to_100
+    title_output += serialized_titles_to_100
 
     # отборка для меньшего совпадения
     serialized_titles_to_85 = []
@@ -149,7 +145,6 @@ def get_titles_by_attrs(criteria):
             serialized_titles_to_85.append(serializer_data)
         selected_titles = selected_titles.union(filtered_titles_to_85)
 
-    title_output[0]['length'] = len(serialized_titles_to_85)
-    title_output[0]['titles'] = serialized_titles_to_85
+    title_output += serialized_titles_to_85
 
     return title_output
