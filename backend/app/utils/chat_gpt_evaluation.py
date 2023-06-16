@@ -64,6 +64,7 @@ def main():
     files_path = settings.FULL_PATH_TO_FILES
     num_file = 1
     file_path = files_path + f'rating_of_films{num_file}.txt'
+    cnt = 1
     while os.path.isfile(file_path):
         my_films = read_dicts_from_file(file_path)
         for film_dict in my_films:
@@ -72,9 +73,11 @@ def main():
                 try:
                     title = Title.objects.get(id=title_id)
                     add_additional_criteries(film_dict, title)
+                    print(f'[{cnt}] ', sep='', end='')
                     print(f'Критерии добавлены для фильма с id - {title_id}!')
                 except ObjectDoesNotExist:
-                    print(f'Фильм с id - {title_id} нет в базе!')
+                    print(f'[ERROR] Фильм с id - {title_id} нет в базе!')
+            cnt += 1
         print(f'{num_file} файл успешно загружен!')
         num_file += 1
         file_path = files_path + f'rating_of_films{num_file}.txt'

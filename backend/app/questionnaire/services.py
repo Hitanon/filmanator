@@ -1,17 +1,21 @@
 import random
 
+from config.settings import SESSION_LIFETIME
+
 from django.utils import timezone
 
 from questionnaire import exceptions, models
 
 from titles.services import get_titles_by_attrs
 
+from users.models import History
 from users.services import get_user
 
 
 def create_session(user_id):
     user = get_user(user_id)
-    return models.Session.objects.create(user=user, ends_at=timezone.now())
+    ends_at = timezone.now() + SESSION_LIFETIME
+    return models.Session.objects.create(user=user, ends_at=ends_at)
 
 
 def select_first_question():
@@ -42,22 +46,10 @@ def start_session(user_id):
 def get_session_state(session_id):
     try:
         session = models.Session.objects.get(id=session_id)
-        session_state = models.SessionState.objects.get(session=session)
-    except Exception as e:
-        raise e
+    except models.Session.DoesNotExist:
+        raise exceptions.SessionNotFound()
+    session_state = models.SessionState.objects.get(session=session)
     return session_state
-
-
-def check_session_id(**kwargs):
-    session_id = kwargs.get('session', None)
-    question_id = kwargs.get('question', None)
-    answer_id = kwargs.get('answer', None)
-    if not session_id:
-        raise exceptions.SessionIdNotFound()
-    if not question_id:
-        raise exceptions.QuestionIdNotFound()
-    if not answer_id:
-        raise exceptions.AnswerIdNotFound()
 
 
 def get_session(session_id):
@@ -88,25 +80,35 @@ def check_answer(question_id, answer_id):
         raise exceptions.AnswerNotInQuestionAnswers()
 
 
-def update_result(session_id, question_id, answer_id):
+def write_result(session_id, answer_id):
     session = get_session(session_id)
-    question = get_question(question_id)
+    session_state = get_session_state(session.id)
     answer = get_answer(answer_id)
     result = models.Result.objects.create(
         session=session,
-        category=question.category_set.get(),
+        category=session_state.question.category_set.first(),
     )
     result.criterion.set(answer.criterion.all())
 
 
-def write_result(**kwargs):
-    check_session_id(**kwargs)
-    session_id = int(kwargs['session'][0])
-    question_id = int(kwargs['question'][0])
-    answer_id = int(kwargs['answer'][0])
-    check_answer(question_id, answer_id)
-    update_result(session_id, question_id, answer_id)
-    return session_id
+def check_session_id(**kwargs):
+    session_id = kwargs.get('session', None)
+    if session_id is None:
+        raise exceptions.SessionIdNotFound()
+    session_id = int(session_id[0])
+    return get_session(session_id)
+
+
+def check_answer_id(**kwargs):
+    answer_id = kwargs.get('answer', None)
+    if answer_id is None:
+        raise exceptions.SessionIdNotFound()
+    answer_id = int(answer_id[0])
+    return get_answer(answer_id)
+
+
+def check_questionnaire_post_data(**kwargs):
+    return check_session_id(**kwargs), check_answer_id(**kwargs)
 
 
 def is_end(session_id):
@@ -119,7 +121,6 @@ def get_next_question(session_id):
     used_categories = models.Result.objects.filter(session=session).values_list('category')
     not_used_categories = models.Category.objects.exclude(id__in=used_categories).order_by('priority')
     question = random.choice(not_used_categories[0].question.all())
-    print(question)
     update_session_state(session_id, question.id)
     return question
 
@@ -129,5 +130,30 @@ def stop_session(session_id):
     session.delete()
 
 
+def get_criterions(session_id):
+    result_criterions = models.ResultCriterions()
+    session = get_session(session_id)
+    for result in models.Result.objects.filter(session=session):
+        result_criterions.add_result(result)
+    return result_criterions.data
+
+
 def get_titles(session_id):
-    return get_titles_by_attrs()
+    criterions = get_criterions(session_id)
+    return get_titles_by_attrs(criterions)
+
+
+def write_result_titles_to_history(user, session_id, result_titles):
+    if not user.is_authenticated:
+        return
+    session = get_session(session_id)
+    history = History.objects.create(user=user, date=session.ends_at)
+    for result_title in result_titles:
+        history.title.add(*[title['id'] for title in result_title['titles']])
+
+
+def check_session_not_over(session_id):
+    session = get_session(session_id)
+    if session.ends_at < timezone.now():
+        stop_session(session.id)
+        raise exceptions.SessionNotFound()

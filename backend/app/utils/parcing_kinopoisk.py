@@ -4,6 +4,7 @@ from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
+from django.utils import timezone
 
 import requests
 
@@ -17,9 +18,14 @@ def read_data_from_kinopoisk(url: str, headers: dict) -> dict:
     :param headers: заголовок запроса с указанием токена
     :return: data - словарь со списком фильмов
     """
-    response = requests.get(url, headers=headers)
-    data = response.json()
-    return data
+    while True:
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            return data
+        except requests.exceptions.HTTPError:
+            time.sleep(5)
 
 
 def check_params(data: dict) -> bool:
@@ -32,6 +38,17 @@ def check_params(data: dict) -> bool:
         if data['name'] and data['genres'] and data['year'] and data['rating'] and data['votes'] and \
                 data['countries'] and data['persons']:
             return True
+    return False
+
+
+def check_constraints(data: dict) -> bool:
+    """
+    Проверка ограничений полей для БД
+    :param data: словарь с одним фильмом
+    :return: bool
+    """
+    if 1896 <= data['year'] <= timezone.now().year and 0 <= data['rating']['imdb'] <= 10 and data['votes']['imdb'] >= 0:
+        return True
     return False
 
 
@@ -65,6 +82,8 @@ def add_title(data: dict) -> None:
     """
     if data['isSeries']:
         seasons_count = data['seasonsInfo'][-1]['number']
+        if seasons_count == 0:
+            seasons_count = data['seasonsInfo'][-2]['number']
 
         title, _ = Title.objects.get_or_create(
             id=data['id'],
@@ -97,7 +116,7 @@ def add_title_genres(data: dict) -> None:
     for genre in data['genres']:
         genre, _ = Genre.objects.get_or_create(title=genre['name'])
 
-        genre.titles.add(title)
+        title.genre.add(genre)
 
 
 def add_title_directors(data: dict) -> None:
@@ -114,7 +133,7 @@ def add_title_directors(data: dict) -> None:
             except ObjectDoesNotExist:
                 director, _ = Director.objects.get_or_create(id=director['id'], name=director['name'])
 
-            director.titles.add(title)
+            title.director.add(director)
 
 
 def add_title_countries(data: dict) -> None:
@@ -127,7 +146,7 @@ def add_title_countries(data: dict) -> None:
     for country in data['countries']:
         country, _ = Country.objects.get_or_create(title=country['name'])
 
-        country.titles.add(title)
+        title.country.add(country)
 
 
 def add_title_actors(data: dict) -> None:
@@ -147,7 +166,7 @@ def add_title_actors(data: dict) -> None:
             except ObjectDoesNotExist:
                 actor, _ = Actor.objects.get_or_create(id=actor['id'], name=actor['name'])
 
-            actor.titles.add(title)
+            title.actor.add(actor)
             cnt += 1
 
 
@@ -162,10 +181,11 @@ def add_title_content_rating(data: dict) -> None:
         age_rating, _ = ContentRating.objects.get_or_create(
             value=data['ageRating'],
         )
-        age_rating.titles.add(title)
+        title.content_rating = age_rating
+        title.save()
 
 
-def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> None:
+def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> int:
     """
     Добавление одного похожего фильма в БД
     :param data: словарь с одним экземпляром
@@ -177,7 +197,7 @@ def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_ch
     Title.objects.get(id=similar_title['id'])
     if update_mode:
         try:
-            SimilarTitle.objects.update(
+            SimilarTitle.objects.create(
                 title_id=data['id'],
                 similar_title_id=similar_title['id'],
             )
@@ -189,9 +209,10 @@ def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_ch
             title_id=data['id'],
             similar_title_id=similar_title['id'],
         )
+    return cnt_changes
 
 
-def add_similar_titles(data: dict, update_mode: bool, cnt_changes: int) -> None:
+def add_similar_titles(data: dict, update_mode: bool, cnt_changes: int) -> int:
     """
     Добавление похожих фильмов и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
@@ -201,12 +222,13 @@ def add_similar_titles(data: dict, update_mode: bool, cnt_changes: int) -> None:
     """
     for similar_title in data['similarMovies']:
         try:
-            add_similar_title(data, update_mode, similar_title, cnt_changes)
+            cnt_changes = add_similar_title(data, update_mode, similar_title, cnt_changes)
         except ObjectDoesNotExist:
             pass
+    return cnt_changes
 
 
-def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> None:
+def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
     """
     Добавление фильма в БД
     :param data: словарь с одним экземпляром
@@ -215,7 +237,7 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> None:
     :return:
     """
     if update_mode:
-        add_similar_titles(data, update_mode, cnt_changes)
+        cnt_changes = add_similar_titles(data, update_mode, cnt_changes)
     else:
         add_title(data)
         add_title_genres(data)
@@ -225,9 +247,10 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> None:
         add_title_content_rating(data)
         add_similar_titles(data, update_mode, cnt_changes)
         print(f"Фильм {data['name']} - успешно добавлен!")
+    return cnt_changes
 
 
-def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
+def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> int:
     """
     Добавление фильма в БД
     :param film: словарь с одним экземпляром
@@ -240,7 +263,8 @@ def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: i
         film_id = film['id']
         try:
             Title.objects.get(id=film_id)
-            fill_database(film, update_mode, cnt_changes)
+            if check_constraints(film):
+                cnt_changes = fill_database(film, update_mode, cnt_changes)
         except ObjectDoesNotExist:
             pass
     else:
@@ -249,10 +273,14 @@ def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: i
             print(f'[INFO] Фильм {title.title} - уже существует!')
         except ObjectDoesNotExist:
             print(f'[{cnt}] ', sep='', end='')
-            fill_database(film, update_mode, cnt_changes)
+            if check_constraints(film):
+                fill_database(film, update_mode, cnt_changes)
+            else:
+                print(f"Фильм {film['name']} - не соответствуют ограничениям!")
+    return cnt_changes
 
 
-def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
+def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> int:
     """
     Проверка корректности полученных данных о фильме и добавление фильма
     :param film: словарь с одним экземпляром
@@ -262,7 +290,7 @@ def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
     :return:
     """
     if check_params(film) and check_duration(film) and check_seasons(film):
-        add_film_to_database(film, cnt, update_mode, cnt_changes)
+        cnt_changes = add_film_to_database(film, cnt, update_mode, cnt_changes)
     else:
         if not update_mode:
             if 'name' in film:
@@ -270,6 +298,7 @@ def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> None:
                 print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
             else:
                 print('[ERROR] Недостаточно данных для добавления фильма None!')
+    return cnt_changes
 
 
 def main():
@@ -295,7 +324,7 @@ def main():
         data = read_data_from_kinopoisk(url, headers)
         cnt_changes = 0
         for film in data['docs']:
-            add_film(film, cnt, update_mode, cnt_changes)
+            cnt_changes = add_film(film, cnt, update_mode, cnt_changes)
             cnt += 1
         if update_mode:
             print(f'Для {limit} фильмов добавлено {cnt_changes} похожих!')
