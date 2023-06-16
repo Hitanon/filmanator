@@ -37,57 +37,73 @@
 
 #### Url: api/v1/token/
 
-Description: Get jwt tokens: access, refresh. Authorize user
-Methods: Post
-Request body:
+* Description: Get jwt tokens: access, refresh. Authorize user
+* Methods: Post
+* Request body:
+  ```
   {
     'email': email,
     'password': password,
   }
-Response:
+  ```
+* Response:
+  ```
   {
     'access': access,
     'refresh': fefresh,
   }
+  ```
 
 #### Url: api/v1/token/refresh/
 
-Description: Refresh access by refresh token
-Method: Post
-Request body:
+* Description: Refresh access by refresh token
+* Method: Post
+* Request body:
+  ```
   {
     'refresh': refresh,
   }
-Response:
+  ```
+* Response:
+  ```
   {
     'access': access,
   }
+  ```
 
 #### Url: api/v1/token/verify/
 
-Description: Verify token
-Method: Post
-Request body:
+* Description: Verify token
+* Method: Post
+* Request body:
+  ```
   {
     'token': token,
   }
-Response:
-  {}
+  ```
 
 #### Url: api/v1/users/
 
-Description: Create, delete users
-Method: Post, Delete
-  (Post)
-  Request body:
-    {
-      'email': email,
-      'username': username,
-      'password': password,
-    }
-  (Delete)
-  Headers:
-    Authorization: Bearer (token)
+* Description: Create, delete users
+* Method: Post, Delete
+
+###### Post
+
+* Request body:
+  ```
+  {
+    'email': email,
+    'username': username,
+    'password': password,
+  }
+  ```
+
+###### Delete
+
+* Headers:
+* Authorization: Bearer (token)
+
+---
 
 ### Questionnaire
 
@@ -95,15 +111,17 @@ Method: Post, Delete
 
 Description: Start, Update session
 Methods: Get, Post
-(Get)
-  Response:
+
+###### Get
+
+* Response:
+  ```
   {
     'id': session_id,
     'question': {
       'id': id,
       'body': body,
-      'answer':
-      [
+      'answer':[
         {
           'id': id,
           'body': body
@@ -111,34 +129,40 @@ Methods: Get, Post
       ]
     }
   }
-(Post)
-  Request body:
-    {
-      'session': session_id,
-      'question': question_id,
-      'answer': answer_id,
-    }
+  ```
+
+###### Post
+
+* Request body:
+  ```
+  {
+    'session': session_id,
+    'question': question_id,
+    'answer': answer_id,
+  }
+  ```
   Questionnaire is over:
-    Response:
-      [
-        {
-          'match_percentage': match_percentage,
-          'length': length,
-          'titles':
-            [
-              {...}
-            ]
-        }
-      ]
-  Questionnaire is not over:
-    Response:
+  * Response:
+    ```
+    [
       {
+        'match_percentage': match_percentage,
+        'length': length,
+        'titles': [
+          {...}
+        ]
+      }
+    ]
+    ```
+  Questionnaire is not over:
+  * Response:
+    ```
+    {
       'id': session_id,
       'question': {
         'id': id,
         'body': body,
-        'answer':
-        [
+        'answer':[
           {
             'id': id,
             'body': body
@@ -146,6 +170,7 @@ Methods: Get, Post
         ]
       }
     }
+    ```
 
 #### Url: api/v1/questionnaire/`session_id`/
 
