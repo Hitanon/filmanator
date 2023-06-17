@@ -19,6 +19,14 @@ class TitleSerializer(serializers.ModelSerializer):
         )
 
 
+class TitleOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Title
+        fields = (
+            'id',
+        )
+
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Genre
