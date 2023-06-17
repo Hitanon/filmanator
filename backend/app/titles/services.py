@@ -1,12 +1,14 @@
 import random
 
-from django.db.models import Q
+from config import settings
 
-from titles.models import Title
-from titles.serializers import TitleSerializer
+from titles.models import SimilarTitle, Title
+from titles.serializers import TitleOutputSerializer
 
 
 # приоритет категорий
+from utils.parcing_kinopoisk import read_data_from_kinopoisk
+
 priority = {
     'seasons_count': 5,
     'actor': 5,
@@ -89,17 +91,13 @@ def apply_additional_filters(queryset, criteria, sum_points):
     for key, values in criteria.items():
         if key in ['mood', 'viewing_method', 'viewing_time', 'visual_atmosphere', 'audience', 'intellectuality',
                    'narrative_method', 'acting', 'amount_of_dialogue', 'graphics']:
-            filters = Q()
-            for value in values:
-                filter_q = Q(**{key: value})
-                filters |= filter_q
-            queryset = queryset.filter(filters)
+            queryset = queryset.filter(**{key + '__in': values})
             sum_points += priority[key]
 
     return queryset, sum_points
 
 
-def apply_filters(queryset, criteria, sum_points=0):
+def apply_filters(queryset, criteria, sum_points):
     """
     Применение к списку фильмов базовых и дополнительных фильтров
     """
@@ -147,21 +145,48 @@ def remove_filter(criteria):
             return criteria
 
 
-def get_titles_by_attrs(criteria):
+def add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles):
+    similar_filtered_titles = filtered_titles_to_100.filter(pk__in=[title.pk for title in similar_titles])
+    if similar_filtered_titles:
+        while len(serialized_titles_to_100) < 10 and similar_filtered_titles:
+            random_element = random.choice(similar_filtered_titles)
+            similar_filtered_titles = similar_filtered_titles.exclude(id=random_element.id)
+            serializer = TitleOutputSerializer(random_element)
+            serializer_data = serializer.data
+            serializer_data['match_percentage'] = 100
+            serialized_titles_to_100.append(serializer_data)
+    return serialized_titles_to_100
+
+
+def get_titles_by_attrs(criteria, history):
     """
     Получение словаря с отборными фильмами
     """
     title_output = []
     titles = Title.objects.all()
     sum_points = 0
+    # похожие фильмы на уже просмотренные
+    similar_similar_titles = SimilarTitle.objects.none()
+    for title in history:
+        similar_similar_titles = similar_similar_titles.union(title.similar_titles.all())
+    similar_titles = Title.objects.all()
+    print(similar_similar_titles)
+    similar_titles = similar_titles.filter(pk__in=[title.title.pk for title in similar_similar_titles])
+
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)
+    # исключаем все ранее просмотренные фильмы
+    filtered_titles_to_100 = filtered_titles_to_100.exclude(pk__in=[title.pk for title in history])
     selected_titles = filtered_titles_to_100
+    selected_titles = selected_titles.union(history)
     serialized_titles_to_100 = []
+    # добавление похожих фильмов
+    serialized_titles_to_100 = add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles)
+
     while len(serialized_titles_to_100) < 10 and filtered_titles_to_100:
         random_element = random.choice(filtered_titles_to_100)
         filtered_titles_to_100 = filtered_titles_to_100.exclude(id=random_element.id)
-        serializer = TitleSerializer(random_element)
+        serializer = TitleOutputSerializer(random_element)
         serializer_data = serializer.data
         serializer_data['match_percentage'] = 100
         serialized_titles_to_100.append(serializer_data)
@@ -181,7 +206,7 @@ def get_titles_by_attrs(criteria):
         while len(serialized_titles_to_85) < 10-length_to_100 and filtered_titles_to_85:
             random_element = random.choice(filtered_titles_to_85)
             filtered_titles_to_85 = filtered_titles_to_85.exclude(id=random_element.id)
-            serializer = TitleSerializer(random_element)
+            serializer = TitleOutputSerializer(random_element)
             serializer_data = serializer.data
             serializer_data['match_percentage'] = round(points/sum_points*100)
             serialized_titles_to_85.append(serializer_data)
@@ -190,3 +215,132 @@ def get_titles_by_attrs(criteria):
     title_output += serialized_titles_to_85
 
     return title_output
+
+
+def many_trailers_to_one(film):
+    """
+    Сокращение кол-ва трейлеров до одного
+    """
+    if not film['videos'] or not film['videos']['trailers']:
+        del film['videos']
+        film['trailer'] = None
+    else:
+        film['trailer'] = film['videos']['trailers'][-1]
+        del film['videos']
+    return film
+
+
+def check_data(film):
+    """
+    Проверка наличия всех полей для полной информации
+    """
+    needed_data = ['id', 'name', 'alternativeName', 'isSeries', 'year', 'rating', 'rating', 'votes', 'movieLength',
+                   'countries', 'ageRating', 'persons', 'seasonsInfo', 'persons', 'genres', 'shortDescription',
+                   'description', 'budget', 'fees', 'similarMovies', 'videos', 'poster']
+    for need in needed_data:
+        if need not in film or not film[need]:
+            film[need] = None
+    film = many_trailers_to_one(film)
+    if not film['fees'] or not film['fees']['world']:
+        film['fees'] = None
+    if film['ageRating'] is None:
+        film['ageRating'] = 0
+
+    return film
+
+
+def compare_with_ratings(ratings, similar_title):
+    """
+    Добавление рейтинга к похожему фильму
+    """
+    similar_id = similar_title['id']
+    for rating in ratings:
+        if rating['id'] == similar_id:
+            if 'rating' in rating:
+                if 'kp' in rating['rating']:
+                    similar_title['rating'] = rating['rating']['kp']
+                    break
+                elif 'imdb' in rating['rating']:
+                    similar_title['rating'] = rating['rating']['imdb']
+                    break
+    else:
+        similar_title['rating'] = None
+    return similar_title
+
+
+def add_link_and_rating_to_similar(headers, data):
+    """
+    Добавление ссылки на фильм и рейтинга к похожим
+    """
+    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id rating.kp rating.imdb'
+    base_link = 'https://www.kinopoisk.ru/film/'
+    for title in data:
+        title['link'] = base_link + str(title['id'])
+        for similar_title in title['similarMovies']:
+            url += f'&id={similar_title["id"]}'
+    all_ratings = read_data_from_kinopoisk(url, headers)
+    ratings = all_ratings['docs']
+    for title in data:
+        for similar_title in title['similarMovies']:
+            similar_title = compare_with_ratings(ratings, similar_title)
+    return data
+
+
+def remove_key_persons(film, output_actors, output_directors):
+    """
+    Удаление ключа persons и добавление actors и directors
+    """
+    del film['persons']
+    film['actors'] = output_actors
+    film['directors'] = output_directors
+    if not output_actors:
+        film['actors'] = None
+    if not output_directors:
+        film['directors'] = None
+    return film
+
+
+def reduce_persons(film):
+    """
+    Сокращение кол-ва актеров до 10
+    """
+    output_actors = []
+    output_directors = []
+    for person in film['persons']:
+        if person['profession'] == 'актеры':
+            if len(output_actors) < 10:
+                output_actors.append(person['name'])
+        elif person['profession'] == 'режиссеры':
+            output_directors.append(person['name'])
+    film = remove_key_persons(film, output_actors, output_directors)
+    return film
+
+
+def get_full_info_about_titles(titles):
+    """
+    Получение полной информации о фильмах
+    """
+    token = settings.TOKEN
+    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name alternativeName isSeries year rating.imdb ' \
+          'rating.kp votes.imdb movieLength countries ageRating persons.id seasonsInfo persons.name ' \
+          'persons.profession genres shortDescription description budget fees.world similarMovies.id ' \
+          'similarMovies.name similarMovies.poster.previewUrl videos.trailers.url poster.previewUrl'
+    for title in titles:
+        url += f'&id={title["id"]}'
+    headers = {'x-api-key': token}
+    all_data = read_data_from_kinopoisk(url, headers)
+    data = all_data['docs']
+    data = add_link_and_rating_to_similar(headers, data)
+    for film in data:
+        film = check_data(film)
+        film = reduce_persons(film)
+    return data
+
+
+def select_titles(criteria, history):
+    """
+    Выборка фильмов и получение инфы о них
+    """
+    titles = get_titles_by_attrs(criteria, history)
+    full_info = get_full_info_about_titles(titles)
+    return full_info

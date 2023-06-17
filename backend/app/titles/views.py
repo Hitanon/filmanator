@@ -7,7 +7,7 @@ from rest_framework import generics
 
 from titles.models import Title
 from titles.serializers import TitleSerializer
-from titles.services import get_titles_by_attrs
+from titles.services import select_titles
 
 
 class TitleAPIView(generics.RetrieveAPIView):
@@ -27,6 +27,7 @@ def get_films_by_criteria(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-    films = get_titles_by_attrs(criteria)
+    history = Title.objects.filter(pk__in=[298])
+    films = select_titles(criteria, history)
 
     return JsonResponse({'success': True, 'films': films})
