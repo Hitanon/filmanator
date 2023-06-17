@@ -27,6 +27,7 @@ def get_films_by_criteria(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-    films = get_titles_by_attrs(criteria)
+    history = Title.objects.filter(pk__in=[298])
+    films = get_titles_by_attrs(criteria, history)
 
     return JsonResponse({'success': True, 'films': films})

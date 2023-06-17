@@ -130,17 +130,24 @@ def stop_session(session_id):
     session.delete()
 
 
-def get_criterions(session_id):
+def get_criterions(session):
     result_criterions = models.ResultCriterions()
-    session = get_session(session_id)
     for result in models.Result.objects.filter(session=session):
         result_criterions.add_result(result)
     return result_criterions.data
 
 
+def get_history(session):
+    user = session.user
+    history = History.objects.filter(user=user)
+    return history
+
+
 def get_titles(session_id):
-    criterions = get_criterions(session_id)
-    return get_titles_by_attrs(criterions)
+    session = get_session(session_id)
+    criterions = get_criterions(session)
+    history = get_history(session)
+    return get_titles_by_attrs(criterions, history)
 
 
 def write_result_titles_to_history(user, session_id, result_titles):

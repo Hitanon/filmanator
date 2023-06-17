@@ -1,8 +1,6 @@
 import random
 
-from django.db.models import Q
-
-from titles.models import Title
+from titles.models import Title, SimilarTitle
 from titles.serializers import TitleSerializer
 
 
@@ -89,17 +87,13 @@ def apply_additional_filters(queryset, criteria, sum_points):
     for key, values in criteria.items():
         if key in ['mood', 'viewing_method', 'viewing_time', 'visual_atmosphere', 'audience', 'intellectuality',
                    'narrative_method', 'acting', 'amount_of_dialogue', 'graphics']:
-            filters = Q()
-            for value in values:
-                filter_q = Q(**{key: value})
-                filters |= filter_q
-            queryset = queryset.filter(filters)
+            queryset = queryset.filter(**{key + '__in': values})
             sum_points += priority[key]
 
     return queryset, sum_points
 
 
-def apply_filters(queryset, criteria, sum_points=0):
+def apply_filters(queryset, criteria, sum_points):
     """
     Применение к списку фильмов базовых и дополнительных фильтров
     """
@@ -147,17 +141,41 @@ def remove_filter(criteria):
             return criteria
 
 
-def get_titles_by_attrs(criteria):
+def get_titles_by_attrs(criteria, history):
     """
     Получение словаря с отборными фильмами
     """
     title_output = []
     titles = Title.objects.all()
     sum_points = 0
+    # похожие фильмы на уже просмотренные
+    similar_similar_titles = SimilarTitle.objects.none()
+    for title in history:
+        similar_similar_titles = similar_similar_titles.union(title.similar_titles.all())
+    similar_titles = Title.objects.all()
+    print(similar_similar_titles)
+    similar_titles = similar_titles.filter(pk__in=[title.title.pk for title in similar_similar_titles])
+
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)
+    # исключаем все ранее просмотренные фильмы
+    filtered_titles_to_100 = filtered_titles_to_100.exclude(pk__in=[title.pk for title in history])
     selected_titles = filtered_titles_to_100
+    selected_titles = selected_titles.union(history)
     serialized_titles_to_100 = []
+    # добавление похожих фильмов
+    print(filtered_titles_to_100)
+    print(similar_titles)
+    similar_filtered_titles = filtered_titles_to_100.filter(pk__in=[title.pk for title in similar_titles])
+    if similar_filtered_titles:
+        while len(serialized_titles_to_100) < 10 and similar_filtered_titles:
+            random_element = random.choice(similar_filtered_titles)
+            similar_filtered_titles = similar_filtered_titles.exclude(id=random_element.id)
+            serializer = TitleSerializer(random_element)
+            serializer_data = serializer.data
+            serializer_data['match_percentage'] = 100
+            serialized_titles_to_100.append(serializer_data)
+
     while len(serialized_titles_to_100) < 10 and filtered_titles_to_100:
         random_element = random.choice(filtered_titles_to_100)
         filtered_titles_to_100 = filtered_titles_to_100.exclude(id=random_element.id)
