@@ -41,8 +41,10 @@ ALLOWED_HOSTS = [
     env('ALLOWED_HOST'),
 ]
 
+cors_allowed_origins = env('CORS_ALLOWED_ORIGINS')
+
 CORS_ALLOWED_ORIGINS = [
-    env('CORS_ALLOWED_ORIGINS'),
+    cors_allowed_origins if cors_allowed_origins else 'http://localhost',
 ]
 
 INSTALLED_APPS = [
