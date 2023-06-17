@@ -316,6 +316,15 @@ def reduce_persons(film):
     return film
 
 
+def add_match_percentage(data, titles):
+    """
+    Добавление в полную информацию процента совпадения
+    """
+    for i in range(len(data)):
+        data[i]['match_percentage'] = titles[i]['match_percentage']
+    return data
+
+
 def get_full_info_about_titles(titles):
     """
     Получение полной информации о фильмах
@@ -334,6 +343,7 @@ def get_full_info_about_titles(titles):
     for film in data:
         film = check_data(film)
         film = reduce_persons(film)
+    add_match_percentage(data, titles)
     return data
 
 
