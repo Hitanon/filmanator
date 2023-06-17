@@ -20,10 +20,9 @@ class QuestionnaireView(APIView):
 
     def _get_titles(self, session_id):
         result_titles = services.get_titles(session_id)
-        services.stop_session(session_id)
+        data = services.get_titles_full_info(result_titles)
         services.write_result_titles_to_history(self.request.user, session_id, result_titles)
-        serializer = serializers.SelectedTitlesSerializer(result_titles, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_200_OK)
 
     def _get_next_question(self, session_id):
         question = services.get_next_question(session_id)
