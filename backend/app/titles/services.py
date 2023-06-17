@@ -317,6 +317,9 @@ def reduce_persons(film):
 
 
 def add_match_percentage(data, titles):
+    """
+    Добавление в полную информацию процента совпадения
+    """
     for i in range(len(data)):
         data[i]['match_percentage'] = titles[i]['match_percentage']
     return data
