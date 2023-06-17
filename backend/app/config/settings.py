@@ -11,6 +11,7 @@ env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-secret-key'),
     ALLOWED_HOST=(str, 'localhost'),
+    CORS_ALLOWED_ORIGINS=(str, 'http://localhost'),
 
     # Database
     DB_NAME=(str, 'DB_NAME'),
@@ -40,6 +41,10 @@ ALLOWED_HOSTS = [
     env('ALLOWED_HOST'),
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    env('CORS_ALLOWED_ORIGINS'),
+]
+
 INSTALLED_APPS = [
     # Встроенные django приложения
     'django.contrib.admin',
@@ -53,6 +58,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',
 
     # Приложения проекта
     'questionnaire',
@@ -63,6 +69,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
