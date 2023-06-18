@@ -28,6 +28,12 @@ const updateCurrentButtonIndex = (isTextAnimated, currentButtonIndex, setCurrent
     }
 };
 
+// const fetchData = async () => {
+//     const response = await fetch('http://localhost:8000/api/v1/questionnaire/');
+//     const data = await response.json();
+//     console.log(data);
+// };
+
 const Question = observer(() => {
     const [iconSrc, setIconSrc] = useState('/img/previous_question_button.svg');
     const [currentButtonIndex, setCurrentButtonIndex] = useState(-1);
@@ -36,6 +42,10 @@ const Question = observer(() => {
     const handleAnimationComplete = useCallback(() => {
         setIsTextAnimated(true);
     }, []);
+
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
 
     useEffect(() => {
         updateCurrentButtonIndex(isTextAnimated, currentButtonIndex, setCurrentButtonIndex);

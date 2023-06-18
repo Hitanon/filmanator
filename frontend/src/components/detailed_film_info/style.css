@@ -1,0 +1,30 @@
+.container-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 40px;
+    margin: 0 160px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 1200px) {
+    .container-grid {
+        margin: 0;
+        overflow-x: auto;
+    }
+}
+
+
+.header {
+    grid-column: 4 / span 5;
+    font-size: 50px;
+}
+
+.rating_icons {
+    margin-top:50px;
+    grid-column-end: 12;
+}
+
+.rating_icons>* {
+    margin-bottom: 10px;
+}

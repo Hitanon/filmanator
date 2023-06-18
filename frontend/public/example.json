@@ -1,0 +1,1458 @@
+[
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 392000694,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 7.974,
+      "imdb": 8.2
+    },
+    "votes": {
+      "imdb": 1466980
+    },
+    "movieLength": 180,
+    "id": 462682,
+    "name": "Волк с Уолл-стрит",
+    "description": "1987 год. Джордан Белфорт становится брокером в успешном инвестиционном банке. Вскоре банк закрывается после внезапного обвала индекса Доу-Джонса. По совету жены Терезы Джордан устраивается в небольшое заведение, занимающееся мелкими акциями. Его настойчивый стиль общения с клиентами и врождённая харизма быстро даёт свои плоды. Он знакомится с соседом по дому Донни, торговцем, который сразу находит общий язык с Джорданом и решает открыть с ним собственную фирму. В качестве сотрудников они нанимают нескольких друзей Белфорта, его отца Макса и называют компанию «Стрэттон Оукмонт». В свободное от работы время Джордан прожигает жизнь: лавирует от одной вечеринки к другой, вступает в сексуальные отношения с проститутками, употребляет множество наркотических препаратов, в том числе кокаин и кваалюд. Однажды наступает момент, когда быстрым обогащением Белфорта начинает интересоваться агент ФБР...",
+    "year": 2013,
+    "budget": {
+      "value": 100000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_462682.jpg"
+    },
+    "genres": [
+      {
+        "name": "драма"
+      },
+      {
+        "name": "криминал"
+      },
+      {
+        "name": "биография"
+      },
+      {
+        "name": "комедия"
+      }
+    ],
+    "countries": [
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "The Wolf of Wall Street",
+    "shortDescription": "Восхождение циника-гедониста на бизнес-олимп 1980-х. Блистательный тандем Леонардо ДиКаприо и Мартина Скорсезе",
+    "ageRating": 18,
+    "similarMovies": [
+      {
+        "id": 324,
+        "name": "Поймай меня, если сможешь",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/e38dd6f9-610e-4c90-8540-dc48560cb9cc/x1000"
+        },
+        "rating": 8.527
+      },
+      {
+        "id": 616,
+        "name": "Кокаин",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/f6b90ead-f020-4d7f-9796-b41e8d738499/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 2494,
+        "name": "Казино",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/b648db4a-60c5-4cd8-ab8a-4f79d5609cd5/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/462682",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/W8oTil54t1s"
+    },
+    "actors": [
+      "Леонардо ДиКаприо",
+      "Джона Хилл",
+      "Марго Робби",
+      "Кайл Чандлер",
+      "Роб Райнер",
+      "П.Дж. Бирн",
+      "Джон Бернтал",
+      "Кристин Милиоти",
+      "Жан Дюжарден",
+      "Мэттью МакКонахи"
+    ],
+    "directors": [
+      "Мартин Скорсезе"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 286801374,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 9.073,
+      "imdb": 8.6
+    },
+    "votes": {
+      "imdb": 1337695
+    },
+    "movieLength": 189,
+    "id": 435,
+    "name": "Зеленая миля",
+    "description": "Пол Эджкомб — начальник блока смертников в тюрьме «Холодная гора», каждый из узников которого однажды проходит «зеленую милю» по пути к месту казни. Пол повидал много заключённых и надзирателей за время работы. Однако гигант Джон Коффи, обвинённый в страшном преступлении, стал одним из самых необычных обитателей блока.",
+    "year": 1999,
+    "budget": {
+      "value": 60000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_435.jpg"
+    },
+    "genres": [
+      {
+        "name": "драма"
+      },
+      {
+        "name": "фэнтези"
+      },
+      {
+        "name": "криминал"
+      }
+    ],
+    "countries": [
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "The Green Mile",
+    "shortDescription": "В тюрьме для смертников появляется заключенный с божественным даром. Мистическая драма по роману Стивена Кинга",
+    "similarMovies": [
+      {
+        "id": 326,
+        "name": "Побег из Шоушенка",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/0b76b2a2-d1c7-4f04-a284-80ff7bb709a4/x1000"
+        },
+        "rating": 9.108
+      },
+      {
+        "id": 448,
+        "name": "Форрест Гамп",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/3560b757-9b95-45ec-af8c-623972370f9d/x1000"
+        },
+        "rating": 8.918
+      },
+      {
+        "id": 723,
+        "name": "Планета Ка-Пэкс",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/83aeba81-a956-4e70-b19d-40a4db1284d9/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 738,
+        "name": "Жизнь Дэвида Гейла",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4483445/09a852e0-394e-457e-b637-880cadc38dd2/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 279880,
+        "name": "Подмена",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/295dc81a-a86f-4246-872c-6b5bc75c74f0/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 357,
+        "name": "Убить пересмешника",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/46b80991-7b6f-484b-b6dd-8cd2cd6ccbe9/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 273302,
+        "name": "Мгла",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/e365ec59-b8ba-4d2c-b068-0c472832a47e/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 2271,
+        "name": "Пудра",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/feb20b68-6f88-433c-a6b2-44f30304ff66/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 646,
+        "name": "Танцующая в темноте",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/355a7fde-66df-42e4-9360-ee8400221203/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 7363,
+        "name": "Мертвец идет",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4486454/7fcb3641-786c-4f27-9471-429caca81c81/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "ageRating": 16,
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/435",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/TODt_q-_4C4"
+    },
+    "actors": [
+      "Том Хэнкс",
+      "Дэвид Морс",
+      "Бонни Хант",
+      "Майкл Кларк Дункан",
+      "Джеймс Кромуэлл",
+      "Майкл Джитер",
+      "Грэм Грин",
+      "Даг Хатчисон",
+      "Сэм Рокуэлл",
+      "Барри Пеппер"
+    ],
+    "directors": [
+      "Фрэнк Дарабонт"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 321752656,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 8.408,
+      "imdb": 8.2
+    },
+    "votes": {
+      "imdb": 520973
+    },
+    "movieLength": 130,
+    "id": 1108577,
+    "name": "Зеленая книга",
+    "description": "1960-е годы. После закрытия нью-йоркского ночного клуба на ремонт вышибала Тони по прозвищу Болтун ищет подработку на пару месяцев. Как раз в это время Дон Ширли — утонченный светский лев, богатый и талантливый чернокожий музыкант, исполняющий классическую музыку — собирается в турне по южным штатам, где ещё сильны расистские убеждения и царит сегрегация. Он нанимает Тони в качестве водителя, телохранителя и человека, способного решать текущие проблемы. У этих двоих так мало общего, и эта поездка навсегда изменит жизнь обоих.",
+    "year": 2018,
+    "budget": {
+      "value": 23000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_1108577.jpg"
+    },
+    "genres": [
+      {
+        "name": "биография"
+      },
+      {
+        "name": "комедия"
+      },
+      {
+        "name": "драма"
+      }
+    ],
+    "countries": [
+      {
+        "name": "США"
+      },
+      {
+        "name": "Китай"
+      }
+    ],
+    "seasonsInfo": null,
+    "similarMovies": [
+      {
+        "id": 535341,
+        "name": "1+1",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/bf93b465-1189-4155-9dd1-cb9fb5cb1bb5/x1000"
+        },
+        "rating": 8.807
+      },
+      {
+        "id": 470553,
+        "name": "Прислуга",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/f1c4d9cb-2120-487c-a84a-cbb8e5c462c0/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 6066,
+        "name": "Шофер мисс Дэйзи",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/5c32b430-e02f-44ca-8c98-5f6354a4e8c3/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 966036,
+        "name": "Скрытые фигуры",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/4f60f182-f69d-4e7e-b00b-63ce014cae5f/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 606646,
+        "name": "12 лет рабства",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/5bf49fa3-333d-4625-9857-14b533adbad7/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 586397,
+        "name": "Джанго освобожденный",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/401c67e4-5047-42c2-8668-aeda39da529f/x1000"
+        },
+        "rating": 8.233
+      },
+      {
+        "id": 5319,
+        "name": "Рэй",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/33b1074c-e045-44a3-b26a-af878eb274aa/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 920082,
+        "name": "Лучшие враги",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/053240e2-e37e-4b80-94e6-ec29015e907d/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "alternativeName": "Green Book",
+    "shortDescription": "Путешествие итальянца-вышибалы и чернокожего пианиста по Америке 1960-х. «Оскар» за лучший фильм",
+    "ageRating": 18,
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/1108577",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/PyOdoIzVRk4"
+    },
+    "actors": [
+      "Вигго Мортенсен",
+      "Махершала Али",
+      "Линда Карделлини",
+      "Себастьян Манискалко",
+      "Димитар Маринов",
+      "Майк Хаттон",
+      "П.Дж. Бирн",
+      "Джо Кортезе",
+      "Мэгги Никсон",
+      "Фон Льюис"
+    ],
+    "directors": [
+      "Питер Фаррелли"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 2799439100,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 7.848,
+      "imdb": 8.4
+    },
+    "votes": {
+      "imdb": 1184106
+    },
+    "movieLength": 181,
+    "id": 843650,
+    "name": "Мстители: Финал",
+    "description": "Оставшиеся в живых члены команды Мстителей и их союзники должны разработать новый план, который поможет противостоять разрушительным действиям могущественного титана Таноса. После наиболее масштабной и трагической битвы в истории они не могут допустить ошибку.",
+    "year": 2019,
+    "budget": {
+      "value": 356000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_843650.jpg"
+    },
+    "genres": [
+      {
+        "name": "фантастика"
+      },
+      {
+        "name": "боевик"
+      },
+      {
+        "name": "драма"
+      },
+      {
+        "name": "приключения"
+      }
+    ],
+    "countries": [
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "Avengers: Endgame",
+    "similarMovies": [
+      {
+        "id": 597687,
+        "name": "Люди Икс: Дни минувшего будущего",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/de7da935-0a1d-42fb-8e92-988a9d9d8788/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 689066,
+        "name": "Стражи Галактики",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/2e6ab20b-7cf1-49e7-b465-bd5a71c13fa3/x1000"
+        },
+        "rating": 7.845
+      },
+      {
+        "id": 409600,
+        "name": "Доктор Стрэндж",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/bb966b79-5b10-485d-88d7-fb6aeb79b185/x1000"
+        },
+        "rating": 7.517
+      },
+      {
+        "id": 935940,
+        "name": "Человек-муравей и Оса",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/6c56fc51-4e6e-4d84-b37b-4bddd5f71a26/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 424994,
+        "name": "Лига справедливости",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/ee1b7203-b1b4-4cf9-95b2-92fd4600151b/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 61237,
+        "name": "Железный человек",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/c8e2f069-15f1-4803-95c0-aba858fec360/x1000"
+        },
+        "rating": 7.96
+      },
+      {
+        "id": 1008445,
+        "name": "Человек-паук: Вдали от дома",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/5cadd28b-996e-4224-ab98-f7aed64aa56c/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 160946,
+        "name": "Первый мститель",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/e33e1f96-bb6b-4630-a419-c90af926c7f3/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 1387021,
+        "name": "Лига справедливости Зака Снайдера",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/3518c34c-092f-42bf-b948-87ebe0bd325a/x1000"
+        },
+        "rating": 7.83
+      },
+      {
+        "id": 823956,
+        "name": "Чёрная Вдова",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/bf8eb79b-565e-4525-80f8-fd0633c747ce/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "shortDescription": "Железный человек, Тор и другие пытаются переиграть Таноса. Эпохальное завершение супергеройской франшизы",
+    "ageRating": 16,
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/843650",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/gbcVZgO4n4E"
+    },
+    "actors": [
+      "Роберт Дауни мл.",
+      "Крис Эванс",
+      "Марк Руффало",
+      "Крис Хемсворт",
+      "Скарлетт Йоханссон",
+      "Джереми Реннер",
+      "Дон Чидл",
+      "Пол Радд",
+      "Бри Ларсон",
+      "Карен Гиллан"
+    ],
+    "directors": [
+      "Энтони Руссо",
+      "Джо Руссо"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 42972994,
+        "currency": "$"
+      }
+    },
+    "id": 839954,
+    "name": "Легенда",
+    "rating": {
+      "kp": 7.191,
+      "imdb": 6.9
+    },
+    "description": "Близнецы Реджи и Ронни Крэй — культовые фигуры преступного мира Великобритании 1960-х. Братья возглавляли самую влиятельную бандитскую группировку Ист-Энда. В их послужном списке были вооруженные грабежи, рэкет, поджоги, покушения, убийства и собственный ночной клуб, куда доезжали даже голливудские знаменитости. Среди их жертв — криминальные авторитеты Джек МакВитти и Джордж Корнелл.",
+    "votes": {
+      "imdb": 191172
+    },
+    "year": 2015,
+    "budget": {
+      "value": 30000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_839954.jpg"
+    },
+    "genres": [
+      {
+        "name": "криминал"
+      },
+      {
+        "name": "триллер"
+      },
+      {
+        "name": "драма"
+      }
+    ],
+    "countries": [
+      {
+        "name": "Великобритания"
+      },
+      {
+        "name": "Франция"
+      },
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "Legend",
+    "movieLength": 131,
+    "ageRating": 18,
+    "shortDescription": "Гангстеры-близнецы завоевывают Лондон 1960-х. Драма о знаменитых преступниках с двойной ролью Тома Харди",
+    "similarMovies": [
+      {
+        "id": 736205,
+        "name": "Черная месса",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/b2301ffb-6258-46fe-943e-7c192c4ef0c0/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 400599,
+        "name": "Джонни Д.",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/e36fc8aa-ff04-4005-8872-c701aef087c1/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 461972,
+        "name": "Самый пьяный округ в мире",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/ae48ede5-7a52-4382-867c-70514e592997/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 716587,
+        "name": "Острые козырьки",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/e1ec4209-569e-4745-a324-b180af8097ef/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 468564,
+        "name": "Охотники на гангстеров",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/caf70030-3cdc-4593-85c7-b3f27b3a1486/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 21636,
+        "name": "Братья Крэй",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/a2f8e716-3bde-4aef-b33d-094bf89fa4f2/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 2494,
+        "name": "Казино",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/b648db4a-60c5-4cd8-ab8a-4f79d5609cd5/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 487211,
+        "name": "Прикуп",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/8269d338-3ed7-447a-a14d-441bc02e38cf/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 770819,
+        "name": "Восхождение Крэев",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/e1760418-4f44-40b1-9a56-8755a30a88a3/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 350,
+        "name": "Славные парни",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/7f119fc4-7fe0-4738-9fa4-bc541d468911/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/839954",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/k7izcLjrArc"
+    },
+    "actors": [
+      "Том Харди",
+      "Эмили Браунинг",
+      "Дэвид Тьюлис",
+      "Даффи",
+      "Кристофер Экклстон",
+      "Чазз Пальминтери",
+      "Пол Андерсон",
+      "Джошуа Хилл",
+      "Колин Морган",
+      "Тара Фитцджеральд"
+    ],
+    "directors": [
+      "Брайан Хелгеленд"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 19552639,
+        "currency": "$"
+      }
+    },
+    "id": 389,
+    "name": "Леон",
+    "rating": {
+      "kp": 8.668,
+      "imdb": 8.5
+    },
+    "description": "Профессиональный убийца Леон неожиданно для себя самого решает помочь 12-летней соседке Матильде, семью которой убили коррумпированные полицейские.",
+    "votes": {
+      "imdb": 1191526
+    },
+    "year": 1994,
+    "budget": {
+      "value": 115000000,
+      "currency": "FRF"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_389.jpg"
+    },
+    "genres": [
+      {
+        "name": "боевик"
+      },
+      {
+        "name": "триллер"
+      },
+      {
+        "name": "драма"
+      },
+      {
+        "name": "криминал"
+      }
+    ],
+    "countries": [
+      {
+        "name": "Франция"
+      },
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "Léon",
+    "similarMovies": [
+      {
+        "id": 6889,
+        "name": "Гнев",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/cacca5b5-8261-40d9-847f-fb29af41cf9e/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 276376,
+        "name": "Заложница",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/037e599b-f419-4dbe-98db-7c38e5eddaf5/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 276598,
+        "name": "Драйв",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/7d10f506-1d2a-4d73-98e0-d6605183b938/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 8178,
+        "name": "Совершенный мир",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/208fca23-b34b-4ca4-9208-7b96cd577d3c/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 14288,
+        "name": "Васаби",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/e0f0830a-8560-436d-9c6f-d984ee157e7e/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 39259,
+        "name": "Профессионал",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/7727548a-3760-46f3-9879-f77ab9a62a81/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 523057,
+        "name": "Защитник",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/ca37a460-5d79-4080-b840-accce18859c6/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 195615,
+        "name": "Механик",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/ec1b6071-a30b-4c98-81d4-b3f8d5c2e657/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 523122,
+        "name": "Коломбиана",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/317002b9-01b0-4798-bce9-8881c341b0fa/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 468551,
+        "name": "Ханна. Совершенное оружие",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/d3a3e328-9eb9-4531-8877-44d6b19989e3/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "movieLength": 133,
+    "shortDescription": null,
+    "ageRating": 16,
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/389",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/hvya_q8KM80"
+    },
+    "actors": [
+      "Жан Рено",
+      "Натали Портман",
+      "Гари Олдман",
+      "Дэнни Айелло",
+      "Питер Эппел",
+      "Уилли Уан Блад",
+      "Дон Крич",
+      "Кит А. Гласко",
+      "Рэндольф Скотт",
+      "Майкл Бадалукко"
+    ],
+    "directors": [
+      "Люк Бессон"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 214139,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 8.636,
+      "imdb": 7.8
+    },
+    "votes": {
+      "imdb": 32136
+    },
+    "movieLength": 87,
+    "id": 32898,
+    "name": "Достучаться до небес",
+    "description": "Волею судеб две абсолютные противоположности, тихоня Руди и разгильдяй Мартин, оказываются в одной больничной палате. Узнав неутешительные прогнозы, друзья решают использовать последние дни на полную катушку — угнать машину с деньгами, напиться текилы, и, конечно, увидеть море.",
+    "year": 1997,
+    "budget": {
+      "value": 4300000,
+      "currency": "DEM"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_32898.jpg"
+    },
+    "genres": [
+      {
+        "name": "драма"
+      },
+      {
+        "name": "комедия"
+      },
+      {
+        "name": "криминал"
+      }
+    ],
+    "countries": [
+      {
+        "name": "Германия"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "Knockin' on Heaven's Door",
+    "similarMovies": [
+      {
+        "id": 258885,
+        "name": "Пока не сыграл в ящик",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/7155a924-ac60-4a34-8b0f-56dff6a012f6/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 535341,
+        "name": "1+1",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/bf93b465-1189-4155-9dd1-cb9fb5cb1bb5/x1000"
+        },
+        "rating": 8.807
+      },
+      {
+        "id": 84014,
+        "name": "…А в душе я танцую",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/3623db7c-3c94-4cff-841a-bb2f2d30b9ea/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 81584,
+        "name": "Босиком по мостовой",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/c806aae3-1ed4-4cbc-b0a3-b1c62d67ded3/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 4917,
+        "name": "Святые из Бундока",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/51988714-4bd5-4d26-ad6c-0361bd3a9145/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 462515,
+        "name": "Жизнь прекрасна",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/2b5e57a6-535f-4461-a534-6bb811d28233/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 4871,
+        "name": "Запах женщины",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/378890fe-a68d-45ba-a87e-9108ae0e4574/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 467729,
+        "name": "Реальные парни",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/53898ffe-dab2-41a0-9226-8ff882e0e56e/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 477662,
+        "name": "Третья звезда",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/d2958430-0cc6-4a37-bd1d-43c41ae25b76/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 260162,
+        "name": "Далласский клуб покупателей",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/b2995873-7228-41fa-863f-a5cb2e7c85a4/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "shortDescription": "Смертельно больные Мартин и Руди едут к морю на угнанной машине. Роль, сделавшая Тиля Швайгера суперзвездой",
+    "ageRating": 18,
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/32898",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/jgt39kAWS0g"
+    },
+    "actors": [
+      "Тиль Швайгер",
+      "Ян Йозеф Лиферс",
+      "Тьерри Ван Вервеке",
+      "Мориц Бляйбтрой",
+      "Хуб Стапель",
+      "Леонард Лансинк",
+      "Ральф Херфорт",
+      "Корнелия Фробёсс",
+      "Рутгер Хауэр",
+      "Вилли Томчик"
+    ],
+    "directors": [
+      "Томас Ян"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 321455689,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 7.984,
+      "imdb": 8.3
+    },
+    "votes": {
+      "imdb": 1494779
+    },
+    "movieLength": 153,
+    "id": 9691,
+    "name": "Бесславные ублюдки",
+    "description": "Вторая мировая война. В оккупированной немцами Франции группа американских солдат-евреев наводит страх на нацистов, жестоко убивая и скальпируя солдат.",
+    "year": 2009,
+    "budget": {
+      "value": 70000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_9691.jpg"
+    },
+    "genres": [
+      {
+        "name": "боевик"
+      },
+      {
+        "name": "драма"
+      },
+      {
+        "name": "комедия"
+      },
+      {
+        "name": "военный"
+      }
+    ],
+    "countries": [
+      {
+        "name": "Германия"
+      },
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "Inglourious Basterds",
+    "ageRating": 16,
+    "similarMovies": [
+      {
+        "id": 586397,
+        "name": "Джанго освобожденный",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/401c67e4-5047-42c2-8668-aeda39da529f/x1000"
+        },
+        "rating": 8.233
+      },
+      {
+        "id": 342,
+        "name": "Криминальное чтиво",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/87b5659d-a159-4224-9bff-d5a5d109a53b/x1000"
+        },
+        "rating": 8.646
+      },
+      {
+        "id": 394,
+        "name": "Бешеные псы",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/b1add366-9e49-4ad8-905a-46ca23da8adc/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 2717,
+        "name": "Убить Билла",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/c28ed8ad-54b7-4781-8f42-002d26b39b7f/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 819101,
+        "name": "Омерзительная восьмерка",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/e5013408-8374-400b-a444-b9753e9da28d/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 47015,
+        "name": "Убить Билла 2",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/2f8295c3-cc9f-43cf-8dfe-13616c3eaa5e/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 309475,
+        "name": "Операция «Валькирия»",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/57f61a4c-935f-477b-abd3-05fd0a2ed1a0/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 78079,
+        "name": "Чёрная книга",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/16a4d2dc-847d-4654-ba61-92fd6cf585b2/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 467553,
+        "name": "Мачете",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/6e5f0d93-859a-4561-90c9-6f10f2b75f2d/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 1047883,
+        "name": "Однажды в… Голливуде",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/70580cf5-3287-42d6-8a76-2c715e2f6172/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "shortDescription": "Американский спецотряд жестоко расправляется с нацистами. Пародия на военные фильмы от Квентина Тарантино",
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/9691",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/pZEZ1yDIHEU"
+    },
+    "actors": [
+      "Брэд Питт",
+      "Кристоф Вальц",
+      "Мелани Лоран",
+      "Даниэль Брюль",
+      "Дайан Крюгер",
+      "Майкл Фассбендер",
+      "Аугуст Диль",
+      "Элай Рот",
+      "Тиль Швайгер",
+      "Гедеон Буркхард"
+    ],
+    "directors": [
+      "Квентин Тарантино"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 369330363,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 7.959,
+      "imdb": 8.1
+    },
+    "votes": {
+      "imdb": 1010233
+    },
+    "movieLength": 149,
+    "id": 692861,
+    "name": "Исчезнувшая",
+    "description": "Всё было готово для празднования пятилетия супружеской жизни, когда вдруг необъяснимо пропала виновница торжества. Остались следы борьбы в доме, кровь, которую явно пытались стереть, и цепочка подсказок в игре «охота за сокровищами» - жена ежегодно устраивала её для своего обожаемого мужа. И похоже, что эти подсказки дают шанс пролить свет на судьбу исчезнувшей.",
+    "year": 2014,
+    "budget": {
+      "value": 61000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_692861.jpg"
+    },
+    "genres": [
+      {
+        "name": "триллер"
+      },
+      {
+        "name": "драма"
+      },
+      {
+        "name": "детектив"
+      }
+    ],
+    "countries": [
+      {
+        "name": "США"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "Gone Girl",
+    "ageRating": 16,
+    "shortDescription": "Жена Ника бесследно исчезает в день пятилетия свадьбы. Фильм-головоломка от Дэвида Финчера с Беном Аффлеком",
+    "similarMovies": [
+      {
+        "id": 12198,
+        "name": "Игра",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/d753a460-0ece-4007-84d9-02d7a2968829/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 623744,
+        "name": "Побочный эффект",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/e21f86b2-aeec-42cd-a487-4507223a010f/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 491724,
+        "name": "Девушка с татуировкой дракона",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/1ae7c41f-2605-498a-9d38-8f3ee1526e9a/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 455194,
+        "name": "Пленницы",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/c7debfa6-6264-4352-a996-3676906cce58/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 2441,
+        "name": "Основной инстинкт",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/1c1e106f-d81c-4d39-91dc-cdf865c5608c/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 681849,
+        "name": "Лучшее предложение",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4716873/b90b179d-b5f7-454c-80b3-60884a5ecd5f/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 102838,
+        "name": "Зодиак",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/0d57f736-f872-4494-ae80-f30d23a38aa0/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 928391,
+        "name": "Девушка в поезде",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/4e1d87ce-d715-49a2-b9a7-6e1181e397c6/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 586399,
+        "name": "Транс",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/a9ee64e7-dc0b-42bb-9403-493d67b8911c/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 879,
+        "name": "Что скрывает ложь",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/1242023a-1178-4572-8ae0-684fae961745/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/692861",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/4xsA8gxIltY"
+    },
+    "actors": [
+      "Бен Аффлек",
+      "Розамунд Пайк",
+      "Нил Патрик Харрис",
+      "Тайлер Перри",
+      "Кэрри Кун",
+      "Ким Диккенс",
+      "Патрик Фьюджит",
+      "Дэвид Кленнон",
+      "Лиза Бейнс",
+      "Мисси Пайл"
+    ],
+    "directors": [
+      "Дэвид Финчер"
+    ]
+  },
+  {
+    "match_percentage": 100,
+    "fees": {
+      "world": {
+        "value": 326551094,
+        "currency": "$"
+      }
+    },
+    "rating": {
+      "kp": 7.688,
+      "imdb": 6.9
+    },
+    "votes": {
+      "imdb": 436097
+    },
+    "movieLength": 109,
+    "id": 104992,
+    "name": "Дьявол носит Prada",
+    "description": "Мечтающая стать журналисткой провинциальная девушка Энди по окончании университета получает должность помощницы всесильной Миранды Пристли, деспотичного редактора одного из крупнейших нью-йоркских журналов мод. Энди всегда мечтала о такой работе, не зная, с каким нервным напряжением это будет связано…",
+    "year": 2006,
+    "budget": {
+      "value": 35000000,
+      "currency": "$"
+    },
+    "poster": {
+      "previewUrl": "https://st.kp.yandex.net/images/film_iphone/iphone360_104992.jpg"
+    },
+    "genres": [
+      {
+        "name": "драма"
+      },
+      {
+        "name": "комедия"
+      }
+    ],
+    "countries": [
+      {
+        "name": "США"
+      },
+      {
+        "name": "Франция"
+      }
+    ],
+    "seasonsInfo": null,
+    "alternativeName": "The Devil Wears Prada",
+    "shortDescription": "Юная карьеристка сталкивается с изнанкой гламура. В главных ролях — Энн Хэтэуэй и Мерил Стрип",
+    "similarMovies": [
+      {
+        "id": 395679,
+        "name": "Шопоголик",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/5fe445ce-9981-4a08-b644-904da1e781f6/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 321842,
+        "name": "Предложение",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/5b0441e5-a7d8-4504-bbdc-2ff05852e538/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 437040,
+        "name": "Доброе утро",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/b084a8ec-d1e6-4f92-bfa8-0ad215cb9a05/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 281869,
+        "name": "Секс в большом городе",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/ffe39088-987f-4891-aae2-a35d4a9f44eb/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 677893,
+        "name": "Стажёр",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/d71cea2b-944b-4c37-adf4-aaccfb146924/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 107413,
+        "name": "Как потерять друзей и заставить всех тебя ненавидеть",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/76c48fad-1414-44b5-9ee5-7bacc2056d4a/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 277545,
+        "name": "Дурнушка Бетти",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/baf2586b-17c3-4ec2-9ee3-cff6fd425970/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 461904,
+        "name": "Бурлеск",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/c7f4e9ac-d59a-4f2d-bfb3-40e8d9b17f3b/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 420475,
+        "name": "Секс в большом городе 2",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/a60e6229-faa2-4bad-b7de-6f8086ec02a4/x1000"
+        },
+        "rating": null
+      },
+      {
+        "id": 271819,
+        "name": "Глянец",
+        "poster": {
+          "previewUrl": "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/7a80e6a1-fc7c-4bfe-bc2b-8c589fa0f392/x1000"
+        },
+        "rating": null
+      }
+    ],
+    "ageRating": 16,
+    "isSeries": false,
+    "link": "https://www.kinopoisk.ru/film/104992",
+    "trailer": {
+      "url": "https://www.youtube.com/embed/6ZOZwUQKu3E"
+    },
+    "actors": [
+      "Мэрил Стрип",
+      "Энн Хэтэуэй",
+      "Эмили Блант",
+      "Стэнли Туччи",
+      "Саймон Бейкер",
+      "Эдриан Гренье",
+      "Трейси Томс",
+      "Рич Соммер",
+      "Дэниел Сунджата",
+      "Дэвид Маршалл Грант"
+    ],
+    "directors": [
+      "Дэвид Фрэнкел"
+    ]
+  }
+]

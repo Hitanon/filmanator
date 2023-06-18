@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import userStore from '../../store/UserStore';
 
 import './style.css';
-import UserIcon from "../uer_icon/UserIcon";
+import UserIcon from "../user_icon/UserIcon";
 import UserButtons from "../user_buttons/UserButtons";
 
 const handleEditEmail = () => {

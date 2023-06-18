@@ -110,6 +110,13 @@ button:hover {
     background-repeat: no-repeat;
 }
 
+.detailed-result-page{
+    background-color: var(--bg-color);
+    width: 99vw;
+    height: 100%;
+    min-height: 100vh;
+}
+
 .personal-account-page{
     background-image: linear-gradient(
         to bottom,
