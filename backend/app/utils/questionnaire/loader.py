@@ -7,6 +7,8 @@ from questionnaire import models
 
 class QuestionnaireLoader:
     def _read_json_data(self):
+        if QUESTIONNAIRE_FILE_PATH == 'PATH':
+            return []
         with open(QUESTIONNAIRE_FILE_PATH, 'r') as file:
             return json.loads(file.read())
 

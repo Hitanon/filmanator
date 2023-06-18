@@ -8,12 +8,12 @@ from django.db.models.constraints import UniqueConstraint
 
 
 class Session(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        auto_created=True,
-        editable=False,
-    )
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     auto_created=True,
+    #     editable=False,
+    # )
 
     user = models.ForeignKey(
         AUTH_USER_MODEL,
@@ -65,12 +65,12 @@ class Criterion(models.Model):
 
 
 class Answer(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        auto_created=True,
-        editable=False,
-    )
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     auto_created=True,
+    #     editable=False,
+    # )
 
     body = models.CharField(
         max_length=64,
