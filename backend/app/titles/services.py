@@ -278,6 +278,7 @@ def add_link_and_rating_to_similar(headers, data):
         title['link'] = base_link + str(title['id'])
         for similar_title in title['similarMovies']:
             url += f'&id={similar_title["id"]}'
+    url += '&limit=10000'
     all_ratings = read_data_from_kinopoisk(url, headers)
     ratings = all_ratings['docs']
     for title in data:
@@ -325,13 +326,30 @@ def add_match_percentage(data, titles):
     return data
 
 
+def seasons_info(film):
+    """
+    Изменение информации для сериалов
+    """
+    if film['isSeries']:
+        if film['seasonsInfo']:
+            seasons_count = film['seasonsInfo'][-1]['number']
+            if seasons_count == 0:
+                seasons_count = film['seasonsInfo'][-2]['number']
+            film['seasons_count'] = seasons_count
+    else:
+        film['isSeries'] = False
+        film['seasons_count'] = None
+    del film['seasonsInfo']
+    return film
+
+
 def get_full_info_about_titles(titles):
     """
     Получение полной информации о фильмах
     """
     token = settings.TOKEN
     url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name alternativeName isSeries year rating.imdb ' \
-          'rating.kp votes.imdb movieLength countries ageRating persons.id seasonsInfo persons.name ' \
+          'rating.kp movieLength countries ageRating persons.id seasonsInfo persons.name ' \
           'persons.profession genres shortDescription description budget fees.world similarMovies.id ' \
           'similarMovies.name similarMovies.poster.previewUrl videos.trailers.url poster.previewUrl'
     for title in titles:
@@ -343,6 +361,7 @@ def get_full_info_about_titles(titles):
     for film in data:
         film = check_data(film)
         film = reduce_persons(film)
+        film = seasons_info(film)
     add_match_percentage(data, titles)
     return data
 
