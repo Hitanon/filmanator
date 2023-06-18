@@ -20,17 +20,17 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(models.Question)
 class QuestionAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('answer__criterion__title',)
 
 
 @admin.register(models.Criterion)
 class CriterionAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('title', )
 
 
 @admin.register(models.Answer)
 class AnswerAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('criterion__title',)
 
 
 @admin.register(models.Result)

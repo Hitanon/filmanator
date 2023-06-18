@@ -29,6 +29,9 @@ env = environ.Env(
 
     # ChatGPT
     FULL_PATH_TO_FILES=(str, 'PATH'),
+
+    # Questionnaire
+    QUESTIONNAIRE_FILE_PATH=(str, 'PATH'),
 )
 
 env.read_env(BASE_DIR.parent / '.env')
@@ -39,12 +42,6 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [
     env('ALLOWED_HOST'),
-]
-
-cors_allowed_origins = env('CORS_ALLOWED_ORIGINS')
-
-CORS_ALLOWED_ORIGINS = [
-    cors_allowed_origins if cors_allowed_origins else 'http://localhost',
 ]
 
 INSTALLED_APPS = [
@@ -151,6 +148,14 @@ UPDATE = env('UPDATE')
 
 # ChatGPT
 FULL_PATH_TO_FILES = env('FULL_PATH_TO_FILES')
+
+cors_allowed_origins = env('CORS_ALLOWED_ORIGINS')
+
+CORS_ALLOWED_ORIGINS = [
+    cors_allowed_origins if cors_allowed_origins else 'http://localhost',
+]
+
+QUESTIONNAIRE_FILE_PATH = env('QUESTIONNAIRE_FILE_PATH')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

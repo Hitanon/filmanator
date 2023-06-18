@@ -71,7 +71,7 @@ class ContentRating(models.Model):
         )
 
     def __str__(self):
-        return self.value
+        return str(self.value)
 
 
 class AdditionalCriteria(models.Model):
