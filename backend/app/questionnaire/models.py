@@ -1,4 +1,4 @@
-import uuid
+# import uuid
 
 from config.settings import AUTH_USER_MODEL
 
