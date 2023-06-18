@@ -234,7 +234,7 @@ def check_data(film):
     """
     Проверка наличия всех полей для полной информации
     """
-    needed_data = ['id', 'name', 'alternativeName', 'isSeries', 'year', 'rating', 'rating', 'votes', 'movieLength',
+    needed_data = ['id', 'name', 'alternativeName', 'isSeries', 'year', 'rating', 'rating', 'movieLength',
                    'countries', 'ageRating', 'persons', 'seasonsInfo', 'persons', 'genres', 'shortDescription',
                    'description', 'budget', 'fees', 'similarMovies', 'videos', 'poster']
     for need in needed_data:
