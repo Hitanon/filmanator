@@ -1,3 +1,5 @@
+# import uuid
+
 from config.settings import AUTH_USER_MODEL
 
 from django.db import models
@@ -6,6 +8,13 @@ from django.db.models.constraints import UniqueConstraint
 
 
 class Session(models.Model):
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     auto_created=True,
+    #     editable=False,
+    # )
+
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -33,39 +42,36 @@ class Criterion(models.Model):
         max_length=64,
     )
 
-    has_limits = models.BooleanField(
-        default=False,
-    )
-
-    # Change to Float
-    more = models.IntegerField(
-        blank=True,
-        null=True,
-    )
-
-    # Change to Float
-    less = models.IntegerField(
-        blank=True,
-        null=True,
-    )
-
     body = models.CharField(
         max_length=64,
     )
 
-    class Meta:
-        constraints = (
-            UniqueConstraint(
-                fields=('title', 'body'),
-                name='title and body are unique',
-            ),
-        )
+    has_limits = models.BooleanField(
+        default=False,
+    )
+
+    more = models.FloatField(
+        blank=True,
+        null=True,
+    )
+
+    less = models.FloatField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
-        return f'{self.title}: {self.body}'
+        return self.body
 
 
 class Answer(models.Model):
+    # id = models.UUIDField(
+    #     primary_key=True,
+    #     default=uuid.uuid4,
+    #     auto_created=True,
+    #     editable=False,
+    # )
+
     body = models.CharField(
         max_length=64,
     )

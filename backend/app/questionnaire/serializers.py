@@ -45,13 +45,3 @@ class SessionStateSerializer(serializers.ModelSerializer):
         fields = (
             'question',
         )
-
-
-# class SelectedTitlesSerializer(serializers.Serializer):
-#     match_percentage = serializers.IntegerField()
-    # length = serializers.IntegerField()
-    # titles = serializers.SerializerMethodField('get_titles')
-
-    # def get_titles(self, obj):
-    #     return obj['titles']
-    # id = serializers.IntegerField()
