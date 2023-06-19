@@ -3,8 +3,8 @@ export class Movie {
         this.id = json.id;
         this.fees = json.fees;
         this.rating = json.rating;
-        this._match_percentage = json.match_percentage;
-        this.movieDuration = json.movieLength;
+        this.match_percentage = json.match_percentage;
+        this.movieLength = json.movieLength;
         this.name = json.name;
         this.description = json.description;
         this.year = json.year;
@@ -33,11 +33,11 @@ export class Movie {
     }
 
     get matchPercentage (){
-        return `${this._match_percentage}%`;
+        return `${this.match_percentage}%`;
     }
 
     set matchPercentage(value) {
-        this._match_percentage = value;
+        this.match_percentage = value;
     }
 
     get genresList() {
@@ -49,7 +49,7 @@ export class Movie {
     }
 
     get actorsList() {
-        return this.actors.join(', ');
+        return this.actors.join(',\n');
     }
 
     get directorsList() {
@@ -80,7 +80,7 @@ export class Movie {
         const feesValue = this.fees.world.value.toLocaleString();
         const feesCurrency = this.fees.world.currency;
 
-        return `${feesValue} ${feesCurrency}`;
+        return `${feesCurrency} ${feesValue} `;
     }
 
     get budgetString() {
@@ -88,7 +88,7 @@ export class Movie {
             const budgetValue = this.budget.value.toLocaleString();
             const budgetCurrency = this.budget.currency;
 
-            return `${budgetValue} ${budgetCurrency}`;
+            return `${budgetCurrency} ${budgetValue}`;
         } else {
             return 'N/A';
         }
@@ -107,9 +107,9 @@ export class Movie {
     }
 
     get durationFormatted() {
-        if (!this.isSeries && this.movieDuration !== null) {
-            const hours = Math.floor(this.movieDuration / 60);
-            const minutes = this.movieDuration % 60;
+        if (!this.isSeries && this.movieLength !== null) {
+            const hours = Math.floor(this.movieLength / 60);
+            const minutes = this.movieLength % 60;
 
             if (hours === 0) {
                 return `${minutes} мин.`;

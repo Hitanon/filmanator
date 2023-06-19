@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { Movie } from './Movie.js';
 
-export class FilmInfoStore {
+class FilmInfoStore {
     movies = [];
     currentMovieIndex = 0;
 
@@ -14,10 +14,12 @@ export class FilmInfoStore {
         const moviesJson = localStorage.getItem('movies');
         if (moviesJson) {
             this.movies = JSON.parse(moviesJson).map(movieJson => new Movie(movieJson));
+            
         }
         const currentMovieIndex = localStorage.getItem('currentMovieIndex');
         if (currentMovieIndex) {
             this.currentMovieIndex = Number(currentMovieIndex);
+            
         }
     }
 
@@ -56,4 +58,6 @@ export class FilmInfoStore {
         return this.movies[this.currentMovieIndex];
     }
 }
+
+export const filmInfoStore = new FilmInfoStore();
 

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { observer } from 'mobx-react-lite';
-import { FilmInfoStore } from '../../store/FilmInfoStore';
+import { useNavigate } from "react-router-dom";
+
+import { filmInfoStore } from '../../store/FilmInfoStore';
 
 import './style.css';
+import {DETAILED_RESULT_ROUTE} from "../../utils/Consts";
 import InfoIcon from "../info_icon/InfoIcon";
 import Poster from "../poster/Poster";
 import SquareButton from "../square_button/SquareButton";
@@ -11,9 +14,6 @@ import SquareButton from "../square_button/SquareButton";
 const SQUARE_BUTTON_SIZE = "2.7vw";
 const ICON_HEIGHT = "2vw";
 const NAV_BUTTON_WIDTH = "5vw";
-
-// store
-const filmInfoStore = new FilmInfoStore();
 
 // backwards button
 const handleBackwardsEnter = (setIconSrc) => {
@@ -33,7 +33,7 @@ const handleForwardsLeave = (setIconSrc) => {
     setIconSrc('/img/forwards_button.svg');
 };
 
-//Handles
+//like button
 const handleLikeClick = () => {
     console.log("pressed like")
 };
@@ -63,9 +63,6 @@ const handleBackwardsClick = () => {
     filmInfoStore.decreaseCurrentMovieIndex();
 };
 
-const handleLearnMoreClick = () => {
-    console.log("pressed learn more")
-};
 
 const handleRepeatClick = () => {
     console.log("pressed repeat")
@@ -77,7 +74,14 @@ const handleForwardsClick = () => {
 
 
 const FilmInfo = observer(() => {
+    
+    // navigator
+    const navigate = useNavigate();
 
+    const handleLearnMoreClick = () => {
+        navigate(DETAILED_RESULT_ROUTE);
+    };
+    
 
     const [backwardsSrc, setBackwardsSrc] = useState('/img/backwards_button.svg');
     const [forwardsSrc, setForwardsSrc] = useState('/img/forwards_button.svg');
