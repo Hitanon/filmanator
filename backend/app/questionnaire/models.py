@@ -36,7 +36,7 @@ class Session(models.Model):
         )
 
     def __str__(self):
-        return f'{self.user}'
+        return f'{self.id}:{self.user}'
 
 
 class Criterion(models.Model):
@@ -78,6 +78,10 @@ class Answer(models.Model):
         max_length=64,
     )
 
+    is_next = models.BooleanField(
+        default=False,
+    )
+
     is_skip = models.BooleanField(
         default=False,
     )
@@ -93,12 +97,16 @@ class Answer(models.Model):
 class Question(models.Model):
     body = models.TextField()
 
+    priority = models.SmallIntegerField(
+        default=3,
+    )
+
     answer = models.ManyToManyField(
         Answer,
     )
 
     def __str__(self):
-        return self.body
+        return f'{self.priority}:{self.body}'
 
 
 class Category(models.Model):
@@ -133,7 +141,7 @@ class SessionState(models.Model):
     )
 
     def __str__(self):
-        return f'{self.session}: {self.question}'
+        return f'{self.session.id}: {self.question}'
 
 
 class Result(models.Model):
@@ -149,9 +157,18 @@ class Result(models.Model):
         null=True,
     )
 
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.PROTECT,
+    )
+
     criterion = models.ManyToManyField(
         Criterion,
         blank=True,
+    )
+
+    is_skipped = models.BooleanField(
+        default=False,
     )
 
     def __str__(self):
@@ -181,7 +198,7 @@ class ResultCriterions:
     def __init__(self):
         self._data = {}
 
-    # Data property is trash
+    # Trash property
     @property
     def data(self):
         return self._data
@@ -219,3 +236,10 @@ class ResultCriterions:
         else:
             value = [CRITERIONS[criterion.title].objects.get(title=criterion.body).id for criterion in criterions]
         self.data[key] = value
+
+
+class SkipAnsweredQuestion:
+    def __init__(self, session, question, skip_answer):
+        self.session = session
+        self.question = question
+        self.skip_answer = skip_answer

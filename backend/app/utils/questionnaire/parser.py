@@ -79,7 +79,7 @@ class QuestionnaireParser:
 
     def _init_questions(self):
         for skip_answer_body, data in self.questions.items():
-            skip_answer = self._init_skip_answer(body=skip_answer_body)
+            # skip_answer = self._init_skip_answer(body=skip_answer_body)
             for criterion_title, question_body in data.items():
                 answers = models.Answer.objects.filter(criterion__title=criterion_title)
                 splitted_answers = self._split_to_approximately_equal_parts(answers)
@@ -88,7 +88,7 @@ class QuestionnaireParser:
                         body=question_body,
                     )
                     answers = list(answers)
-                    answers.append(skip_answer)
+                    # answers.append(skip_answer)
                     question.answer.set(answers)
 
     def _init_categories(self):
@@ -100,8 +100,21 @@ class QuestionnaireParser:
             questions = models.Question.objects.filter(answer__criterion__title=category_title)
             category.question.set(questions)
 
+    def _init_skip_answers(self):
+        models.Answer.objects.create(
+            body='Далее',
+            is_next=True,
+            is_skip=False,
+        )
+        models.Answer.objects.create(
+            body='Пропустить',
+            is_next=True,
+            is_skip=True,
+        )
+
     def parse(self):
         self._init_criterions()
         self._init_answers()
         self._init_questions()
         self._init_categories()
+        self._init_skip_answers()
