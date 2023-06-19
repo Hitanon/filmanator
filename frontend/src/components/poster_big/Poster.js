@@ -1,9 +1,9 @@
 import React from 'react';
 import './style.css';
 
-const Poster = ({ width, imageUrl }) => {
+const Poster = ({ imageUrl }) => {
     return (
-        <div className="poster-container" style={{ width}}>
+        <div className="poster-container">
             <img src={imageUrl} alt="Poster" />
         </div>
     );

@@ -9,6 +9,7 @@ const TextButton = () => {
     const handleClick = () => {
         navigate(QUESTIONNAIRE_ROUTE)
     }
+    
     return (
         <div className="text-button">
             <h1 className='text-button-heading'>

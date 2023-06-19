@@ -1,4 +1,5 @@
 import About from "../pages/About";
+import DetailedResult from "../pages/DetailedResult";
 import Home from "../pages/Home";
 import PersonalAccount from "../pages/PersonalAccount";
 import PersonalData from "../pages/PersonalData";
@@ -11,6 +12,7 @@ import {
     HOME_ROUTE,
     QUESTIONNAIRE_ROUTE,
     RESULT_ROUTE,
+    DETAILED_RESULT_ROUTE,
     PRIVACY_POLICY_ROUTE,
     PERSONAL_DATA_ROUTE,
     ABOUT_ROUTE,
@@ -42,6 +44,10 @@ export const publicRoutes = [
     {
         path: RESULT_ROUTE,
         element: <Result/>,
+    },
+    {
+        path: DETAILED_RESULT_ROUTE,
+        element: <DetailedResult/>,
     },
     {
         path: SIGNIN_ROUTE,

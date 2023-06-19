@@ -1,6 +1,6 @@
 .square-button {
     height: auto;
-    width: 3vw;
+    /* width: 3vw; */
     margin: 0.2vw;
 
     background: var(--icon-bg-color);

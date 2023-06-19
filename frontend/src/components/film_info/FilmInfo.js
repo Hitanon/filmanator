@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { observer } from 'mobx-react-lite';
-import filmInfoStore from '../../store/FilmInfoStore';
+import { useNavigate } from "react-router-dom";
+
+import { filmInfoStore } from '../../store/FilmInfoStore';
 
 import './style.css';
+import {DETAILED_RESULT_ROUTE} from "../../utils/Consts";
 import InfoIcon from "../info_icon/InfoIcon";
 import Poster from "../poster/Poster";
 import SquareButton from "../square_button/SquareButton";
 
 // rate buttons size
 const SQUARE_BUTTON_SIZE = "2.7vw";
+const ICON_HEIGHT = "2vw";
+const NAV_BUTTON_WIDTH = "5vw";
 
 // backwards button
 const handleBackwardsEnter = (setIconSrc) => {
@@ -28,7 +33,7 @@ const handleForwardsLeave = (setIconSrc) => {
     setIconSrc('/img/forwards_button.svg');
 };
 
-//Handles
+//like button
 const handleLikeClick = () => {
     console.log("pressed like")
 };
@@ -38,65 +43,101 @@ const handleDislikeClick = () => {
 };
 
 const handleShareClick = () => {
-    console.log("pressed share")
+    const currentMovie = filmInfoStore.currentMovie;
+    if (currentMovie && currentMovie.link && navigator.share) {
+        navigator.share({
+            title: currentMovie.title,
+            url: currentMovie.link
+        });
+    }
 };
 
 const handleWatchClick = () => {
-    console.log("pressed watch")
+    const currentMovie = filmInfoStore.currentMovie;
+    if (currentMovie && currentMovie.link) {
+        window.open(currentMovie.link, '_blank');
+    }
 };
 
 const handleBackwardsClick = () => {
-    console.log("pressed backwards")
+    filmInfoStore.decreaseCurrentMovieIndex();
 };
 
-const handleLearnMoreClick = () => {
-    console.log("pressed learn more")
-};
 
 const handleRepeatClick = () => {
     console.log("pressed repeat")
 };
 
 const handleForwardsClick = () => {
-    console.log("pressed forwards")
+    filmInfoStore.increaseCurrentMovieIndex();
 };
 
 
 const FilmInfo = observer(() => {
+    
+    // navigator
+    const navigate = useNavigate();
+
+    const handleLearnMoreClick = () => {
+        navigate(DETAILED_RESULT_ROUTE);
+    };
+    
 
     const [backwardsSrc, setBackwardsSrc] = useState('/img/backwards_button.svg');
     const [forwardsSrc, setForwardsSrc] = useState('/img/forwards_button.svg');
+    const { currentMovieIndex, movies } = filmInfoStore;
+
+    useEffect(() => {
+        filmInfoStore.fetchMovies();
+    }, []);
+
+    useEffect(() => {
+        if (currentMovieIndex === movies.length - 1) {
+            setForwardsSrc('/img/forwards_button.svg');
+        }
+    }, [currentMovieIndex, movies.length, setForwardsSrc]);
+
+    useEffect(() => {
+        if (currentMovieIndex === 0) {
+            setBackwardsSrc('/img/backwards_button.svg');
+        }
+    }, [currentMovieIndex, setBackwardsSrc]);
+
+
+
+    if (!filmInfoStore.currentMovie) {
+        return <div>Подбираю фильмы...</div>;
+    }
 
     return (
         <div className="film-info-container">
 
-            <Poster width='8vw' height='12vw' imageUrl={filmInfoStore.poster_url} />
+            <Poster width='8vw' imageUrl={filmInfoStore.currentMovie.posterUrl} />
 
-            <h1>{filmInfoStore.title} ({filmInfoStore.year})</h1>
-            <h2>{filmInfoStore.alternativeTitle}</h2>
+            <h1>{filmInfoStore.currentMovie.title}</h1>
+            <h2>{filmInfoStore.currentMovie.alternativeTitle}</h2>
 
             <div className="icon-container">
                 <div className="icon-row">
-                    <InfoIcon icon="/img/match_icon.svg" text={`${filmInfoStore.match}%`} color='#F66004' />
-                    <InfoIcon icon="/img/imdb_icon.svg" text={`${filmInfoStore.imdb_rating}`} color='#FFFFFF' />
-                    <InfoIcon icon="/img/kinopoisk_icon.svg" text={`${filmInfoStore.kinopoisk_rating}`} color='#FFFFFF' />
-                    <InfoIcon icon="/img/metacritic_icon.svg" text={`${filmInfoStore.metacritic}`} color='#FFFFFF' />
+                    <InfoIcon icon="/img/match_icon.svg" text={`${filmInfoStore.currentMovie.matchPercentage}`} color='#F66004' height={ICON_HEIGHT} />
+                    <InfoIcon icon="/img/imdb_icon.svg" text={`${filmInfoStore.currentMovie.imdbRating}`} color='#FFFFFF' height={ICON_HEIGHT} />
+                    <InfoIcon icon="/img/kinopoisk_icon.svg" text={`${filmInfoStore.currentMovie.kinopoiskRating}`} color='#FFFFFF' height={ICON_HEIGHT} />
                 </div>
                 <div className="icon-row">
-                    <InfoIcon icon="/img/time_icon.svg" text={`${filmInfoStore.durationFormatted}`} color='#FFFFFF' />
-                    <InfoIcon text={`${filmInfoStore.age}+`} color='#FFFFFF' />
+                    <InfoIcon icon="/img/time_icon.svg" text={filmInfoStore.currentMovie.durationFormatted} color='#FFFFFF' height={ICON_HEIGHT} />
+                    <InfoIcon text={filmInfoStore.currentMovie.ageRatingString} color='#FFFFFF' height={ICON_HEIGHT} />
                 </div>
             </div>
 
             <div className="info-container">
-                <p>Жанры: {filmInfoStore.genres.join(', ')}</p>
-                <p>Озвучка: {filmInfoStore.audio_langs.join(', ')}</p>
-                <p>Субтитры: {filmInfoStore.subtitles_langs.join(', ')}</p>
+                <p>Жанр: {filmInfoStore.currentMovie.genresList}</p>
+                <p>Страна: {filmInfoStore.currentMovie.countriesList}</p>
+                <p>Режиссер: {filmInfoStore.currentMovie.directorsList}</p>
             </div>
 
             <div className="description-container">
                 <h3>Краткое описание: </h3>
-                <p>{filmInfoStore.short_description}</p>
+                <p>{filmInfoStore.currentMovie.shortDescription}</p>
             </div>
 
             <div className="rate_buttons-container">
@@ -111,12 +152,16 @@ const FilmInfo = observer(() => {
             </div>
 
             <div className="actions_container">
-                <button onClick={handleBackwardsClick} className="nav-button"
-                    onMouseEnter={() => handleBackwardsEnter(setBackwardsSrc)}
-                    onMouseLeave={() => handleBackwardsLeave(setBackwardsSrc)}
-                >
-                    <img src={backwardsSrc} alt="Backward" />
-                </button>
+                {filmInfoStore.currentMovieIndex > 0 ? (
+                    <button onClick={handleBackwardsClick} className="nav-button"
+                        onMouseEnter={() => handleBackwardsEnter(setBackwardsSrc)}
+                        onMouseLeave={() => handleBackwardsLeave(setBackwardsSrc)}
+                    >
+                        <img src={backwardsSrc} alt="Backward" />
+                    </button>
+                ) : (
+                    <div style={{ minWidth: NAV_BUTTON_WIDTH  }}></div>
+                )}
 
                 <button onClick={handleRepeatClick} className="repeat-button">
                     Пройти опрос заново
@@ -125,13 +170,17 @@ const FilmInfo = observer(() => {
                 <button onClick={handleLearnMoreClick} className="learn-more-button">
                     Подробнее
                 </button>
-
-                <button onClick={handleForwardsClick} className="nav-button"
-                    onMouseEnter={() => handleForwardsEnter(setForwardsSrc)}
-                    onMouseLeave={() => handleForwardsLeave(setForwardsSrc)}
-                >
-                    <img src={forwardsSrc} alt="Forward" />
-                </button>
+                
+                {filmInfoStore.currentMovieIndex < filmInfoStore.movies.length - 1 ? (
+                    <button onClick={handleForwardsClick} className="nav-button"
+                        onMouseEnter={() => handleForwardsEnter(setForwardsSrc)}
+                        onMouseLeave={() => handleForwardsLeave(setForwardsSrc)}
+                    >
+                        <img src={forwardsSrc} alt="Forward" />
+                    </button>
+                ) : (
+                    <div style={{ width: NAV_BUTTON_WIDTH }}></div>
+                )}
             </div>
         </div>
     );
