@@ -6,6 +6,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.constraints import UniqueConstraint
 
+from titles import models as t_models
+
 
 class Session(models.Model):
     # id = models.UUIDField(
@@ -34,7 +36,7 @@ class Session(models.Model):
         )
 
     def __str__(self):
-        return f'{self.user}: {self.ends_at}'
+        return f'{self.user}'
 
 
 class Criterion(models.Model):
@@ -61,7 +63,7 @@ class Criterion(models.Model):
     )
 
     def __str__(self):
-        return self.body
+        return f'{self.title}: {self.body}'
 
 
 class Answer(models.Model):
@@ -153,7 +155,26 @@ class Result(models.Model):
     )
 
     def __str__(self):
-        return str(self.session)
+        return f'{self.session.id}:{self.category}'
+
+
+CRITERIONS = {
+    'content_rating': t_models.ContentRating,
+    'acting': t_models.Acting,
+    # 'actor': models.Actor,
+    'amount_of_dialogue': t_models.AmountOfDialogue,
+    'audience': t_models.Audience,
+    'country': t_models.Country,
+    # 'director': models.Director,
+    'genre': t_models.Genre,
+    'graphics': t_models.Graphics,
+    'intellectuality': t_models.Intellectuality,
+    'mood': t_models.Mood,
+    'narrative_method': t_models.NarrativeMethod,
+    'viewing_method': t_models.ViewingMethod,
+    'viewing_time': t_models.ViewingTime,
+    'visual_atmosphere': t_models.VisualAtmosphere,
+}
 
 
 class ResultCriterions:
@@ -168,7 +189,12 @@ class ResultCriterions:
     @data.getter
     def data(self):
         temp = self._data
-        keys = ['votes_count']
+        keys = [
+            'popularity',
+            'year',
+            'duration',
+            'rating',
+        ]
         for key in keys:
             if key in temp.keys():
                 del temp[key]
@@ -178,7 +204,7 @@ class ResultCriterions:
         return criterion.more, criterion.less
 
     def get_unlimited_criterion(self, criterion):
-        return [criterion.id]
+        return [CRITERIONS[criterion.title].objects.get(title=criterion.body).id]
 
     def get_single_criterion(self, criterion):
         if criterion.has_limits:
@@ -191,5 +217,5 @@ class ResultCriterions:
         if criterions.count() == 1:
             value = self.get_single_criterion(criterions[0])
         else:
-            value = [criterion.id for criterion in criterions]
+            value = [CRITERIONS[criterion.title].objects.get(title=criterion.body).id for criterion in criterions]
         self.data[key] = value

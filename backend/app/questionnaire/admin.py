@@ -15,7 +15,7 @@ class SessionStateAdmin(admin.ModelAdmin):
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    ordering = ('priority',)
 
 
 @admin.register(models.Question)
@@ -35,4 +35,5 @@ class AnswerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Result)
 class ResutlAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('session__id',)
+    search_fields = ('session__user__username',)

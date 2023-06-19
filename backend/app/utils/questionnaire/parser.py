@@ -5,22 +5,11 @@ from utils.questionnaire import config
 
 class QuestionnaireParser:
     def __init__(self):
-        self._clean_up()
         self.criterions = config.CRITERIONS
         self.named_attrs = config.NAMED_CRITERIONS
         self.criterion_titles = config.CRITERION_TITLES
         self.questions = config.QUESTIONS
         self.categories = config.CATEGORIES
-
-    def _clean_up(self):
-        questionnaire_models = [
-            models.Criterion,
-            models.Answer,
-            models.Question,
-            models.Category,
-        ]
-        for model in questionnaire_models:
-            model.objects.all().delete()
 
     def _init_limited_criterion(self, title, model):
         entities = model.objects.all()
