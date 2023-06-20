@@ -38,14 +38,20 @@ def get_films_by_criteria(request):
 class TestSelectTitles(APIView):
     def get(self, request, *args, **kwargs):
         history = None
-        criteria = {
-            'genre': [1, 2, 3],
-            'country': [1, 2],
-            'mood': [1, 2, 3],
-            'year': [2015, None],
-            'imdb_rating': [6, None],
-            'content_rating': [18, None],
-        }
+        criteria = {'genre': (16.0, None),
+                    'content_rating': (16.0, None),
+                    'country': [38],
+                    'acting': [5],
+                    'amount_of_dialogue': [9],
+                    'audience': [19],
+                    'graphics': [110],
+                    'intellectuality': [125],
+                    'mood': [136],
+                    'narrative_method': [143],
+                    'viewing_method': [158],
+                    'viewing_time': [163],
+                    'visual_atmosphere': [169],
+                    }
         films = select_titles(criteria, history)
 
         return Response(films)

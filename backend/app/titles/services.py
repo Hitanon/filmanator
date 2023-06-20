@@ -1,4 +1,5 @@
 import random
+import time
 
 from config import settings
 
@@ -160,15 +161,14 @@ def add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar
     return serialized_titles_to_100
 
 
-def remove_titles_in_history(filtered_titles_to_100, history, history_id):
+def remove_titles_in_history(filtered_titles_to_100, history, history_id, titles):
     """
     Добавление фильмов из истории в уже выбранные
     """
     selected_titles = filtered_titles_to_100
     if history is not None:
-        filtered_titles_to_100 = set(title for title in filtered_titles_to_100 if title.pk not in history_id)
-        selected_titles = filtered_titles_to_100
-        selected_titles = set(set(selected_titles | history))
+        history_titles = set(titles.filter(pk__in=history_id))
+        selected_titles = set(selected_titles | history_titles)
     return selected_titles
 
 
@@ -183,14 +183,14 @@ def get_titles_by_attrs(criteria, history):
     history_id = set()
     similar_titles = set()
     if history is not None:
-        history_id = set(history[0].title.all().values_list('similar_titles__title', flat=True))
-        similar_titles = set(titles.filter(pk__in=history))
-        history = set(history)
+        history_id = set(history.title.all().values_list('similar_titles__title', flat=True))
+        similar_titles = set(titles.filter(pk__in=history_id))
+        history = set(history_id)
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)
     filtered_titles_to_100 = set(filtered_titles_to_100)
     # исключаем все ранее просмотренные фильмы
-    selected_titles = remove_titles_in_history(filtered_titles_to_100, history, history_id)
+    selected_titles = remove_titles_in_history(filtered_titles_to_100, history, history_id, titles)
     # добавление похожих фильмов
     serialized_titles_to_100 = []
     serialized_titles_to_100 = add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles)
@@ -388,6 +388,11 @@ def select_titles(criteria, history):
     """
     Выборка фильмов и получение инфы о них
     """
+    print(criteria)
+    start = time.time()
     titles = get_titles_by_attrs(criteria, history)
+    end1 = time.time()
     full_info = get_full_info_about_titles(titles)
+    end2 = time.time()
+    print(f'Время подбора фильмов: {end1-start}, время получения полной информации: {end2-start}')
     return full_info
