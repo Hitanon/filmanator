@@ -78,18 +78,14 @@ class QuestionnaireParser:
                 answer.criterion.set([criterion])
 
     def _init_questions(self):
-        for skip_answer_body, data in self.questions.items():
-            # skip_answer = self._init_skip_answer(body=skip_answer_body)
-            for criterion_title, question_body in data.items():
-                answers = models.Answer.objects.filter(criterion__title=criterion_title)
-                splitted_answers = self._split_to_approximately_equal_parts(answers)
-                for answers in splitted_answers:
-                    question = models.Question.objects.create(
-                        body=question_body,
-                    )
-                    answers = list(answers)
-                    # answers.append(skip_answer)
-                    question.answer.set(answers)
+        for criterion_title, question_body in self.questions.items():
+            answers = models.Answer.objects.filter(criterion__title=criterion_title)
+            splitted_answers = self._split_to_approximately_equal_parts(answers)
+            for answers in splitted_answers:
+                question = models.Question.objects.create(
+                    body=question_body,
+                )
+                question.answer.set(answers)
 
     def _init_categories(self):
         for category_title, priority in self.categories.items():
