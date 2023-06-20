@@ -5,4 +5,6 @@ from .import views
 urlpatterns = [
     path('<int:pk>/', views.TitleAPIView.as_view(), name='title'),
     path('films/', views.get_films_by_criteria, name='titles'),
+    # путь для дебага запросов к бд
+    path('testfilms/', views.TestSelectTitles.as_view(), name='titles'),
 ]

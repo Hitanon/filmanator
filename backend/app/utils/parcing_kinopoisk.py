@@ -202,6 +202,7 @@ def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_ch
                 similar_title_id=similar_title['id'],
             )
             cnt_changes += 1
+            print(1)
         except IntegrityError:
             pass
     else:
@@ -313,6 +314,66 @@ def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> int:
     return cnt_changes
 
 
+def add_count_awards_to_database(headers, model, list_persons, count_people):
+    """
+    Добавление кол-ва наград определенному кол-ву человек
+    :param headers: заголовок запроса
+    :param model: модель персонажей (актеры или режиссеры)
+    :param list_persons: список персонажей
+    :param count_people: кол-во персонажей
+    :return:
+    """
+    url = f'https://api.kinopoisk.dev/v1/person?selectFields=id countAwards&limit={count_people + 1}'
+    for person in list_persons:
+        url += '&id=' + str(person.pk)
+    data = read_data_from_kinopoisk(url, headers)
+    persons = data['docs']
+    for person in persons:
+        try:
+            element = model.objects.get(id=person['id'])
+            element.count_awards = person['countAwards']
+            element.save()
+        except ObjectDoesNotExist:
+            pass
+
+
+def add_count_awards_to_persons(headers, model):
+    """
+    Добавление кол-ва наград определенной модели людей
+    :param headers: заголовок запроса
+    :param model: модель персонажей (актеры или режиссеры)
+    :return:
+    """
+    count_people = 1000
+    start_num = 0
+    end_num = count_people
+    all_persons = model.objects.all()
+    try:
+        list_persons = all_persons[start_num:end_num]
+    except IndexError:
+        list_persons = all_persons[start_num:]
+    while len(list_persons) and len(list_persons) != 1:
+        add_count_awards_to_database(headers, model, list_persons, count_people)
+        start_num += count_people
+        end_num += count_people
+        print(f'{len(list_persons)} персонажей обработано!')
+        try:
+            list_persons = all_persons[start_num-1:end_num]
+        except IndexError:
+            list_persons = all_persons[start_num-1:]
+
+
+def add_count_awards(headers):
+    """
+    Добавление кол-ва наград
+    :param headers: заголовок запроса
+    :return:
+    """
+    model_list = [Actor, Director]
+    for model in model_list:
+        add_count_awards_to_persons(headers, model)
+
+
 def main():
     """
     Получение списка фильмов через api кинопоиска и их добавление в БД
@@ -325,13 +386,15 @@ def main():
     limit = settings.LIMIT
     token = settings.TOKEN
     update_mode = settings.UPDATE
-
+    headers = {'x-api-key': token}
+    if update_mode:
+        print('---Началось заполнение кол-во наград актеров и режиссеров---')
+        add_count_awards(headers)
+        print('---Закончилось заполнение кол-во наград актеров и режиссеров---')
     for page in range(start_page, end_page + 1):
         url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name similarMovies.id isSeries ' \
               'year rating.imdb votes.imdb movieLength countries ageRating director persons.id seasonsInfo ' \
               f'persons.name persons.profession genres&limit={limit}&page={page}'
-
-        headers = {'x-api-key': token}
 
         data = read_data_from_kinopoisk(url, headers)
         cnt_changes = 0
@@ -339,7 +402,7 @@ def main():
             cnt_changes = add_film(film, cnt, update_mode, cnt_changes)
             cnt += 1
         if update_mode:
-            print(f'Для {limit} фильмов добавлено {cnt_changes} похожих!')
+            print(f'Добавлено {cnt_changes} похожих фильмов!')
 
 
 if __name__ == '__main__':
