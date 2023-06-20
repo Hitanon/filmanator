@@ -131,7 +131,10 @@ def add_title_directors(data: dict) -> None:
             try:
                 director = Director.objects.get(id=director['id'])
             except ObjectDoesNotExist:
-                director, _ = Director.objects.get_or_create(id=director['id'], name=director['name'])
+                director, _ = Director.objects.get_or_create(id=director['id'],
+                                                             name=director['name'],
+                                                             count_awards=None,
+                                                             )
 
             title.director.add(director)
 
@@ -164,7 +167,10 @@ def add_title_actors(data: dict) -> None:
             try:
                 actor = Actor.objects.get(id=actor['id'])
             except ObjectDoesNotExist:
-                actor, _ = Actor.objects.get_or_create(id=actor['id'], name=actor['name'])
+                actor, _ = Actor.objects.get_or_create(id=actor['id'],
+                                                       name=actor['name'],
+                                                       count_awards=None,
+                                                       )
 
             title.actor.add(actor)
             cnt += 1
@@ -202,7 +208,6 @@ def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_ch
                 similar_title_id=similar_title['id'],
             )
             cnt_changes += 1
-            print(1)
         except IntegrityError:
             pass
     else:
