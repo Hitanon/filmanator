@@ -25,6 +25,8 @@
 
     FULL_PATH_TO_FILES: ${{ secrets.FULL_PATH_TO_FILES }}
 
+    CATEGORIES_LIMIT: ${{ secrets.CATEGORIES_LIMIT }}
+
   jobs:
     Test:
       runs-on: ubuntu-latest
