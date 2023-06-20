@@ -29,8 +29,8 @@ class QuestionnaireView(APIView):
 
     def _get_titles(self, session_id):
         result_titles = services.get_titles(session_id)
-        data = services.get_titles_full_info(result_titles)
         services.write_result_titles_to_history(self.request.user, session_id, result_titles)
+        data = services.get_titles_full_info(result_titles)
         return Response(data=data, status=status.HTTP_200_OK)
 
     def get(self, request, session_id=None, *args, **kwargs):
@@ -40,6 +40,7 @@ class QuestionnaireView(APIView):
 
     def post(self, request, *args, **kwargs):
         session, answer = services.check_questionnaire_post_data(**request.data)
+        services.check_user(session, request.user)
         services.write_result(session, answer)
         if services.is_end(session.id):
             return self._get_titles(session.id)

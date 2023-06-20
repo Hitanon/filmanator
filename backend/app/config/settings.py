@@ -32,6 +32,7 @@ env = environ.Env(
 
     # Questionnaire
     QUESTIONNAIRE_FILE_PATH=(str, 'PATH'),
+    CATEGORIES_LIMIT=(int, 0),
 )
 
 env.read_env(BASE_DIR.parent / '.env')
@@ -158,6 +159,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 QUESTIONNAIRE_FILE_PATH = env('QUESTIONNAIRE_FILE_PATH')
+
+CATEGORIES_LIMIT = env('CATEGORIES_LIMIT')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
