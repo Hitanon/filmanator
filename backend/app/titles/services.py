@@ -1,4 +1,5 @@
 import random
+import time
 
 from config import settings
 
@@ -146,11 +147,13 @@ def remove_filter(criteria):
 
 
 def add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles):
-    similar_filtered_titles = filtered_titles_to_100.filter(pk__in=[title.pk for title in similar_titles])
+    similar_filtered_titles = set()
+    for similar_title in similar_titles:
+        similar_filtered_titles = set(title for title in filtered_titles_to_100 if title.pk != similar_title.pk)
     if similar_filtered_titles:
         while len(serialized_titles_to_100) < 10 and similar_filtered_titles:
-            random_element = random.choice(similar_filtered_titles)
-            similar_filtered_titles = similar_filtered_titles.exclude(id=random_element.id)
+            random_element = random.choice(tuple(similar_filtered_titles))
+            similar_filtered_titles = set(title for title in similar_filtered_titles if title.pk != random_element.pk)
             serializer = TitleOutputSerializer(random_element)
             serializer_data = serializer.data
             serializer_data['match_percentage'] = 100
@@ -166,26 +169,27 @@ def get_titles_by_attrs(criteria, history):
     titles = Title.objects.all()
     sum_points = 0
     # похожие фильмы на уже просмотренные
-    similar_similar_titles = SimilarTitle.objects.none()
-    for title in history:
-        similar_similar_titles = similar_similar_titles.union(title.similar_titles.all())
-    similar_titles = Title.objects.all()
-    print(similar_similar_titles)
-    similar_titles = similar_titles.filter(pk__in=[title.title.pk for title in similar_similar_titles])
-
+    if history:
+        history_id = set(history[0].title.all().values_list('similar_titles__title', flat=True))
+    similar_titles = set(titles.filter(pk__in=history))
+    history = set(history)
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)
+    filtered_titles_to_100 = set(filtered_titles_to_100)
     # исключаем все ранее просмотренные фильмы
-    filtered_titles_to_100 = filtered_titles_to_100.exclude(pk__in=[title.pk for title in history])
     selected_titles = filtered_titles_to_100
-    selected_titles = selected_titles.union(history)
+    if history:
+        filtered_titles_to_100 = set(title for title in filtered_titles_to_100 if title.pk not in history_id)
+        selected_titles = filtered_titles_to_100
+        selected_titles = set(set(selected_titles | history))
+    selected_titles = selected_titles
     serialized_titles_to_100 = []
     # добавление похожих фильмов
     serialized_titles_to_100 = add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles)
-
+    filtered_titles_to_100 = set(filtered_titles_to_100)
     while len(serialized_titles_to_100) < 10 and filtered_titles_to_100:
-        random_element = random.choice(filtered_titles_to_100)
-        filtered_titles_to_100 = filtered_titles_to_100.exclude(id=random_element.id)
+        random_element = random.choice(tuple(filtered_titles_to_100))
+        filtered_titles_to_100 = set(title for title in filtered_titles_to_100 if title.pk != random_element.pk)
         serializer = TitleOutputSerializer(random_element)
         serializer_data = serializer.data
         serializer_data['match_percentage'] = 100
@@ -202,15 +206,20 @@ def get_titles_by_attrs(criteria, history):
         points = 0
 
         filtered_titles_to_85, points = apply_filters(titles, criteria, points)
-        filtered_titles_to_85 = filtered_titles_to_85.exclude(pk__in=[title.pk for title in selected_titles])
+        filtered_titles_to_85 = set(filtered_titles_to_85)
+        select_title_id = set()
+        for select_title in selected_titles:
+            select_title_id.add(select_title.pk)
+        filtered_titles_to_100 = set(title for title in filtered_titles_to_100 if title.pk not in select_title_id)
+
         while len(serialized_titles_to_85) < 10-length_to_100 and filtered_titles_to_85:
-            random_element = random.choice(filtered_titles_to_85)
-            filtered_titles_to_85 = filtered_titles_to_85.exclude(id=random_element.id)
+            random_element = random.choice(tuple(filtered_titles_to_85))
+            filtered_titles_to_85 = set(title for title in filtered_titles_to_85 if title.pk != random_element.pk)
             serializer = TitleOutputSerializer(random_element)
             serializer_data = serializer.data
             serializer_data['match_percentage'] = round(points/sum_points*100)
             serialized_titles_to_85.append(serializer_data)
-        selected_titles = selected_titles.union(filtered_titles_to_85)
+        selected_titles = set(set(selected_titles | filtered_titles_to_85))
 
     title_output += serialized_titles_to_85
 
@@ -363,6 +372,7 @@ def get_full_info_about_titles(titles):
         film = reduce_persons(film)
         film = seasons_info(film)
     add_match_percentage(data, titles)
+
     return data
 
 

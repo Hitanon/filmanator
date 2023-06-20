@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from questionnaire import exceptions, models
 
-from titles.services import get_full_info_about_titles, get_titles_by_attrs
+from titles.services import get_full_info_about_titles, select_titles
 
 from users.models import History
 from users.services import get_user
@@ -139,7 +139,10 @@ def get_criterions(session):
 
 def get_history(session):
     user = session.user
-    history = History.objects.filter(user=user)
+    try:
+        history = History.objects.filter(user=user)
+    except:
+        history = History.objects.none()
     return history
 
 
@@ -147,7 +150,7 @@ def get_titles(session_id):
     session = get_session(session_id)
     criterions = get_criterions(session)
     history = get_history(session)
-    return get_titles_by_attrs(criterions, history)
+    return select_titles(criterions, history)
 
 
 def get_titles_full_info(titles):
