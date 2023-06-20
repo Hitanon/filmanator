@@ -46,7 +46,7 @@ class Genre(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return f'{self.id}: {self.title}'
 
 
 class Country(models.Model):
@@ -59,7 +59,7 @@ class Country(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return f'{self.id}: {self.title}'
 
 
 class ContentRating(models.Model):

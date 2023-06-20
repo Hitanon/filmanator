@@ -1,8 +1,9 @@
 import random
 
-from config.settings import SESSION_LIFETIME
+from config.settings import CATEGORIES_LIMIT, SESSION_LIFETIME
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.utils import timezone
 
 from questionnaire import exceptions, models
@@ -10,24 +11,29 @@ from questionnaire import exceptions, models
 from titles.services import get_full_info_about_titles, select_titles
 
 from users.models import History
-from users.services import get_user
 
 
-def create_session(user_id):
-    user = get_user(user_id)
+def create_session(user):
+    user = user if user.is_authenticated else None
     ends_at = timezone.now() + SESSION_LIFETIME
     return models.Session.objects.create(user=user, ends_at=ends_at)
 
 
-def select_first_question():
-    category = models.Category.objects.order_by('priority').first()
-    question = random.choice(category.question.all())
+def get_question(session):
+    used_categories = models.Result.objects.filter(
+        session=session,
+    ).filter(
+        Q(is_skipped=True) | Q(criterion__isnull=False),
+    ).values_list('category')
+    not_used_categories = models.Category.objects.exclude(id__in=used_categories).order_by('-priority')
+    used_questions = models.Result.objects.filter(session=session).values_list('question')
+    not_used_questions = not_used_categories[0].question.exclude(id__in=used_questions)
+    priorities = [question.priority for question in not_used_questions]
+    question = random.choices(not_used_questions, weights=priorities, k=1)[0]
     return question
 
 
-def update_session_state(session_id, question_id):
-    session = models.Session.objects.get(id=session_id)
-    question = models.Question.objects.get(id=question_id)
+def update_session_state(session, question):
     try:
         session_state = models.SessionState.objects.get(session=session)
         session_state.question = question
@@ -37,11 +43,60 @@ def update_session_state(session_id, question_id):
     return session_state
 
 
-def start_session(user_id):
-    session = create_session(user_id)
-    question = select_first_question()
-    update_session_state(session.id, question.id)
-    return session
+def start_session(user):
+    session = create_session(user)
+    question = get_question(session)
+    session_state = update_session_state(session, question)
+    return session_state
+
+
+def get_skip_answer(session_state):
+    category = session_state.question.category_set.first()
+    temp = models.Result.objects.filter(session=session_state.session, category=category, criterion__isnull=True)
+    is_skip = temp.count() or category.question.count() == 1
+    return models.Answer.objects.get(is_next=True, is_skip=is_skip)
+
+
+def get_skip_answered_question(session):
+    session_state = get_session_state(session.id)
+    skip_answer = get_skip_answer(session_state)
+    return models.SkipAnsweredQuestion(session_state.session, session_state.question, skip_answer)
+
+
+def check_session_not_over(session_id):
+    session = get_session(session_id)
+    if session.ends_at < timezone.now():
+        stop_session(session.id)
+        raise exceptions.SessionNotFound()
+
+
+def write_result(session, answer):
+    session_state = get_session_state(session.id)
+    question = session_state.question
+    category = question.category_set.first()
+    if answer.is_skip:
+        temp_results = models.Result.objects.filter(session=session, category=category)
+        if temp_results:
+            temp_results.update(is_skipped=True)
+        else:
+            temp_result = models.Result.objects.create(
+                session=session,
+                question=question,
+                category=category,
+                is_skipped=True,
+            )
+    else:
+        temp_results = models.Result.objects.filter(session=session, category=category)
+        if temp_results:
+            temp_results.update(question=question)
+            temp_results[0].criterion.set(answer.criterion.all())
+        else:
+            temp_result = models.Result.objects.create(
+                session=session,
+                question=question,
+                category=category,
+            )
+            temp_result.criterion.set(answer.criterion.all())
 
 
 def get_session_state(session_id):
@@ -60,13 +115,6 @@ def get_session(session_id):
         raise exceptions.SessionNotFound()
 
 
-def get_question(question_id):
-    try:
-        return models.Question.objects.get(id=question_id)
-    except models.Question.DoesNotExist:
-        raise exceptions.QuestionNotFound()
-
-
 def get_answer(answer_id):
     try:
         return models.Answer.objects.get(id=answer_id)
@@ -79,17 +127,6 @@ def check_answer(question_id, answer_id):
     answer = get_answer(answer_id)
     if answer not in question.answer.all():
         raise exceptions.AnswerNotInQuestionAnswers()
-
-
-def write_result(session_id, answer_id):
-    session = get_session(session_id)
-    session_state = get_session_state(session.id)
-    answer = get_answer(answer_id)
-    result = models.Result.objects.create(
-        session=session,
-        category=session_state.question.category_set.first(),
-    )
-    result.criterion.set(answer.criterion.all())
 
 
 def check_session_id(**kwargs):
@@ -114,16 +151,10 @@ def check_questionnaire_post_data(**kwargs):
 
 def is_end(session_id):
     session = get_session(session_id)
-    return models.Result.objects.filter(session=session).count() == models.Category.objects.count()
-
-
-def get_next_question(session_id):
-    session = get_session(session_id)
-    used_categories = models.Result.objects.filter(session=session).values_list('category')
-    not_used_categories = models.Category.objects.exclude(id__in=used_categories).order_by('priority')
-    question = random.choice(not_used_categories[0].question.all())
-    update_session_state(session_id, question.id)
-    return question
+    results = models.Result.objects.filter(session=session)
+    answered = results.filter(criterion__isnull=False).count()
+    active = results.filter(Q(is_skipped=True) | Q(criterion__isnull=False)).count()
+    return answered == CATEGORIES_LIMIT or active == models.Category.objects.count()
 
 
 def stop_session(session_id):
@@ -133,7 +164,7 @@ def stop_session(session_id):
 
 def get_criterions(session):
     result_criterions = models.ResultCriterions()
-    for result in models.Result.objects.filter(session=session):
+    for result in models.Result.objects.filter(session=session, criterion__isnull=False):
         result_criterions.add_result(result)
     return result_criterions.data
 
@@ -158,17 +189,14 @@ def get_titles_full_info(titles):
     return get_full_info_about_titles(titles)
 
 
-def write_result_titles_to_history(user, session_id, result_titles):
+def write_result_titles_to_history(user, session_id, titles):
     if not user.is_authenticated:
         return
     session = get_session(session_id)
     history = History.objects.create(user=user, date=session.ends_at)
-    for result_title in result_titles:
-        history.title.add(*[title['id'] for title in result_title['titles']])
+    history.title.set([title['id'] for title in titles])
 
 
-def check_session_not_over(session_id):
-    session = get_session(session_id)
-    if session.ends_at < timezone.now():
-        stop_session(session.id)
+def check_user(session, user):
+    if user.is_authenticated and session.user != user:
         raise exceptions.SessionNotFound()
