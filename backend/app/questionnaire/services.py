@@ -2,6 +2,7 @@ import random
 
 from config.settings import SESSION_LIFETIME
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from questionnaire import exceptions, models
@@ -140,9 +141,9 @@ def get_criterions(session):
 def get_history(session):
     user = session.user
     try:
-        history = History.objects.filter(user=user)
-    except:
-        history = History.objects.none()
+        history = History.objects.get(user=user)
+    except ObjectDoesNotExist:
+        history = None
     return history
 
 

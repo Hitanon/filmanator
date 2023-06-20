@@ -1,9 +1,8 @@
 import random
-import time
 
 from config import settings
 
-from titles.models import SimilarTitle, Title
+from titles.models import Title
 from titles.serializers import TitleOutputSerializer
 
 
@@ -161,6 +160,18 @@ def add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar
     return serialized_titles_to_100
 
 
+def remove_titles_in_history(filtered_titles_to_100, history, history_id):
+    """
+    Добавление фильмов из истории в уже выбранные
+    """
+    selected_titles = filtered_titles_to_100
+    if history is not None:
+        filtered_titles_to_100 = set(title for title in filtered_titles_to_100 if title.pk not in history_id)
+        selected_titles = filtered_titles_to_100
+        selected_titles = set(set(selected_titles | history))
+    return selected_titles
+
+
 def get_titles_by_attrs(criteria, history):
     """
     Получение словаря с отборными фильмами
@@ -169,22 +180,19 @@ def get_titles_by_attrs(criteria, history):
     titles = Title.objects.all()
     sum_points = 0
     # похожие фильмы на уже просмотренные
-    if history:
+    history_id = set()
+    similar_titles = set()
+    if history is not None:
         history_id = set(history[0].title.all().values_list('similar_titles__title', flat=True))
-    similar_titles = set(titles.filter(pk__in=history))
-    history = set(history)
+        similar_titles = set(titles.filter(pk__in=history))
+        history = set(history)
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)
     filtered_titles_to_100 = set(filtered_titles_to_100)
     # исключаем все ранее просмотренные фильмы
-    selected_titles = filtered_titles_to_100
-    if history:
-        filtered_titles_to_100 = set(title for title in filtered_titles_to_100 if title.pk not in history_id)
-        selected_titles = filtered_titles_to_100
-        selected_titles = set(set(selected_titles | history))
-    selected_titles = selected_titles
-    serialized_titles_to_100 = []
+    selected_titles = remove_titles_in_history(filtered_titles_to_100, history, history_id)
     # добавление похожих фильмов
+    serialized_titles_to_100 = []
     serialized_titles_to_100 = add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles)
     filtered_titles_to_100 = set(filtered_titles_to_100)
     while len(serialized_titles_to_100) < 10 and filtered_titles_to_100:
