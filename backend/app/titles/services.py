@@ -301,6 +301,7 @@ def add_link_and_rating_to_similar(headers, data):
     for title in data:
         for similar_title in title['similarMovies']:
             similar_title = compare_with_ratings(ratings, similar_title)
+            similar_title['link'] = base_link + str(similar_title['id'])
     return data
 
 
@@ -394,5 +395,5 @@ def select_titles(criteria, history):
     end1 = time.time()
     full_info = get_full_info_about_titles(titles)
     end2 = time.time()
-    print(f'Время подбора фильмов: {end1-start}, время получения полной информации: {end2-start}')
+    print(f'Время подбора фильмов: {end1-start}, время получения полной информации: {end2-end1}')
     return full_info
