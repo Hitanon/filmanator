@@ -12,7 +12,7 @@ export class Movie {
         this.poster = json.poster;
         this.genres = json.genres;
         this.countries = json.countries;
-        this.seasonsInfo = json.seasonsInfo;
+        this.seasons_count = json.seasons_count;
         this.alternativeName = json.alternativeName;
         this.shortDescription = json.shortDescription;
         this.ageRating = json.ageRating;
@@ -32,7 +32,7 @@ export class Movie {
         return this.alternativeName;
     }
 
-    get matchPercentage (){
+    get matchPercentage() {
         return `${this.match_percentage}%`;
     }
 
@@ -77,10 +77,13 @@ export class Movie {
     }
 
     get feesString() {
-        const feesValue = this.fees.world.value.toLocaleString();
-        const feesCurrency = this.fees.world.currency;
+        if (this.fees) {
+            const feesValue = this.fees.world.value.toLocaleString();
+            const feesCurrency = this.fees.world.currency;
 
-        return `${feesCurrency} ${feesValue} `;
+            return `${feesCurrency} ${feesValue} `;
+        }
+        return 'N/A';
     }
 
     get budgetString() {
@@ -119,8 +122,8 @@ export class Movie {
                 return `${hours} ч. ${minutes} мин.`;
             }
         }
-        if (this.seasonsInfo && this.seasonsInfo.countSeasons !== 0) {
-            return this.pluralizeSeasons(this.seasonsInfo.countSeasons);
+        if (this.seasons_count && this.seasons_count !== 0) {
+            return this.pluralizeSeasons(this.seasons_count);
 
         }
         return ``;

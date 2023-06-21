@@ -10,3 +10,5 @@ export const SIGNIN_ROUTE = "/signin";
 
 // private routes
 export const PERSONAL_ACCOUNT = "/personal_account";
+
+export const QUESTIONNAIRE_REQUEST = "http://localhost:8000/api/v1/questionnaire/"

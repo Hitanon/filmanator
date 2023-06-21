@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { observer } from 'mobx-react-lite';
+import { useNavigate } from "react-router-dom";
+
+import { observer} from 'mobx-react-lite';
+import { reaction } from 'mobx';
 import './style.css'
 import AnimatedText from '../animated_text/AnimatedText';
 import questionStore from '../../store/QuestionStore';
+
+import {RESULT_ROUTE} from "../../utils/Consts";
 
 const handleMouseEnter = (setIconSrc) => {
     setIconSrc('/img/previous_question_button_active.svg');
@@ -12,11 +17,8 @@ const handleMouseLeave = (setIconSrc) => {
     setIconSrc('/img/previous_question_button.svg');
 };
 
-const handleButtonClick = async (answer) => {
-    console.log(answer)
-    questionStore.setQuestionNumber(2);
-    questionStore.setQuestionText("Тест обновления вопроса");
-    questionStore.setAnswers(['ответ 1', 'ответ 2', 'ответ 3']);
+const handleButtonClick = async (answerId) => {
+    questionStore.submitAnswer(answerId);
 };
 
 const updateCurrentButtonIndex = (isTextAnimated, currentButtonIndex, setCurrentButtonIndex) => {
@@ -28,28 +30,38 @@ const updateCurrentButtonIndex = (isTextAnimated, currentButtonIndex, setCurrent
     }
 };
 
-// const fetchData = async () => {
-//     const response = await fetch('http://localhost:8000/api/v1/questionnaire/');
-//     const data = await response.json();
-//     console.log(data);
-// };
 
 const Question = observer(() => {
     const [iconSrc, setIconSrc] = useState('/img/previous_question_button.svg');
     const [currentButtonIndex, setCurrentButtonIndex] = useState(-1);
     const [isTextAnimated, setIsTextAnimated] = useState(false);
+    const navigate = useNavigate();
 
     const handleAnimationComplete = useCallback(() => {
         setIsTextAnimated(true);
     }, []);
 
-    // useEffect(() => {
-    //     fetchData();
-    // }, []);
 
     useEffect(() => {
         updateCurrentButtonIndex(isTextAnimated, currentButtonIndex, setCurrentButtonIndex);
     }, [isTextAnimated, currentButtonIndex]);
+
+    useEffect(() => {
+        questionStore.fetchQuestion();
+    }, []);
+
+
+    useEffect(() => {
+        const disposer = reaction(
+            () => questionStore.isComplete,
+            (isComplete) => {
+                if (isComplete) {
+                    navigate(RESULT_ROUTE);
+                }
+            }
+        );
+        return () => disposer();
+    }, [navigate]);
 
     return (
         <div className="question-container">
@@ -63,18 +75,18 @@ const Question = observer(() => {
                 <div className="question-number">Вопрос {questionStore.questionNumber}</div>
             </div>
             <div className="question-text">
-                <AnimatedText
-                    text={questionStore.questionText}
-                    onComplete={handleAnimationComplete}
-                />
+                {questionStore.question && (
+                    <AnimatedText
+                        text={questionStore.question}
+                        onComplete={handleAnimationComplete}
+                    />
+                )}
             </div>
             <div className="button-container">
-                {questionStore.answers.map((text, index) => (
-                    index <= currentButtonIndex && (
-                        <button key={index} className="answer-button" onClick={() => handleButtonClick(text)}>
-                            {text}
-                        </button>
-                    )
+                {questionStore.answers.map((answer) => (
+                    <button key={answer.id} className="answer-button" onClick={() => handleButtonClick(answer.id)}>
+                        {answer.body}
+                    </button>
                 ))}
             </div>
         </div>

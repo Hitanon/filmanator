@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Movie } from './Movie.js';
 
 class FilmInfoStore {
@@ -14,12 +14,12 @@ class FilmInfoStore {
         const moviesJson = localStorage.getItem('movies');
         if (moviesJson) {
             this.movies = JSON.parse(moviesJson).map(movieJson => new Movie(movieJson));
-            
+
         }
         const currentMovieIndex = localStorage.getItem('currentMovieIndex');
         if (currentMovieIndex) {
             this.currentMovieIndex = Number(currentMovieIndex);
-            
+
         }
     }
 
@@ -33,6 +33,14 @@ class FilmInfoStore {
         const moviesJson = await response.json();
         this.movies = moviesJson.map(movieJson => new Movie(movieJson));
         this.saveToLocalStorage();
+    }
+
+    loadMovies(data) {
+        runInAction(() => {
+            this.currentMovieIndex = 0;
+            filmInfoStore.movies = data.map(movieJson => new Movie(movieJson));
+            this.saveToLocalStorage();
+        });
     }
 
     setCurrentMovieIndex(index) {

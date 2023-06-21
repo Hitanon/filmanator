@@ -87,9 +87,6 @@ const FilmInfo = observer(() => {
     const [forwardsSrc, setForwardsSrc] = useState('/img/forwards_button.svg');
     const { currentMovieIndex, movies } = filmInfoStore;
 
-    useEffect(() => {
-        filmInfoStore.fetchMovies();
-    }, []);
 
     useEffect(() => {
         if (currentMovieIndex === movies.length - 1) {
