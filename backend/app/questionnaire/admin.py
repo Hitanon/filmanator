@@ -5,12 +5,12 @@ from questionnaire import models
 
 @admin.register(models.Session)
 class SessionAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ('session__id',)
 
 
 @admin.register(models.SessionState)
 class SessionStateAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ('session__id',)
 
 
 @admin.register(models.Category)
@@ -37,3 +37,8 @@ class AnswerAdmin(admin.ModelAdmin):
 class ResutlAdmin(admin.ModelAdmin):
     list_filter = ('session__id',)
     search_fields = ('session__user__username',)
+
+
+@admin.register(models.ResultTitle)
+class ResultTitleAdmin(admin.ModelAdmin):
+    list_filter = ('session__id',)
