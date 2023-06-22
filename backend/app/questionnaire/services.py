@@ -144,7 +144,7 @@ def get_skip_answered_question(session: models.Session) -> models.SkipAnsweredQu
 def get_finished_session_titles_data(session: models.Session) -> dict:
     result_titles = models.ResultTitle.objects.filter(session=session)
     serializer = serializers.ResultTitleSerializer(result_titles, many=True)
-    return dict(serializer.data)
+    return [dict(title) for title in serializer.data]
 
 
 # Fix type annotation

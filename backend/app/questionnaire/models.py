@@ -48,6 +48,7 @@ class ResultTitle(models.Model):
     title = models.ForeignKey(
         t_models.Title,
         on_delete=models.CASCADE,
+        db_index=True,
     )
 
     def __str__(self):
@@ -156,6 +157,7 @@ class Result(models.Model):
     session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,
+        db_index=True,
     )
 
     category = models.ForeignKey(
