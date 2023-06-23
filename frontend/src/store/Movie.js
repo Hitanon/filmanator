@@ -41,31 +41,52 @@ export class Movie {
     }
 
     get genresList() {
-        return this.genres.map(genre => genre.name).join(', ');
+        if (this.genres) {
+            return this.genres.map(genre => genre.name).join(', ');
+        }
+        return '';
     }
 
     get countriesList() {
-        return this.countries.map(country => country.name).join(', ');
+        if (this.countries) {
+            return this.countries.map(country => country.name).join(', ');
+        }
+        return '';
     }
 
     get actorsList() {
-        return this.actors.join(',\n');
+        if (this.actors) {
+            return this.actors.join(',\n');
+        }
+        return '';
     }
 
     get directorsList() {
-        return this.directors.join(', ');
+        if (this.directors) {
+            return this.directors.join(', ');
+        }
+        return '';
     }
 
     get imdbRating() {
-        return this.rating.imdb.toFixed(1);
+        if (this.rating){
+            return this.rating.imdb.toFixed(1);
+        }
+        return '';
     }
 
     get kinopoiskRating() {
-        return this.rating.kp.toFixed(1);
+        if (this.rating){
+            return this.rating.kp.toFixed(1);
+        }
+        return '';
     }
 
     get posterUrl() {
-        return this.poster.previewUrl;
+        if (this.poster){
+            return this.poster.previewUrl;
+        }
+        return '';
     }
 
     get ageRatingString() {
@@ -73,7 +94,10 @@ export class Movie {
     }
 
     get trailerUrl() {
-        return this.trailer.url;
+        if (this.trailer){
+            return this.trailer.url;
+        }
+        return '';
     }
 
     get feesString() {

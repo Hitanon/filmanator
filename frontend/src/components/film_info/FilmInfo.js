@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { filmInfoStore } from '../../store/FilmInfoStore';
 
 import './style.css';
-import {DETAILED_RESULT_ROUTE} from "../../utils/Consts";
+import {QUESTIONNAIRE_ROUTE, DETAILED_RESULT_ROUTE} from "../../utils/Consts";
 import InfoIcon from "../info_icon/InfoIcon";
 import Poster from "../poster/Poster";
 import SquareButton from "../square_button/SquareButton";
@@ -64,10 +64,6 @@ const handleBackwardsClick = () => {
 };
 
 
-const handleRepeatClick = () => {
-    console.log("pressed repeat")
-};
-
 const handleForwardsClick = () => {
     filmInfoStore.increaseCurrentMovieIndex();
 };
@@ -80,6 +76,10 @@ const FilmInfo = observer(() => {
 
     const handleLearnMoreClick = () => {
         navigate(DETAILED_RESULT_ROUTE);
+    };
+
+    const handleRepeatClick = () => {
+        navigate(QUESTIONNAIRE_ROUTE);
     };
     
 
@@ -100,11 +100,6 @@ const FilmInfo = observer(() => {
         }
     }, [currentMovieIndex, setBackwardsSrc]);
 
-
-
-    if (!filmInfoStore.currentMovie) {
-        return <div>Подбираю фильмы...</div>;
-    }
 
     return (
         <div className="film-info-container">
@@ -128,7 +123,7 @@ const FilmInfo = observer(() => {
 
             <div className="info-container">
                 <p>Жанр: {filmInfoStore.currentMovie.genresList}</p>
-                <p>Страна: {filmInfoStore.currentMovie.countriesList}</p>
+                <p>Страна: {`${filmInfoStore.currentMovie.countriesList}`}</p>
                 <p>Режиссер: {filmInfoStore.currentMovie.directorsList}</p>
             </div>
 

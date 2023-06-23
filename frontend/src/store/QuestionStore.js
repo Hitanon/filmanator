@@ -9,7 +9,7 @@ import { filmInfoStore } from './FilmInfoStore';
 
 class QuestionStore {
     constructor() {
-        this.isComplete = false
+        this.isComplete = false;
         this.session = null;
         this.question = null;
         this.answers = [];
@@ -18,14 +18,13 @@ class QuestionStore {
     }
 
     async fetchQuestion() {
+        this.reset();
         try {
             const response = await axios.get(QUESTIONNAIRE_REQUEST);
             const data = response.data;
             runInAction(() => {
                 this.session = data.session;
-                this.question = data.question.body;
-                this.answers = data.question.answers;
-                this.questionNumber += 1;
+                this.updateQuestion(data.question.body, data.question.answers)
             });
         } catch (error) {
             console.error(error);
@@ -43,18 +42,14 @@ class QuestionStore {
             const data = response.data;
             if (data.question) {
                 runInAction(() => {
-                    this.question = data.question.body;
-                    this.answers = data.question.answers;
-                    this.questionNumber += 1;
+                    this.updateQuestion(data.question.body, data.question.answers)
                 });
             } else if (Array.isArray(data)) {
+                console.log(data);
+                filmInfoStore.clearLocalStorage();
                 filmInfoStore.loadMovies(data);
                 runInAction(() => {
                     this.isComplete = true;
-                    this.session = null;
-                    this.question = null;
-                    this.answers = [];
-                    this.questionNumber = 0;
                 });
             } else {
                 throw new Error('Invalid response data');
@@ -64,7 +59,23 @@ class QuestionStore {
             // need display an error message to the user
         }
     }
-    
+
+    updateQuestion(question, answers) {
+        this.question = question;
+        this.answers = answers;
+        this.questionNumber += 1;
+    }
+
+    reset() {
+        runInAction(() => {
+            this.session = null;
+            this.question = null;
+            this.answers = [];
+            this.questionNumber = 0;
+            this.isComplete = false;
+        });
+    }
+
 
 
 

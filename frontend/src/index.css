@@ -59,6 +59,7 @@ button:hover {
 
 /* filmanator */
 .filmanator-main-image {
+    aspect-ratio: 3202/2189;
     display: block;
     max-width: 70%;
     height: auto;
@@ -87,6 +88,8 @@ button:hover {
 /* container for filmanator */
 .image-container {
     position: relative;
+    width: 99vw;
+    height: 47.4vw;
 }
 
 .image-container .text-button {
@@ -98,13 +101,14 @@ button:hover {
 
 /* pages */
 .home-page {
-    background-image: url('../public/img/home_bg.png');
+    aspect-ratio: 16/9;
+    background-image: url('../public/img/home_bg.webp');
     background-size: 110%;
     background-position: center;
 }
 
 .questionnaire-page{
-    background-image: url('../public/img/questionnaire_bg.png');
+    background-image: url('../public/img/questionnaire_bg.webp');
     background-size: cover;
     background-position: cover;
     background-repeat: no-repeat;

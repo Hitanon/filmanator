@@ -25,7 +25,7 @@ const Home = () => {
         <div className="home-page">
             <Navbar />
             <div className="image-container">
-                <img className="filmanator-main-image" src="/img/filmanator_main.png" alt="main filmanator" />
+                <img className="filmanator-main-image" src="/img/filmanator_main.webp" alt="main filmanator" />
                 <TextButton />
             </div>
             <Footer />

@@ -11,7 +11,7 @@ const Questionnaire = () => {
             <Navbar />
             <div className="image-container">
                 <img className="filmanator-questionnaire-image"
-                    src="/img/filmanator_questionnaire.png"
+                    src="/img/filmanator_questionnaire.webp"
                     alt="Filmanator for questionnaire"
                 />
                 <Question />

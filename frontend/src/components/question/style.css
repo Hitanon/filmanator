@@ -1,53 +1,72 @@
 .question-container {
-    top: 18%;
-    left: 44%;
-    right: 0;
-    position: absolute;
-  }
-  
-  .question-header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  
-  button.back-button {
-    margin-left: 0;
-    margin-right: 0;
-    width: auto;
-    height: auto;
-    border: none;
-    background: none;
-    padding: 0;
-  }
+  top: 18%;
+  left: 44%;
+  right: 0;
+  position: absolute;
+}
 
-  .question-number {
-    margin-left: 1%;
-    color: white;
-    font-size: 1vw;
-  }
-  
-  .question-text {
-    margin: 2% 0;
-    font-weight: bold;
-    font-size: 1.5vw;
-    color: white;
-    max-width: 50%;
-  }
-  
-  .button-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .answer-button {
-    margin-bottom: 1.2%;
-    font-weight: 500;
-    font-size: 1vw;
-    color: var(--dark-bg-color);
-    background-color: white;
-    border: none;
-    width: 40%;
-    height: 3.2vw;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  }
+.circular-progress-container {
+  margin-top: 4.5vw;
+  margin-left: 8.2vw;
+  position: absolute;
+}
+
+.circular-progress-color {
+  color: white;
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+button.back-button {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+  height: auto;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.question-number {
+  margin-left: 0;
+  color: white;
+  font-size: 1vw;
+}
+
+.question-text {
+  margin: 2% 0;
+  font-weight: bold;
+  font-size: 1.5vw;
+  color: white;
+  max-width: 50%;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.answer-button {
+  margin-bottom: 1.2%;
+  font-weight: 500;
+  font-size: 1vw;
+  color: var(--dark-bg-color);
+  background-color: white;
+  border: none;
+  width: 40%;
+  height: 3.2vw;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.answer-button:disabled {
+  color: var(--dark-bg-color);
+  background-color: var(--grey-color);
+}
+.answer-button:disabled:hover {
+  color: var(--dark-bg-color);
+  background-color: var(--grey-color);
+}

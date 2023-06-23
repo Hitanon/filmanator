@@ -62,6 +62,11 @@ class FilmInfoStore {
         }
     }
 
+    clearLocalStorage() {
+        localStorage.removeItem('movies');
+        localStorage.removeItem('currentMovieIndex');
+    }
+
     get currentMovie() {
         return this.movies[this.currentMovieIndex];
     }
