@@ -213,8 +213,3 @@ def is_end(session: models.Session) -> bool:
     answered = results.filter(criterion__isnull=False).count()
     active = results.filter(Q(is_skipped=True) | Q(criterion__isnull=False)).count()
     return answered == CATEGORIES_LIMIT or active == models.Category.objects.count()
-
-
-def check_is_author(session: models.Session, user: User | AnonymousUser) -> None:
-    if user.is_authenticated and session.user != user:
-        raise exceptions.SessionNotFound()

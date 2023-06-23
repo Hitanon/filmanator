@@ -1,4 +1,9 @@
-from questionnaire import serializers, services
+from questionnaire import permissions
+from questionnaire import services
+from questionnaire.serializers import (
+    SessionSkipAnsweredQuestionSerializer,
+    SkipAnsweredQuestionSerializer,
+)
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -6,16 +11,21 @@ from rest_framework.views import APIView
 
 
 class QuestionnaireView(APIView):
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.IsAuthor()]
+        return super().get_permissions()
+
     def _start_session(self):
         session = services.start_session(self.request.user)
         skip_answered_question = services.get_skip_answered_question(session)
-        serializer = serializers.SessionSkipAnsweredQuestionSerializer(skip_answered_question)
+        serializer = SessionSkipAnsweredQuestionSerializer(skip_answered_question)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def _get_session_state(self, session):
         services.check_session_not_over(session)
         skip_answered_question = services.get_skip_answered_question(session)
-        serializer = serializers.SkipAnsweredQuestionSerializer(skip_answered_question)
+        serializer = SkipAnsweredQuestionSerializer(skip_answered_question)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def _get_finished_session_titles(self, session):
@@ -26,7 +36,7 @@ class QuestionnaireView(APIView):
     def _get_next_question(self, session):
         services.update_session_state(session)
         skip_answered_question = services.get_skip_answered_question(session)
-        serializer = serializers.SkipAnsweredQuestionSerializer(skip_answered_question)
+        serializer = SkipAnsweredQuestionSerializer(skip_answered_question)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def _select_titles(self, session):
@@ -47,7 +57,7 @@ class QuestionnaireView(APIView):
     def post(self, request, *args, **kwargs):
         session = services.check_session_id(**request.data)
         answer = services.check_answer_id(**request.data)
-        services.check_is_author(session, request.user)
+        self.check_permissions(request)
         if session.is_finished:
             return self._get_finished_session_titles(session)
 
