@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from titles.models import Title
 from titles.serializers import TitleSerializer
 from titles.services import select_titles
+from users.models import History
 
 
 class TitleAPIView(generics.RetrieveAPIView):
@@ -29,7 +30,7 @@ def get_films_by_criteria(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-    history = None
+    history = History.objects.none()
     films = select_titles(criteria, history)
 
     return JsonResponse({'success': True, 'films': films})
@@ -37,7 +38,7 @@ def get_films_by_criteria(request):
 
 class TestSelectTitles(APIView):
     def get(self, request, *args, **kwargs):
-        history = None
+        history = History.objects.none()
         criteria = {'genre': [1, 2],
                     'acting': [3],
                     'amount_of_dialogue': [2],
