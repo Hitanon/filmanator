@@ -1,6 +1,19 @@
 .container {
     display: flex;
+    justify-items: center;
+    align-items: center;
+    margin-left: 150px;
+    margin-right: 280px;
+    margin-top: 0;
 }
+
+/* @media (max-width: 1910px) {
+    .container {
+        margin-left: 0;
+        margin-right: 0;
+        overflow-x: auto;
+    }
+} */
 
 .container-grid-1 {
     position: relative;
@@ -8,7 +21,6 @@
     grid-template-columns: repeat(4, 97px);
     grid-column-gap: 40px;
     grid-auto-rows: minmax(min-content, max-content);
-    margin-left: 150px;
     margin-right: 40px;
     margin-bottom: 40px;
     min-height: 100vh;
@@ -34,7 +46,6 @@
     grid-template-columns: 97px; 
     grid-column-gap: 40px;
     margin-left: 0;
-    margin-right: 280px;
     margin-bottom: 40px;
     min-height: 100vh;
     align-items: start;
@@ -64,9 +75,10 @@
     grid-row: 1;
 }
 
-.big_rate_buttons-container{
+.rate-buttons-big-container{
     position: relative;
-    margin-top: 40px;
+    left:8px;
+    top: 25px;
     display: flex;
     justify-content: center;
     grid-column: 2 /span 3;
@@ -76,7 +88,7 @@
 
 
 .h1 {
-    margin-top: 60px;
+    margin-top: 70px;
     margin-bottom: 0;
     grid-column: 1 / span 5;
     font-size: 44px;
@@ -102,6 +114,7 @@
     margin-top: 60px;
     grid-column: 1 / span 2;
     grid-row: 1;
+    height: 200px;
 }
 
 .rating_icons>* {
@@ -117,7 +130,7 @@
     margin-left: 0;
 }
 
-.icons-row .icon {
+.icons-row .icon-big {
     margin-right: 10px;
 }
 
@@ -197,13 +210,13 @@
 
 .actors-container{
     background-color: var(--icon-bg-color);
-    min-width: 200px;
-    min-height: 320px;
     padding: 10px;
     border-radius: 10px;
     grid-column: 1 / span 2;
-    grid-row: 3;
+    grid-row: 2;
     margin-top: 30px;
+    margin-left: 20px;
+    display: inline-block;
 }
 
 .actors-title{
@@ -214,6 +227,7 @@
     font-weight: bold;
     font-size: 22px;
     margin-right: 20px;
+    margin-left: 20px;
 }
 
 .actors{
@@ -225,5 +239,6 @@
     font-size: 16px;
     margin-right: 20px;
     margin-left: 20px;
+    margin-bottom: 20px;
     line-height: 24px;
 }

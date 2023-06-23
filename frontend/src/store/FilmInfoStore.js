@@ -67,6 +67,18 @@ class FilmInfoStore {
         localStorage.removeItem('currentMovieIndex');
     }
 
+    redirectKinopoisk() {
+        if (this.currentMovie && this.currentMovie.link) {
+            window.open(this.currentMovie.link, '_blank');
+        }
+    }
+
+    redirectYouTube() {
+        if (this.currentMovie && this.currentMovie.trailer.url) {
+            window.open(this.currentMovie.trailer.url, '_blank');
+        }
+    }
+
     get currentMovie() {
         return this.movies[this.currentMovieIndex];
     }

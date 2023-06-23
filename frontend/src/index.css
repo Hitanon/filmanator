@@ -134,7 +134,7 @@ button:hover {
 
 .signin-page{
     margin: 0;
-    background-image: url('../public/img/signin_bg.png');
+    background-image: url('../public/img/signin_bg.webp');
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;

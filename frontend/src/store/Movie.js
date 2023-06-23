@@ -56,7 +56,7 @@ export class Movie {
 
     get actorsList() {
         if (this.actors) {
-            return this.actors.join(',\n');
+            return this.actors.map(actor => <div key={actor}>{actor}</div>);
         }
         return '';
     }
@@ -69,21 +69,21 @@ export class Movie {
     }
 
     get imdbRating() {
-        if (this.rating){
+        if (this.rating) {
             return this.rating.imdb.toFixed(1);
         }
         return '';
     }
 
     get kinopoiskRating() {
-        if (this.rating){
+        if (this.rating) {
             return this.rating.kp.toFixed(1);
         }
         return '';
     }
 
     get posterUrl() {
-        if (this.poster){
+        if (this.poster) {
             return this.poster.previewUrl;
         }
         return '';
@@ -94,7 +94,7 @@ export class Movie {
     }
 
     get trailerUrl() {
-        if (this.trailer){
+        if (this.trailer) {
             return this.trailer.url;
         }
         return '';

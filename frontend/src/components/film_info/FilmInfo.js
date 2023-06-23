@@ -53,10 +53,7 @@ const handleShareClick = () => {
 };
 
 const handleWatchClick = () => {
-    const currentMovie = filmInfoStore.currentMovie;
-    if (currentMovie && currentMovie.link) {
-        window.open(currentMovie.link, '_blank');
-    }
+    filmInfoStore.redirectKinopoisk();
 };
 
 const handleBackwardsClick = () => {

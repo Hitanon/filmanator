@@ -5,14 +5,16 @@ import { filmInfoStore } from '../../store/FilmInfoStore';
 
 
 import './style.css';
-import InfoIcon from "../info_icon/InfoIcon";
+import InfoIconBig from "../info_icon_big/InfoIconBig";
 import BigPoster from "../poster_big/BigPoster";
-import SquareButton from "../square_button/SquareButton";
+import SquareButtonBig from "../square_button_big/SquareButtonBig";
 
 const ICON_HEIGHT = "45px";
 const SMALL_ICON_HEIGHT = "35px";
 const SQUARE_BUTTON_SIZE = "50px";
 const BIG_SQUARE_BUTTON_SIZE = "80px";
+const ICON_FONT_SIZE = "18px";
+const SMALL_ICON_FONT_SIZE = "16px";
 
 
 const handleBackwardsEnter = (setIconSrc) => {
@@ -23,6 +25,13 @@ const handleBackwardsLeave = (setIconSrc) => {
     setIconSrc('/img/backwards_button.svg');
 };
 
+const handleWatchClick = () => {
+    filmInfoStore.redirectKinopoisk();
+};
+
+const handleTrailerClick = () => {
+    filmInfoStore.redirectYouTube();
+};
 
 const DetailedFilmInfo = observer(() => {
     const navigate = useNavigate();
@@ -46,10 +55,10 @@ const DetailedFilmInfo = observer(() => {
                 <div className="poster">
                     <BigPoster imageUrl={filmInfoStore.currentMovie.posterUrl} />
                 </div>
-                <div className="big_rate_buttons-container">
-                    <SquareButton icon="/img/like_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="like" />
-                    <SquareButton icon="/img/dislike_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="dislike" />
-                    <SquareButton icon="/img/share_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="share" />
+                <div className="rate-buttons-big-container">
+                    <SquareButtonBig icon="/img/like_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="like" />
+                    <SquareButtonBig icon="/img/dislike_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="dislike" />
+                    <SquareButtonBig icon="/img/share_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="share" />
                 </div>
             </div>
 
@@ -58,19 +67,26 @@ const DetailedFilmInfo = observer(() => {
                 <h1 className="h1">{filmInfoStore.currentMovie.title}</h1>
                 <h2 className="h2">{filmInfoStore.currentMovie.alternativeTitle}</h2>
                 <div className="icons-row">
-                    <InfoIcon icon="/img/time_icon.svg" text={filmInfoStore.currentMovie.durationFormatted} color='#FFFFFF' height={SMALL_ICON_HEIGHT} />
-                    <InfoIcon text={filmInfoStore.currentMovie.ageRatingString} color='#FFFFFF' height={SMALL_ICON_HEIGHT} />
+                    <InfoIconBig
+                        icon="/img/time_icon.svg"
+                        text={filmInfoStore.currentMovie.durationFormatted}
+                        color='#FFFFFF' height={SMALL_ICON_HEIGHT}
+                        fontSize={SMALL_ICON_FONT_SIZE} />
+                    <InfoIconBig text={filmInfoStore.currentMovie.ageRatingString}
+                        color='#FFFFFF'
+                        height={SMALL_ICON_HEIGHT}
+                        fontSize={SMALL_ICON_FONT_SIZE} />
                 </div>
                 <h3 className="h3">{filmInfoStore.currentMovie.shortDescription}</h3>
 
                 <div className="trailer-button-container">
                     <p className="p">Трейлер: </p>
-                    <SquareButton icon="/img/youtube_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="trailer" />
+                    <SquareButtonBig icon="/img/youtube_icon.svg" size={SQUARE_BUTTON_SIZE} onClick={handleTrailerClick} alt_text="trailer" />
                 </div>
 
                 <div className="watch-button-container">
                     <p className="p">Смотреть полностью: </p>
-                    <SquareButton icon="/img/kinopoisk_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="link" />
+                    <SquareButtonBig icon="/img/kinopoisk_icon.svg" size={SQUARE_BUTTON_SIZE} onClick={handleWatchClick} alt_text="link" />
                 </div>
 
                 <div className="about">
@@ -117,17 +133,29 @@ const DetailedFilmInfo = observer(() => {
 
             <div className="container-grid-3">
                 <div className="rating_icons">
-                    <InfoIcon icon="/img/match_icon.svg" text={`${filmInfoStore.currentMovie.matchPercentage}`} color='#F66004' height={ICON_HEIGHT} />
-                    <InfoIcon icon="/img/imdb_icon.svg" text={`${filmInfoStore.currentMovie.imdbRating}`} color='#FFFFFF' height={ICON_HEIGHT} />
-                    <InfoIcon icon="/img/kinopoisk_icon.svg" text={`${filmInfoStore.currentMovie.kinopoiskRating}`} color='#FFFFFF' height={ICON_HEIGHT} />
+                    <InfoIconBig icon="/img/match_icon.svg"
+                        text={`${filmInfoStore.currentMovie.matchPercentage}`}
+                        color='#F66004'
+                        height={ICON_HEIGHT}
+                        fontSize={ICON_FONT_SIZE} />
+                    <InfoIconBig icon="/img/imdb_icon.svg"
+                        text={`${filmInfoStore.currentMovie.imdbRating}`}
+                        color='#FFFFFF'
+                        height={ICON_HEIGHT}
+                        fontSize={ICON_FONT_SIZE} />
+                    <InfoIconBig icon="/img/kinopoisk_icon.svg"
+                        text={`${filmInfoStore.currentMovie.kinopoiskRating}`}
+                        color='#FFFFFF'
+                        height={ICON_HEIGHT}
+                        fontSize={ICON_FONT_SIZE} />
                 </div>
                 <div className="actors-container">
                     <h3 className="actors-title">
                         Главные роли:
                     </h3>
-                    <p className="actors">
+                    <div className="actors">
                         {filmInfoStore.currentMovie.actorsList}
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>

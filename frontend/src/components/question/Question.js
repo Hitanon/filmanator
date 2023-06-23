@@ -48,7 +48,6 @@ const Question = observer(() => {
     };
 
     useEffect(() => {
-        console.log(currentButtonIndex)
         updateCurrentButtonIndex(isTextAnimated, currentButtonIndex, setCurrentButtonIndex);
     }, [isTextAnimated, currentButtonIndex]);
 
