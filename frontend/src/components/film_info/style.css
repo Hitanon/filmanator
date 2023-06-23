@@ -1,6 +1,6 @@
 .film-info-container {
     position: absolute;
-    top: 15%;
+    top: 12%;
     left: 32%;
     right: 0;
 }
@@ -11,6 +11,10 @@
     font-size: 2vw;
     position: absolute;
     margin-left: 16%;
+    max-width: 35vw;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
 
 /* en title */
@@ -51,6 +55,10 @@
     font-size: 1vw ;
 }
 
+.info-container p {
+    max-width: 35vw;
+}
+
 /* plot */
 .description-container {
     position: absolute;
@@ -86,7 +94,8 @@
 /* container for bottom buttons */
 .actions_container {
     position: absolute;
-    margin-top: 40%;
+    margin-top: 42%;
+    margin-left: 6%;
     display: flex;
     align-items: center;
     max-width: 28vw;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "../components/footer/Footer";
 import Navbar from "../components/navbar/Navbar";
 import TextButton from "../components/home_textbutton/TextButton";
@@ -12,10 +12,20 @@ const handleMouseMove = (event) => {
     }
 };
 
+
+
 const Home = () => {
+    const [showTextButton, setShowTextButton] = useState(false);
+
+    const checkLoadImage = () =>{
+        const image = new Image();
+        image.src = "/img/filmanator_main.webp";
+        image.onload = () => setShowTextButton(true);
+    }
 
     useEffect(() => {
         document.addEventListener('mousemove', handleMouseMove);
+        checkLoadImage();
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
         };
@@ -25,8 +35,8 @@ const Home = () => {
         <div className="home-page">
             <Navbar />
             <div className="image-container">
-                <img className="filmanator-main-image" src="/img/filmanator_main.png" alt="main filmanator" />
-                <TextButton />
+                <img className="filmanator-main-image" src="/img/filmanator_main.webp" alt="main filmanator" />
+                {showTextButton && <TextButton />}
             </div>
             <Footer />
         </div>

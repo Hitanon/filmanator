@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { filmInfoStore } from '../../store/FilmInfoStore';
 
 import './style.css';
-import {DETAILED_RESULT_ROUTE} from "../../utils/Consts";
+import {QUESTIONNAIRE_ROUTE, DETAILED_RESULT_ROUTE} from "../../utils/Consts";
 import InfoIcon from "../info_icon/InfoIcon";
 import Poster from "../poster/Poster";
 import SquareButton from "../square_button/SquareButton";
@@ -53,20 +53,13 @@ const handleShareClick = () => {
 };
 
 const handleWatchClick = () => {
-    const currentMovie = filmInfoStore.currentMovie;
-    if (currentMovie && currentMovie.link) {
-        window.open(currentMovie.link, '_blank');
-    }
+    filmInfoStore.redirectKinopoisk();
 };
 
 const handleBackwardsClick = () => {
     filmInfoStore.decreaseCurrentMovieIndex();
 };
 
-
-const handleRepeatClick = () => {
-    console.log("pressed repeat")
-};
 
 const handleForwardsClick = () => {
     filmInfoStore.increaseCurrentMovieIndex();
@@ -81,15 +74,16 @@ const FilmInfo = observer(() => {
     const handleLearnMoreClick = () => {
         navigate(DETAILED_RESULT_ROUTE);
     };
+
+    const handleRepeatClick = () => {
+        navigate(QUESTIONNAIRE_ROUTE);
+    };
     
 
     const [backwardsSrc, setBackwardsSrc] = useState('/img/backwards_button.svg');
     const [forwardsSrc, setForwardsSrc] = useState('/img/forwards_button.svg');
     const { currentMovieIndex, movies } = filmInfoStore;
 
-    useEffect(() => {
-        filmInfoStore.fetchMovies();
-    }, []);
 
     useEffect(() => {
         if (currentMovieIndex === movies.length - 1) {
@@ -103,11 +97,6 @@ const FilmInfo = observer(() => {
         }
     }, [currentMovieIndex, setBackwardsSrc]);
 
-
-
-    if (!filmInfoStore.currentMovie) {
-        return <div>Подбираю фильмы...</div>;
-    }
 
     return (
         <div className="film-info-container">
@@ -131,7 +120,7 @@ const FilmInfo = observer(() => {
 
             <div className="info-container">
                 <p>Жанр: {filmInfoStore.currentMovie.genresList}</p>
-                <p>Страна: {filmInfoStore.currentMovie.countriesList}</p>
+                <p>Страна: {`${filmInfoStore.currentMovie.countriesList}`}</p>
                 <p>Режиссер: {filmInfoStore.currentMovie.directorsList}</p>
             </div>
 

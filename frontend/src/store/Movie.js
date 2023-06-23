@@ -12,7 +12,7 @@ export class Movie {
         this.poster = json.poster;
         this.genres = json.genres;
         this.countries = json.countries;
-        this.seasonsInfo = json.seasonsInfo;
+        this.seasons_count = json.seasons_count;
         this.alternativeName = json.alternativeName;
         this.shortDescription = json.shortDescription;
         this.ageRating = json.ageRating;
@@ -32,7 +32,7 @@ export class Movie {
         return this.alternativeName;
     }
 
-    get matchPercentage (){
+    get matchPercentage() {
         return `${this.match_percentage}%`;
     }
 
@@ -41,31 +41,52 @@ export class Movie {
     }
 
     get genresList() {
-        return this.genres.map(genre => genre.name).join(', ');
+        if (this.genres) {
+            return this.genres.map(genre => genre.name).join(', ');
+        }
+        return '';
     }
 
     get countriesList() {
-        return this.countries.map(country => country.name).join(', ');
+        if (this.countries) {
+            return this.countries.map(country => country.name).join(', ');
+        }
+        return '';
     }
 
     get actorsList() {
-        return this.actors.join(',\n');
+        if (this.actors) {
+            return this.actors.map(actor => <div key={actor}>{actor}</div>);
+        }
+        return '';
     }
 
     get directorsList() {
-        return this.directors.join(', ');
+        if (this.directors) {
+            return this.directors.join(', ');
+        }
+        return '';
     }
 
     get imdbRating() {
-        return this.rating.imdb.toFixed(1);
+        if (this.rating) {
+            return this.rating.imdb.toFixed(1);
+        }
+        return '';
     }
 
     get kinopoiskRating() {
-        return this.rating.kp.toFixed(1);
+        if (this.rating) {
+            return this.rating.kp.toFixed(1);
+        }
+        return '';
     }
 
     get posterUrl() {
-        return this.poster.previewUrl;
+        if (this.poster) {
+            return this.poster.previewUrl;
+        }
+        return '';
     }
 
     get ageRatingString() {
@@ -73,14 +94,20 @@ export class Movie {
     }
 
     get trailerUrl() {
-        return this.trailer.url;
+        if (this.trailer) {
+            return this.trailer.url;
+        }
+        return '';
     }
 
     get feesString() {
-        const feesValue = this.fees.world.value.toLocaleString();
-        const feesCurrency = this.fees.world.currency;
+        if (this.fees) {
+            const feesValue = this.fees.world.value.toLocaleString();
+            const feesCurrency = this.fees.world.currency;
 
-        return `${feesCurrency} ${feesValue} `;
+            return `${feesCurrency} ${feesValue} `;
+        }
+        return 'N/A';
     }
 
     get budgetString() {
@@ -119,8 +146,8 @@ export class Movie {
                 return `${hours} ч. ${minutes} мин.`;
             }
         }
-        if (this.seasonsInfo && this.seasonsInfo.countSeasons !== 0) {
-            return this.pluralizeSeasons(this.seasonsInfo.countSeasons);
+        if (this.seasons_count && this.seasons_count !== 0) {
+            return this.pluralizeSeasons(this.seasons_count);
 
         }
         return ``;
