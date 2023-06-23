@@ -1,4 +1,9 @@
-from questionnaire import serializers, services
+from questionnaire import permissions
+from questionnaire import services
+from questionnaire.serializers import (
+    SessionSkipAnsweredQuestionSerializer,
+    SkipAnsweredQuestionSerializer,
+)
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -6,46 +11,62 @@ from rest_framework.views import APIView
 
 
 class QuestionnaireView(APIView):
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.IsAuthor()]
+        return super().get_permissions()
+
     def _start_session(self):
-        session_state = services.start_session(self.request.user)
-        skip_answered_question = services.get_skip_answered_question(session_state.session)
-        serializer = serializers.SessionSkipAnsweredQuestionSerializer(skip_answered_question)
+        session = services.start_session(self.request.user)
+        skip_answered_question = services.get_skip_answered_question(session)
+        serializer = SessionSkipAnsweredQuestionSerializer(skip_answered_question)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def _get_session_state(self, session_id):
-        services.check_session_not_over(session_id)
-        session_state = services.get_session_state(session_id)
-        skip_answered_question = services.get_skip_answered_question(session_state.session)
-        serializer = serializers.SkipAnsweredQuestionSerializer(skip_answered_question)
+    def _get_session_state(self, session):
+        services.check_session_not_over(session)
+        skip_answered_question = services.get_skip_answered_question(session)
+        serializer = SkipAnsweredQuestionSerializer(skip_answered_question)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def _get_next_question(self, session_id):
-        session = services.get_session(session_id)
-        question = services.get_question(session)
-        services.update_session_state(session, question)
+    def _get_finished_session_titles(self, session):
+        data = services.get_finished_session_titles_data(session)
+        data = services.get_titles_full_info(data)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    def _get_next_question(self, session):
+        services.update_session_state(session)
         skip_answered_question = services.get_skip_answered_question(session)
-        serializer = serializers.SkipAnsweredQuestionSerializer(skip_answered_question)
+        serializer = SkipAnsweredQuestionSerializer(skip_answered_question)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def _get_titles(self, session_id):
-        result_titles = services.get_titles(session_id)
-        services.write_result_titles_to_history(self.request.user, session_id, result_titles)
-        data = services.get_titles_full_info(result_titles)
+    def _select_titles(self, session):
+        titles = services.select_session_titles(session)
+        services.write_result_titles_to_history(self.request.user, session, titles)
+        services.write_result_to_session(session, titles)
+        data = services.get_titles_full_info(titles)
         return Response(data=data, status=status.HTTP_200_OK)
 
     def get(self, request, session_id=None, *args, **kwargs):
-        if session_id:
-            return self._get_session_state(session_id)
-        return self._start_session()
+        if not session_id:
+            return self._start_session()
+        session = services.get_session(session_id)
+        if session.is_finished:
+            return self._get_finished_session_titles(session)
+        return self._get_session_state(session)
 
     def post(self, request, *args, **kwargs):
-        session, answer = services.check_questionnaire_post_data(**request.data)
-        services.check_user(session, request.user)
+        session = services.check_session_id(**request.data)
+        answer = services.check_answer_id(**request.data)
+        self.check_permissions(request)
+        if session.is_finished:
+            return self._get_finished_session_titles(session)
+
         services.write_result(session, answer)
-        if services.is_end(session.id):
-            return self._get_titles(session.id)
-        return self._get_next_question(session.id)
+        if services.is_end(session):
+            return self._select_titles(session)
+        return self._get_next_question(session)
 
     def delete(self, request, session_id, *args, **kwargs):
-        services.stop_session(session_id)
+        session = services.get_session(session_id)
+        services.delete_session(session)
         return Response(status=status.HTTP_204_NO_CONTENT)

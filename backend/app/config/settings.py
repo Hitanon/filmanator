@@ -215,3 +215,5 @@ SIMPLE_JWT = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+CONN_MAX_AGE = 60
