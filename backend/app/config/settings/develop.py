@@ -5,7 +5,7 @@ DEBUG = True
 INSTALLED_APPS.insert(9, 'django_extensions') # noqa
 INSTALLED_APPS.insert(10, 'debug_toolbar') # noqa
 
-MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware') # noqa
+MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware') # noqa
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
