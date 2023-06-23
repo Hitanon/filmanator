@@ -1,11 +1,11 @@
-from .base import *
+from .base import * # noqa
 
 DEBUG = True
 
-INSTALLED_APPS.insert(9, 'django_extensions')
-INSTALLED_APPS.insert(10, 'debug_toolbar')
+INSTALLED_APPS.insert(9, 'django_extensions') # noqa
+INSTALLED_APPS.insert(10, 'debug_toolbar') # noqa
 
-MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware') # noqa
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
