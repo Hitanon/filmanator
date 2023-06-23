@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from titles.models import Title
 from titles.serializers import TitleSerializer
 from titles.services import select_titles
+
 from users.models import History
 
 

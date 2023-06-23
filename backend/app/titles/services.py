@@ -172,6 +172,15 @@ def remove_titles_in_history(filtered_titles_to_100, history, history_id, titles
     return selected_titles
 
 
+def get_all_history_titles(history, history_id):
+    """
+    Получение всех id просмотренных фильмов
+    """
+    for history_title in history:
+        history_id = set(history_title.title.all().values_list('similar_titles__title', flat=True) | history_id)
+    return history_id
+
+
 def get_titles_by_attrs(criteria, history):
     """
     Получение словаря с отборными фильмами
@@ -183,8 +192,7 @@ def get_titles_by_attrs(criteria, history):
     history_id = set()
     similar_titles = set()
     if history:
-        for history_title in history:
-            history_id = set(history_title.title.all().values_list('similar_titles__title', flat=True) | history_id)
+        history_id = get_all_history_titles(history, history_id)
         similar_titles = set(titles.filter(pk__in=history_id))
         history = set(history_id)
     # отборка для 100% совпадения
