@@ -82,8 +82,10 @@ def add_title(data: dict) -> None:
     """
     if data['isSeries']:
         seasons_count = data['seasonsInfo'][-1]['number']
-        if seasons_count == 0:
+        if seasons_count == 0 and len(data['seasonsInfo']) > 1:
             seasons_count = data['seasonsInfo'][-2]['number']
+        else:
+            raise IndexError
 
         title, _ = Title.objects.get_or_create(
             id=data['id'],
@@ -245,14 +247,17 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
     if update_mode:
         cnt_changes = add_similar_titles(data, update_mode, cnt_changes)
     else:
-        add_title(data)
-        add_title_genres(data)
-        add_title_countries(data)
-        add_title_actors(data)
-        add_title_directors(data)
-        add_title_content_rating(data)
-        add_similar_titles(data, update_mode, cnt_changes)
-        print(f"Фильм {data['name']} - успешно добавлен!")
+        try:
+            add_title(data)
+            add_title_genres(data)
+            add_title_countries(data)
+            add_title_actors(data)
+            add_title_directors(data)
+            add_title_content_rating(data)
+            add_similar_titles(data, update_mode, cnt_changes)
+            print(f"Фильм {data['name']} - успешно добавлен!")
+        except IndexError:
+            print('[ERROR] Недостаточно данных для добавления сериала!')
     return cnt_changes
 
 
