@@ -45,8 +45,8 @@ def write_result(session: models.Session, answer: models.Answer) -> None:
     session_state = get_session_state(session)
     question = session_state.question
     category = question.category_set.first()
+    temp_results = models.Result.objects.filter(session=session, category=category)
     if answer.is_skip:
-        temp_results = models.Result.objects.filter(session=session, category=category)
         if temp_results:
             temp_results.update(is_skipped=True)
         else:
@@ -57,7 +57,6 @@ def write_result(session: models.Session, answer: models.Answer) -> None:
                 is_skipped=True,
             )
     else:
-        temp_results = models.Result.objects.filter(session=session, category=category)
         if temp_results:
             temp_results.update(question=question)
             temp_results[0].criterion.set(answer.criterion.all())
@@ -81,12 +80,13 @@ def write_result_titles_to_history(user: User, session: models.Session, titles: 
 def write_result_to_session(session: models.Session, titles: Any) -> None:
     sessions = models.Session.objects.filter(id=session.id)
     sessions.update(is_finished=True)
-    for title in titles:
-        models.ResultTitle.objects.create(
+    models.ResultTitle.objects.bulk_create([
+        models.ResultTitle(
             session=session,
             title=t_models.Title.objects.get(id=title['id']),
             match_percentage=title['match_percentage'],
-        )
+        ) for title in titles
+    ])
 
 
 # ----------------------------------------------------------------------------------------------------
