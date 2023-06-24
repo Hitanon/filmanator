@@ -1,0 +1,61 @@
+.Movie {
+    position: relative;
+    background-color: var(--icon-bg-color);
+    border-radius: 8px;
+    width: 134px;
+    height: 200px;
+    margin-right: 20px;
+    padding: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.Movie-poster {
+    width: 132px;
+    height: 198px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.Movie-rating {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    font-size: 14px;
+    color: white;
+    font-weight: normal;
+    background-color: var(--main-color);
+    padding: 8px 6px ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+}
+
+.Icon-rating {
+    margin-bottom: 2px;
+    margin-right: 5px;
+    width: 110%;
+    height: 110%;
+}
+
+.Movie-name{
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    text-align: left;
+    position: absolute;
+    top: 105%;
+    left: 7%;
+    max-width: 130px;
+}
+
+.Movie:hover {
+    background-color: var(--dark-bg-color);
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+
+.Movie:hover .Movie-name {
+    color: var(--main-color)
+}

@@ -1,0 +1,38 @@
+.MovieSlider {
+    margin: 16px;
+    display: flex;
+    display: flex;
+    align-items: center;
+}
+
+.MovieSlider-icon {
+    border: none;
+    margin-right: 20px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.MovieSlider-icon:hover {
+    border: none;
+    background: none;
+}
+
+.Icon-button {
+    width: 60px;
+    height: auto;
+}
+
+.No-similar {
+    color:white;
+    margin-left: 98px;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.MovieSlider-placeholder {
+    min-width: 92px;
+    min-height: 60px;
+}
+

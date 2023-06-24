@@ -16,7 +16,7 @@ from users.models import History
 # ----------------------------------------------------------------------------------------------------
 # Create operations
 # ----------------------------------------------------------------------------------------------------
-def create_session(user: User | AnonymousUser) -> models.Session:
+def create_session(user) -> models.Session:
     user = user if user.is_authenticated else None
     ends_at = timezone.now() + SESSION_LIFETIME
     return models.Session.objects.create(user=user, ends_at=ends_at)
@@ -46,7 +46,7 @@ def update_session_state(session, question):
     return session_state
 
 
-def start_session(user: User | AnonymousUser) -> models.Session:
+def start_session(user) -> models.Session:
     session = create_session(user)
     question = get_question(session)
     session_state = update_session_state(session, question)
