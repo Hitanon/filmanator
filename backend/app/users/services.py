@@ -43,6 +43,13 @@ def get_user_histories(user_id):
     return histories
 
 
+def get_histories(user: models.User):
+    try:
+        return models.History.objects.get(user=user)
+    except models.History.DoesNotExist:
+        return None
+
+
 def delete_user_history(user_id, history_id):
     try:
         get_user_histories(user_id).get(id=history_id).delete()

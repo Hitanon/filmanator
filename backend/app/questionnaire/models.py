@@ -1,5 +1,3 @@
-# import uuid
-
 from config.settings import AUTH_USER_MODEL
 
 from django.db import models
@@ -10,13 +8,6 @@ from titles import models as t_models
 
 
 class Session(models.Model):
-    # id = models.UUIDField(
-    #     primary_key=True,
-    #     default=uuid.uuid4,
-    #     auto_created=True,
-    #     editable=False,
-    # )
-
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -24,7 +15,11 @@ class Session(models.Model):
         null=True,
     )
 
-    ends_at = models.DateTimeField()
+    is_finished = models.BooleanField(
+        default=False,
+    )
+
+    start_at = models.DateTimeField()
 
     class Meta:
         constraints = (
@@ -37,6 +32,25 @@ class Session(models.Model):
 
     def __str__(self):
         return f'{self.id}:{self.user}'
+
+
+class ResultTitle(models.Model):
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
+    )
+
+    match_percentage = models.SmallIntegerField(
+        default=0,
+    )
+
+    title = models.ForeignKey(
+        t_models.Title,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return f'{self.title}:{self.match_percentage}'
 
 
 class Criterion(models.Model):
@@ -67,13 +81,6 @@ class Criterion(models.Model):
 
 
 class Answer(models.Model):
-    # id = models.UUIDField(
-    #     primary_key=True,
-    #     default=uuid.uuid4,
-    #     auto_created=True,
-    #     editable=False,
-    # )
-
     body = models.CharField(
         max_length=64,
     )
@@ -173,69 +180,6 @@ class Result(models.Model):
 
     def __str__(self):
         return f'{self.session.id}:{self.category}'
-
-
-CRITERIONS = {
-    'content_rating': t_models.ContentRating,
-    'acting': t_models.Acting,
-    # 'actor': models.Actor,
-    'amount_of_dialogue': t_models.AmountOfDialogue,
-    'audience': t_models.Audience,
-    'country': t_models.Country,
-    # 'director': models.Director,
-    'genre': t_models.Genre,
-    'graphics': t_models.Graphics,
-    'intellectuality': t_models.Intellectuality,
-    'mood': t_models.Mood,
-    'narrative_method': t_models.NarrativeMethod,
-    'viewing_method': t_models.ViewingMethod,
-    'viewing_time': t_models.ViewingTime,
-    'visual_atmosphere': t_models.VisualAtmosphere,
-}
-
-
-class ResultCriterions:
-    def __init__(self):
-        self._data = {}
-
-    # Trash property
-    @property
-    def data(self):
-        return self._data
-
-    @data.getter
-    def data(self):
-        temp = self._data
-        keys = [
-            'popularity',
-            'year',
-            'duration',
-            'rating',
-        ]
-        for key in keys:
-            if key in temp.keys():
-                del temp[key]
-        return temp
-
-    def get_limited_criterion(self, criterion):
-        return criterion.more, criterion.less
-
-    def get_unlimited_criterion(self, criterion):
-        return [CRITERIONS[criterion.title].objects.get(title=criterion.body).id]
-
-    def get_single_criterion(self, criterion):
-        if criterion.has_limits:
-            return self.get_limited_criterion(criterion)
-        return self.get_unlimited_criterion(criterion)
-
-    def add_result(self, result: Result):
-        key = result.category.title
-        criterions = result.criterion.all()
-        if criterions.count() == 1:
-            value = self.get_single_criterion(criterions[0])
-        else:
-            value = [CRITERIONS[criterion.title].objects.get(title=criterion.body).id for criterion in criterions]
-        self.data[key] = value
 
 
 class SkipAnsweredQuestion:
