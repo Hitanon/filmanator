@@ -177,8 +177,18 @@ def get_all_history_titles(history, history_id):
     Получение всех id просмотренных фильмов
     """
     for history_title in history:
-        history_id = set(history_title.title.all().values_list('similar_titles__title', flat=True) | history_id)
+        history_id = set(set(history_title.title.all().values_list('id', flat=True)) | history_id)
     return history_id
+
+
+def get_all_history_similar_titles(history, similar_titles):
+    """
+    Получение id всех фильмов похожих на просмотренные
+    """
+    for history_title in history:
+        similar_titles = set(set(history_title.title.all()
+                                 .values_list('similar_titles__title', flat=True)) | similar_titles)
+    return similar_titles
 
 
 def get_titles_by_attrs(criteria, history):
@@ -193,7 +203,7 @@ def get_titles_by_attrs(criteria, history):
     similar_titles = set()
     if history:
         history_id = get_all_history_titles(history, history_id)
-        similar_titles = set(titles.filter(pk__in=history_id))
+        similar_titles = get_all_history_similar_titles(history, similar_titles)
         history = set(history_id)
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)
