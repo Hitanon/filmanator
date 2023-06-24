@@ -82,6 +82,10 @@ class FilmInfoStore {
     get currentMovie() {
         return this.movies[this.currentMovieIndex];
     }
+
+    get currentMovieSimilarMovies() {
+        return this.currentMovie && this.currentMovie.similarMovies ? this.currentMovie.similarMovies : [];
+    }
 }
 
 export const filmInfoStore = new FilmInfoStore();
