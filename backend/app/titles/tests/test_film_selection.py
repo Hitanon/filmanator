@@ -2,12 +2,14 @@ from random import choice, choices
 from unittest import TestCase
 
 from django.utils import timezone
+
 from parameterized import parameterized
 
 from titles.models import Title
-from titles.services import remove_filter, get_all_history_titles
-from users.models import User
+from titles.services import get_all_history_titles, remove_filter
+
 from users.models import History
+from users.models import User
 
 
 class FilmSelectionUnitTests(TestCase):
