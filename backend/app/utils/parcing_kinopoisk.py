@@ -4,6 +4,7 @@ from config import settings
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
+from django.db.utils import DataError
 from django.utils import timezone
 
 import requests
@@ -173,7 +174,6 @@ def add_title_actors(data: dict) -> None:
                                                        name=actor['name'],
                                                        count_awards=None,
                                                        )
-
             title.actor.add(actor)
             cnt += 1
 
@@ -256,7 +256,7 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
             add_title_content_rating(data)
             add_similar_titles(data, update_mode, cnt_changes)
             print(f"Фильм {data['name']} - успешно добавлен!")
-        except IndexError:
+        except (IndexError, DataError):
             print('[ERROR] Недостаточно данных для добавления сериала!')
     return cnt_changes
 
