@@ -1,9 +1,11 @@
-from random import choice, choices
+from random import choice
 from unittest import TestCase
 
 from django.utils import timezone
 
 from parameterized import parameterized
+
+from rest_framework.test import APITestCase
 
 from titles.models import Title
 from titles.services import get_all_history_titles, remove_filter
@@ -26,25 +28,22 @@ class FilmSelectionUnitTests(TestCase):
         self.assertEqual(criteria, result)
 
 
-class FilmSelectionAPITests(TestCase):
+class FilmSelectionAPITests(APITestCase):
     def setUp(self):
         self._create_user()
         self._init_titles()
         self._init_history()
-
-    def tearDown(self):
-        self.user.delete()
 
     def _init_titles(self):
         self.titles = Title.objects.bulk_create([
               Title(
                   title=f'Title {i}',
                   year=2000 + i,
-                  imdb_rating=2.0 + i,
+                  imdb_rating=2.0 + i/2,
                   votes_count=10000 * i,
                   is_movie=True,
                   duration=100 + 10 * i,
-              ) for i in range(1, 6)
+              ) for i in range(1, 10)
           ])
         self.title_id = choice(Title.objects.all()).id
 
@@ -55,8 +54,9 @@ class FilmSelectionAPITests(TestCase):
                 user=self.user,
             ) for _ in range(1, 4)
         ])
-        for history in self.histories:
-            history.title.set(choices(Title.objects.all(), k=3))
+
+        for i in range(1, 4):
+            self.histories[i-1].title.set(Title.objects.filter(pk__in=[j for j in range(i*3-2, i*3+1)]))
 
     def _create_user(self):
         self.user = User.objects.create_user(
