@@ -166,10 +166,29 @@ def remove_titles_in_history(filtered_titles_to_100, history, history_id, titles
     Добавление фильмов из истории в уже выбранные
     """
     selected_titles = filtered_titles_to_100
-    if history is not None:
+    if history:
         history_titles = set(titles.filter(pk__in=history_id))
         selected_titles = set(selected_titles | history_titles)
     return selected_titles
+
+
+def get_all_history_titles(history, history_id):
+    """
+    Получение всех id просмотренных фильмов
+    """
+    for history_title in history:
+        history_id = set(set(history_title.title.all().values_list('id', flat=True)) | history_id)
+    return history_id
+
+
+def get_all_history_similar_titles(history, similar_titles):
+    """
+    Получение id всех фильмов похожих на просмотренные
+    """
+    for history_title in history:
+        similar_titles = set(set(history_title.title.all()
+                                 .values_list('similar_titles__title', flat=True)) | similar_titles)
+    return similar_titles
 
 
 def get_titles_by_attrs(criteria, history):
@@ -182,9 +201,9 @@ def get_titles_by_attrs(criteria, history):
     # похожие фильмы на уже просмотренные
     history_id = set()
     similar_titles = set()
-    if history is not None:
-        history_id = set(history.title.all().values_list('similar_titles__title', flat=True))
-        similar_titles = set(titles.filter(pk__in=history_id))
+    if history:
+        history_id = get_all_history_titles(history, history_id)
+        similar_titles = get_all_history_similar_titles(history, similar_titles)
         history = set(history_id)
     # отборка для 100% совпадения
     filtered_titles_to_100, sum_points = apply_filters(titles, criteria, sum_points)

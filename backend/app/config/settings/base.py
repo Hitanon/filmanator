@@ -4,7 +4,7 @@ from pathlib import Path
 import environ
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(
     # Django
@@ -39,8 +39,6 @@ env.read_env(BASE_DIR.parent / '.env')
 
 SECRET_KEY = env('SECRET_KEY')
 
-DEBUG = env('DEBUG')
-
 ALLOWED_HOSTS = [
     env('ALLOWED_HOST'),
 ]
@@ -55,11 +53,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Дополнительные django приложения
-    'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'debug_toolbar',
 
     # Приложения проекта
     'questionnaire',
@@ -68,7 +64,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
