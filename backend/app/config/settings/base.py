@@ -8,7 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(
     # Django
-    DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-secret-key'),
     ALLOWED_HOST=(str, 'localhost'),
     CORS_ALLOWED_ORIGINS=(str, 'http://localhost'),
@@ -43,14 +42,34 @@ ALLOWED_HOSTS = [
     env('ALLOWED_HOST'),
 ]
 
+CONN_MAX_AGE = 60
+
+AUTH_USER_MODEL = 'users.User'
+
+# Parser
+TOKEN = env('TOKEN')
+START_PAGE = env('START_PAGE')
+END_PAGE = env('END_PAGE')
+LIMIT = env('LIMIT')
+UPDATE = env('UPDATE')
+
+# ChatGPT
+FULL_PATH_TO_FILES = env('FULL_PATH_TO_FILES')
+
+# CORS
+CORS_ALLOWED_ORIGINS = [
+    env('CORS_ALLOWED_ORIGINS') if env('CORS_ALLOWED_ORIGINS') else 'http://localhost',
+]
+
+# Questionnaire
+QUESTIONNAIRE_FILE_PATH = env('QUESTIONNAIRE_FILE_PATH')
+CATEGORIES_LIMIT = env('CATEGORIES_LIMIT')
+SESSION_LIFETIME = timedelta(hours=1)
+
 INSTALLED_APPS = [
     # Встроенные django приложения
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
 
     # Дополнительные django приложения
     'rest_framework',
@@ -65,12 +84,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -93,6 +109,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 DATABASES = {
     'default': {
@@ -132,31 +149,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.User'
-
-SESSION_LIFETIME = timedelta(hours=1)
-
-
-# Parser
-TOKEN = env('TOKEN')
-START_PAGE = env('START_PAGE')
-END_PAGE = env('END_PAGE')
-LIMIT = env('LIMIT')
-UPDATE = env('UPDATE')
-
-# ChatGPT
-FULL_PATH_TO_FILES = env('FULL_PATH_TO_FILES')
-
-cors_allowed_origins = env('CORS_ALLOWED_ORIGINS')
-
-CORS_ALLOWED_ORIGINS = [
-    cors_allowed_origins if cors_allowed_origins else 'http://localhost',
-]
-
-QUESTIONNAIRE_FILE_PATH = env('QUESTIONNAIRE_FILE_PATH')
-
-CATEGORIES_LIMIT = env('CATEGORIES_LIMIT')
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -168,7 +160,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=59),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -176,6 +168,7 @@ SIMPLE_JWT = {
 
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
+
     'VERIFYING_KEY': '',
     'AUDIENCE': None,
     'ISSUER': None,
@@ -206,9 +199,3 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_OBTAIN_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer',
     'SLIDING_TOKEN_REFRESH_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer',
 }
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
-
-CONN_MAX_AGE = 60
