@@ -20,7 +20,7 @@ from users.services import get_histories
 # ----------------------------------------------------------------------------------------------------
 # Create operations
 # ----------------------------------------------------------------------------------------------------
-def create_session(user) -> models.Session:
+def create_session(user: User | AnonymousUser) -> models.Session:
     user = user if user.is_authenticated else None
     return models.Session.objects.create(
         user=user,
@@ -35,7 +35,7 @@ def create_session_state(session: models.Session) -> models.SessionState:
     )
 
 
-def start_session(user) -> models.Session:
+def start_session(user: User | AnonymousUser) -> models.Session:
     session = create_session(user)
     create_session_state(session)
     return session
