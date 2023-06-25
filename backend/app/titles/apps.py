@@ -6,4 +6,4 @@ class TitlesConfig(AppConfig):
     name = 'titles'
 
     def ready(self):
-        import titles.signals
+        import titles.signals # noqa
