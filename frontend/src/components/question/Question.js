@@ -100,7 +100,7 @@ const Question = observer(() => {
                 </div>
                 <div className="button-container">
                     {questionStore.answers
-                        .slice(0, currentButtonIndex + 1)
+                        // .slice(0, currentButtonIndex + 1)
                         .map((answer) => (
                             <button
                                 key={answer.id}

@@ -3,11 +3,15 @@
     padding: 15px;
     background: var(--icon-bg-color);
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 6px;
+    border-radius: 8px;
+    width: 330px;
+    height: auto;
 }
 
 .big-poster-container img {
-    margin-top: 5px;
-    width: 100%;
+    margin-top: 4px;
+    border-radius: 6px;
+    width: 330px;
     height: 100%;
+    object-fit: cover;
 }

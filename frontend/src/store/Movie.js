@@ -153,4 +153,8 @@ export class Movie {
         return ``;
     }
 
+    get similarMoviesList() {
+        return this.similarMovies || [];
+    }
+
 }

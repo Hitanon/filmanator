@@ -8,6 +8,7 @@ import './style.css';
 import InfoIconBig from "../info_icon_big/InfoIconBig";
 import BigPoster from "../poster_big/BigPoster";
 import SquareButtonBig from "../square_button_big/SquareButtonBig";
+import SimilarMoviesSlider from "../similar_movies_slider/SimilarMoviesSlider";
 
 const ICON_HEIGHT = "45px";
 const SMALL_ICON_HEIGHT = "35px";
@@ -127,6 +128,10 @@ const DetailedFilmInfo = observer(() => {
 
                 <div className="similar" style={{ gridRow: "15" }}>
                     Похожие фильмы
+                </div>
+
+                <div className="slider" style={{ gridRow: "16" }}>
+                    <SimilarMoviesSlider movies={filmInfoStore.currentMovieSimilarMovies} />
                 </div>
             </div>
 

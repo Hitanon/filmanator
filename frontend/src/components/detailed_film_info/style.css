@@ -1,19 +1,11 @@
 .container {
     display: flex;
     justify-items: center;
-    align-items: center;
+    align-items: flex-start;
     margin-left: 150px;
     margin-right: 280px;
     margin-top: 0;
 }
-
-/* @media (max-width: 1910px) {
-    .container {
-        margin-left: 0;
-        margin-right: 0;
-        overflow-x: auto;
-    }
-} */
 
 .container-grid-1 {
     position: relative;
@@ -21,6 +13,7 @@
     grid-template-columns: repeat(4, 97px);
     grid-column-gap: 40px;
     grid-auto-rows: minmax(min-content, max-content);
+    margin-top: 0px;
     margin-right: 40px;
     margin-bottom: 40px;
     min-height: 100vh;
@@ -88,6 +81,7 @@
 
 
 .h1 {
+    line-height: 1.2;
     margin-top: 70px;
     margin-bottom: 0;
     grid-column: 1 / span 5;
@@ -241,4 +235,11 @@
     margin-left: 20px;
     margin-bottom: 20px;
     line-height: 24px;
+}
+
+.slider{
+    margin-top: 10px;
+    grid-column: 1 / span 5;
+    margin-left:-97px;
+    margin-bottom: 100px;
 }
