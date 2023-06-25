@@ -16,6 +16,7 @@ class TitleSerializer(serializers.ModelSerializer):
             'is_movie',
             'duration',
             'seasons_count',
+            'short_description',
         )
 
 

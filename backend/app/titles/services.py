@@ -3,6 +3,8 @@ import time
 
 from config import settings
 
+from django.db.models import Q
+
 from titles.models import Title
 from titles.serializers import TitleOutputSerializer
 
@@ -28,6 +30,7 @@ priority = {
     'intellectuality': 30,
     'visual_atmosphere': 30,
     'mood': 30,
+    'keywords': 30,
     'year': 30,
     'content_rating': 30,
     'is_movie': 40,
@@ -68,6 +71,16 @@ def apply_range_filters(queryset, values, key):
     return queryset
 
 
+def apply_keywords(queryset, values):
+    """
+    Применение к списку фильмов ключевых слов
+    """
+    request = Q()
+    for keyword in values:
+        request = request | Q(short_description__icontains=keyword)
+    return queryset.filter(request)
+
+
 def apply_basic_filters(queryset, criteria, sum_points):
     """
     Применение к списку фильмов базовых фильтров
@@ -77,6 +90,8 @@ def apply_basic_filters(queryset, criteria, sum_points):
             queryset = queryset.filter(**{key: values})
         elif key == 'content_rating':
             queryset = apply_content_rating(queryset, values)
+        elif key == 'keywords':
+            queryset = apply_keywords(queryset, values)
         elif key in ['year', 'imdb_rating', 'votes_count', 'duration', 'seasons_count']:
             queryset = apply_range_filters(queryset, values, key)
         else:

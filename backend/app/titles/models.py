@@ -189,6 +189,11 @@ class Title(models.Model):
         null=True,
     )
 
+    short_description = models.CharField(
+        max_length=1000,
+        null=True,
+    )
+
     director = models.ManyToManyField(
         Director,
         through='TitleDirector',

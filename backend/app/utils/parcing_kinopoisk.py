@@ -96,6 +96,7 @@ def add_title(data: dict) -> None:
             votes_count=data['votes']['imdb'],
             is_movie=False,
             seasons_count=seasons_count,
+            short_description=data['shortDescription'],
         )
     else:
         title, _ = Title.objects.get_or_create(
@@ -106,6 +107,7 @@ def add_title(data: dict) -> None:
             votes_count=data['votes']['imdb'],
             is_movie=True,
             duration=data['movieLength'],
+            short_description=data['shortDescription'],
         )
 
 
@@ -343,7 +345,7 @@ def add_count_awards_to_database(headers, model, list_persons, count_people):
             element = model.objects.get(id=person['id'])
             element.count_awards = person['countAwards']
             element.save()
-        except ObjectDoesNotExist:
+        except (ObjectDoesNotExist, KeyError):
             pass
 
 
@@ -384,13 +386,38 @@ def add_count_awards(headers):
         add_count_awards_to_persons(headers, model)
 
 
+def read_and_write_films(limit, page, update_mode, headers):
+    """
+    Чтение и запись в базу данных фильмов
+    :param limit: кол-во получаемых из api фильмов за один раз
+    :param page: номер страницы из api с фильмами
+    :param update_mode: режим записи фильмов
+    :param headers: заголовок запроса к api
+    :return:
+    """
+    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name similarMovies.id isSeries ' \
+          'year rating.imdb votes.imdb movieLength countries ageRating director persons.id seasonsInfo ' \
+          f'persons.name persons.profession genres shortDescription&limit={limit}&page={page}'
+    cnt = 1
+
+    data = read_data_from_kinopoisk(url, headers)
+    cnt_changes = 0
+    for film in data['docs']:
+        try:
+            cnt_changes = add_film(film, cnt, update_mode, cnt_changes)
+        except KeyError:
+            pass
+        cnt += 1
+    if update_mode:
+        print(f'Добавлено {cnt_changes} похожих фильмов!')
+
+
 def main():
     """
     Получение списка фильмов через api кинопоиска и их добавление в БД
     :param:
     :return:
     """
-    cnt = 1
     start_page = settings.START_PAGE
     end_page = settings.END_PAGE
     limit = settings.LIMIT
@@ -402,17 +429,7 @@ def main():
         add_count_awards(headers)
         print('---Закончилось заполнение кол-во наград актеров и режиссеров---')
     for page in range(start_page, end_page + 1):
-        url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name similarMovies.id isSeries ' \
-              'year rating.imdb votes.imdb movieLength countries ageRating director persons.id seasonsInfo ' \
-              f'persons.name persons.profession genres&limit={limit}&page={page}'
-
-        data = read_data_from_kinopoisk(url, headers)
-        cnt_changes = 0
-        for film in data['docs']:
-            cnt_changes = add_film(film, cnt, update_mode, cnt_changes)
-            cnt += 1
-        if update_mode:
-            print(f'Добавлено {cnt_changes} похожих фильмов!')
+        read_and_write_films(limit, page, update_mode, headers)
 
 
 if __name__ == '__main__':
