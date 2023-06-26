@@ -46,8 +46,7 @@ class TestSelectTitles(APIView):
     def get(self, request, *args, **kwargs):
         history = History.objects.none()
         criteria = {
-            'keywords': ['монстр'],
-            'country': [4, 5, 124],
+            'genre': [3],
             }
         films = select_titles(criteria, history)
 

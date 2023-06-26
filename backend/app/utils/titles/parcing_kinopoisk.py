@@ -96,7 +96,6 @@ def add_title(data: dict) -> None:
             votes_count=data['votes']['imdb'],
             is_movie=False,
             seasons_count=seasons_count,
-            short_description=data['shortDescription'],
         )
     else:
         title, _ = Title.objects.get_or_create(
@@ -107,7 +106,6 @@ def add_title(data: dict) -> None:
             votes_count=data['votes']['imdb'],
             is_movie=True,
             duration=data['movieLength'],
-            short_description=data['shortDescription'],
         )
 
 
@@ -386,19 +384,19 @@ def add_count_awards(headers):
         add_count_awards_to_persons(headers, model)
 
 
-def read_and_write_films(limit, page, update_mode, headers):
+def read_and_write_films(limit, page, update_mode, headers, cnt):
     """
     Чтение и запись в базу данных фильмов
     :param limit: кол-во получаемых из api фильмов за один раз
     :param page: номер страницы из api с фильмами
     :param update_mode: режим записи фильмов
     :param headers: заголовок запроса к api
+    :param cnt: номер обработанного фильма
     :return:
     """
     url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name similarMovies.id isSeries ' \
           'year rating.imdb votes.imdb movieLength countries ageRating director persons.id seasonsInfo ' \
-          f'persons.name persons.profession genres shortDescription&limit={limit}&page={page}'
-    cnt = 1
+          f'persons.name persons.profession genres&limit={limit}&page={page}'
 
     data = read_data_from_kinopoisk(url, headers)
     cnt_changes = 0
@@ -410,6 +408,7 @@ def read_and_write_films(limit, page, update_mode, headers):
         cnt += 1
     if update_mode:
         print(f'Добавлено {cnt_changes} похожих фильмов!')
+    return cnt
 
 
 def main():
@@ -424,12 +423,13 @@ def main():
     token = settings.TOKEN
     update_mode = settings.UPDATE
     headers = {'x-api-key': token}
+    cnt = 1
     if update_mode:
         print('---Началось заполнение кол-во наград актеров и режиссеров---')
         add_count_awards(headers)
         print('---Закончилось заполнение кол-во наград актеров и режиссеров---')
     for page in range(start_page, end_page + 1):
-        read_and_write_films(limit, page, update_mode, headers)
+        cnt = read_and_write_films(limit, page, update_mode, headers, cnt)
 
 
 if __name__ == '__main__':
