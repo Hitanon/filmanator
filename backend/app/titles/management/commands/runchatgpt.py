@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from utils import chat_gpt_evaluation
+from utils.titles import chat_gpt_evaluation
 
 
 class Command(BaseCommand):

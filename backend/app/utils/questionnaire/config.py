@@ -10,7 +10,7 @@ CRITERIONS = {
         # 'actor': models.Actor,
         'amount_of_dialogue': models.AmountOfDialogue,
         'audience': models.Audience,
-        'country': models.Country,
+        # 'country': models.Country,
         # 'director': models.Director,
         'genre': models.Genre,
         'graphics': models.Graphics,

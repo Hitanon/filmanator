@@ -19,8 +19,8 @@ class QuestionnaireParser:
                 title=title,
                 body=body,
                 has_limits=True,
-                more=entity.value,
-                less=None,
+                more=None,
+                less=entity.value,
             )
 
     def _init_unlimited_criterion(self, title, model, is_named=False):

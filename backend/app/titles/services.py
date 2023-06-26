@@ -1,5 +1,4 @@
 import random
-import time
 
 from config import settings
 
@@ -8,10 +7,14 @@ from django.db.models import Q
 from titles.models import Title
 from titles.serializers import TitleOutputSerializer
 
+from utils.titles.parcing_kinopoisk import read_data_from_kinopoisk
+
+
+# ----------------------------------------------------------------------------------------------------
+# Film selection
+# ----------------------------------------------------------------------------------------------------
 
 # приоритет категорий
-from utils.parcing_kinopoisk import read_data_from_kinopoisk
-
 priority = {
     'seasons_count': 5,
     'actor': 5,
@@ -268,6 +271,11 @@ def get_titles_by_attrs(criteria, history):
     return title_output
 
 
+# ----------------------------------------------------------------------------------------------------
+# Get full info
+# ----------------------------------------------------------------------------------------------------
+
+
 def many_trailers_to_one(film):
     """
     Сокращение кол-ва трейлеров до одного
@@ -423,11 +431,6 @@ def select_titles(criteria, history):
     """
     Выборка фильмов и получение инфы о них
     """
-    print(criteria)
-    start = time.time()
     titles = get_titles_by_attrs(criteria, history)
-    end1 = time.time()
     full_info = get_full_info_about_titles(titles)
-    end2 = time.time()
-    print(f'Время подбора фильмов: {end1-start}, время получения полной информации: {end2-end1}')
     return full_info

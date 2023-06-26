@@ -11,6 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print('Начало работы')
         print('Работа чистильщика началась')
+        QuestionnaireCleaner.clean_up_linking_tables()
         QuestionnaireCleaner.clean_up()
         print('Работа чистильщика закончилась')
         print('Работа парсера началась')

@@ -12,7 +12,7 @@ class ResultCriterions:
           # 'actor': models.Actor,
           'amount_of_dialogue': t_models.AmountOfDialogue,
           'audience': t_models.Audience,
-          'country': t_models.Country,
+          # 'country': t_models.Country,
           # 'director': models.Director,
           'genre': t_models.Genre,
           'graphics': t_models.Graphics,
@@ -28,20 +28,6 @@ class ResultCriterions:
     @property
     def data(self):
         return self._data
-
-    @data.getter
-    def data(self):
-        temp = self._data
-        keys = [
-            'popularity',
-            'year',
-            'duration',
-            'rating',
-        ]
-        for key in keys:
-            if key in temp.keys():
-                del temp[key]
-        return temp
 
     def get_limited_criterion(self, criterion):
         return criterion.more, criterion.less
