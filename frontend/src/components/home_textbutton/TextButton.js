@@ -7,7 +7,7 @@ const TextButton = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(QUESTIONNAIRE_ROUTE)
+        navigate(QUESTIONNAIRE_ROUTE);
     }
     
     return (

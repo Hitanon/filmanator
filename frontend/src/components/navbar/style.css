@@ -31,6 +31,24 @@ button:hover {
     color: white;
 }
 
+
+.personal-acc-btn{
+    width: 39px;
+    height: 39px;
+    border: none;
+}
+
+.personal-acc-btn img {
+    width: 100%;
+    height: 100%;
+}
+
+.personal-acc-btn:hover {
+    border: none;
+    background-color: transparent;
+}
+
+
 .logo-link {
     margin-left: 15%
 }

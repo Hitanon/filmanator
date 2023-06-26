@@ -74,7 +74,7 @@ class FilmInfoStore {
     }
 
     redirectYouTube() {
-        if (this.currentMovie && this.currentMovie.trailer.url) {
+        if (this.currentMovie && this.currentMovie.trailer && this.currentMovie.trailer.url) {
             window.open(this.currentMovie.trailer.url, '_blank');
         }
     }
