@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14
+    container_name: db
+    restart: unless-stopped
+    networks:
+      - default_network
+    env_file:
+      - .env.backend
+    volumes:
+      - ./db/pg_data:/var/lib/postgresql/data
+      - ./db/dumps:/dumps
+    environment:
+      - POSTGRES_DB==
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+
+  backend:
+    image: smwatertd/backend_filmanator:latest
+    container_name: backend
+    restart: unless-stopped
+    command: gunicorn config.wsgi:application -w workers_count --bind 0.0.0.0:8000
+    networks:
+      - default_network
+    depends_on:
+      - db
+    env_file:
+      - .env.backend
+    ports:
+      - 8000:8000
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=db
+
+  frontend:
+    image: smwatertd/frontend_filmanator:latest
+    container_name: frontend
+    command: npm run build
+    env_file:
+      - .env.frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - shared:/frontend/build
+    depends_on:
+      - backend
+
+  webserver:
+    image: nginx:latest
+    restart: unless-stopped
+    container_name: webserver
+    depends_on:
+      - frontend
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - shared:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - ./certbot_etc:/etc/nginx/ssl
+
+  certbot:
+    image: certbot/certbot
+    command: certonly --webroot --webroot-path=/var/www/html --email email --agree-tos  --no-eff-email -d domain
+    depends_on:
+      - webserver
+    volumes:
+      - ./certbot_etc:/etc/letsencrypt
+      - shared:/var/www/html
+
+networks:
+  default_network:
+    driver: bridge
+
+volumes:
+  shared:
+    external: true
