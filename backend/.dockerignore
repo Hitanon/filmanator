@@ -1,4 +1,7 @@
 .env
+venv
 .gitignore
 README.md
 setup.cfg
+**/__pycache__
+.mypy_cache
