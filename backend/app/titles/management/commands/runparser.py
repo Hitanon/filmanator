@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from utils import parcing_kinopoisk
+from utils.titles import parcing_kinopoisk
 
 
 class Command(BaseCommand):

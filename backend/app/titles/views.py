@@ -1,5 +1,6 @@
 import json
 
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -14,9 +15,13 @@ from titles.services import select_titles
 from users.models import History
 
 
-class TitleAPIView(generics.RetrieveAPIView):
+class TitleAPIView(generics.ListAPIView):
     serializer_class = TitleSerializer
-    queryset = Title.objects.all()
+
+    def get_queryset(self):  # новый
+        return Title.objects.filter(
+            Q(short_description__icontains='мрак'),
+        )
 
 
 @csrf_exempt
@@ -40,12 +45,9 @@ def get_films_by_criteria(request):
 class TestSelectTitles(APIView):
     def get(self, request, *args, **kwargs):
         history = History.objects.none()
-        criteria = {'genre': [1, 2],
-                    'acting': [3],
-                    'amount_of_dialogue': [2],
-                    'audience': [1],
-                    'graphics': [3],
-                    }
+        criteria = {
+            'genre': [3],
+            }
         films = select_titles(criteria, history)
 
         return Response(films)
