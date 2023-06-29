@@ -43,8 +43,9 @@ class SkipAnsweredQuestionSerializer(serializers.Serializer):
 
     def get_question(self, obj):
         question = QuestionSerializer(obj.question)
-        skip_answer = AnswerSerializer(obj.skip_answer)
-        question.data['answers'].append(skip_answer.data)
+        if obj.skip_answer:
+            skip_answer = AnswerSerializer(obj.skip_answer)
+            question.data['answers'].append(skip_answer.data)
         return question.data
 
 

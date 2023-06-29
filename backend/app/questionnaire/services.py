@@ -69,7 +69,6 @@ def write_result(session: models.Session, answer: models.Answer) -> None:
             temp_result.criterion.set(answer.criterion.all())
 
 
-# Fix type annotation
 def write_result_titles_to_history(user: User, session: models.Session, titles: Any) -> None:
     if not user.is_authenticated:
         return
@@ -129,7 +128,10 @@ def select_question(session: models.Session) -> models.Question:
 
 
 def get_skip_answer(session_state: models.SessionState) -> models.Answer:
-    category = session_state.question.category_set.first()
+    question: models.Question = session_state.question
+    if question.has_skip_answer:
+        return
+    category: models.Category = question.category_set.first()
     temp = models.Result.objects.filter(session=session_state.session, category=category, criterion__isnull=True)
     is_skip = temp.count() or category.question.count() == 1
     return models.Answer.objects.get(is_next=True, is_skip=is_skip)
@@ -147,7 +149,6 @@ def get_finished_session_titles_data(session: models.Session) -> dict:
     return [dict(title) for title in serializer.data]
 
 
-# Fix type annotation
 def get_criterions(session: models.Session) -> dict:
     result_criterions = ResultCriterions()
     for result in models.Result.objects.filter(session=session, criterion__isnull=False):

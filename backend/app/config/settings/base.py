@@ -30,7 +30,7 @@ env = environ.Env(
     FULL_PATH_TO_FILES=(str, 'PATH'),
 
     # Questionnaire
-    QUESTIONNAIRE_FILE_PATH=(str, 'PATH'),
+    QUESTIONNAIRE_FILE_PATH=(str, ''),
     CATEGORIES_LIMIT=(int, 0),
 )
 
@@ -109,7 +109,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
 
 DATABASES = {
     'default': {

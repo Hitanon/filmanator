@@ -1,28 +1,13 @@
 from questionnaire.models import Result
 
-from titles import models as t_models
+from utils.questionnaire.config import LIMITED_CRITERIONS, UNLIMITED_CRITERIONS
 
 
 class ResultCriterions:
     def __init__(self):
         self._data = {}
-        self.criterions = {
-          'content_rating': t_models.ContentRating,
-          'acting': t_models.Acting,
-          # 'actor': models.Actor,
-          'amount_of_dialogue': t_models.AmountOfDialogue,
-          'audience': t_models.Audience,
-          # 'country': t_models.Country,
-          # 'director': models.Director,
-          'genre': t_models.Genre,
-          'graphics': t_models.Graphics,
-          'intellectuality': t_models.Intellectuality,
-          'mood': t_models.Mood,
-          'narrative_method': t_models.NarrativeMethod,
-          'viewing_method': t_models.ViewingMethod,
-          'viewing_time': t_models.ViewingTime,
-          'visual_atmosphere': t_models.VisualAtmosphere,
-        }
+        self.criterions = LIMITED_CRITERIONS.copy()
+        self.criterions.update(UNLIMITED_CRITERIONS)
 
     # Trash property
     @property

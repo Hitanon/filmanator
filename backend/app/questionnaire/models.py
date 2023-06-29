@@ -105,11 +105,15 @@ class Question(models.Model):
     body = models.TextField()
 
     priority = models.SmallIntegerField(
-        default=3,
+        default=1,
     )
 
     answer = models.ManyToManyField(
         Answer,
+    )
+
+    has_skip_answer = models.BooleanField(
+        default=False,
     )
 
     def __str__(self):
