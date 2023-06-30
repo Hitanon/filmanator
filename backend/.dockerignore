@@ -6,3 +6,5 @@ setup.cfg
 **/__pycache__
 .mypy_cache
 **/celerybeat-schedule
+**/migrations/*
+!__init__.py

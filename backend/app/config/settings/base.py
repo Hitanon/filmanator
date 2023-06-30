@@ -32,6 +32,10 @@ env = environ.Env(
     # Questionnaire
     QUESTIONNAIRE_FILE_PATH=(str, ''),
     CATEGORIES_LIMIT=(int, 0),
+
+    # Redis
+    REDIS_PORT=(int, 6379),
+    REDIS_HOST=(str, '0.0.0.0'),
 )
 
 env.read_env(BASE_DIR.parent / '.env')
@@ -67,8 +71,8 @@ CATEGORIES_LIMIT = env('CATEGORIES_LIMIT')
 SESSION_LIFETIME = timedelta(hours=1)
 
 # Redis
-REDIS_PORT = 6379
-REDIS_HOST = '127.0.0.1'
+REDIS_PORT = env('REDIS_PORT')
+REDIS_HOST = env('REDIS_HOST')
 
 # Celery
 CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
