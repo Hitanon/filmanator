@@ -66,6 +66,14 @@ QUESTIONNAIRE_FILE_PATH = env('QUESTIONNAIRE_FILE_PATH')
 CATEGORIES_LIMIT = env('CATEGORIES_LIMIT')
 SESSION_LIFETIME = timedelta(hours=1)
 
+# Redis
+REDIS_PORT = 6379
+REDIS_HOST = '127.0.0.1'
+
+# Celery
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/1'
+
 INSTALLED_APPS = [
     # Встроенные django приложения
     'django.contrib.auth',

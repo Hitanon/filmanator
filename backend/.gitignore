@@ -4,3 +4,4 @@ venv
 **/migrations/*
 !__init__.py
 .env
+**/celerybeat-schedule
