@@ -13,7 +13,7 @@ services:
       - ./db/pg_data:/var/lib/postgresql/data
       - ./db/dumps:/dumps
     environment:
-      - POSTGRES_DB==
+      - POSTGRES_DB=
       - POSTGRES_USER=
       - POSTGRES_PASSWORD=
 
@@ -33,6 +33,35 @@ services:
     environment:
       - DB_PORT=5432
       - DB_HOST=db
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    networks:
+      - default_network
+    depends_on:
+      - backend
+    ports:
+      - 6379:6379
+
+  celery:
+    image: smwatertd/backend_filmanator:latest
+    container_name: celery
+    restart: unless-stopped
+    command: celery -A config.celery.app worker -B -l error
+    networks:
+      - default_network
+    env_file:
+      - .env.backend
+    depends_on:
+      - backend
+      - redis
+    environment:
+      - DB_PORT=5432
+      - DB_HOST=db
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
 
   frontend:
     image: smwatertd/frontend_filmanator:latest

@@ -11,3 +11,5 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements/requirements.txt
 
 COPY ./app .
+
+RUN python manage.py makemigrations
