@@ -23,7 +23,9 @@ class ResultCriterions:
         return criterion.more, criterion.less
 
     def get_unlimited_criterion(self, criterion):
-        return self.criterions[criterion.title].objects.get(title=criterion.body).id
+        if criterion.title == 'director' or criterion.title == 'actor':
+            return [self.criterions[criterion.title].objects.get(name=criterion.body).id]
+        return [self.criterions[criterion.title].objects.get(title=criterion.body).id]
 
     def get_single_criterion(self, criterion):
         if criterion.has_limits:

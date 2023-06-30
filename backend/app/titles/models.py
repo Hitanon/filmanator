@@ -294,15 +294,6 @@ class Title(models.Model):
                 check=Q(votes_count__gte=0),
                 name='Votes count must be positive',
             ),
-            CheckConstraint(
-                check=(Q(is_movie=True) & Q(duration__isnull=False) & Q(seasons_count__isnull=True))
-                | (Q(is_movie=False) & Q(duration__isnull=True) & Q(seasons_count__isnull=False)),
-                name='Duration isnt correct',
-            ),
-            CheckConstraint(
-                check=Q(duration__gte=0) & Q(seasons_count__gt=0),
-                name='Duration or seasons count must be positive',
-            ),
         )
 
     def __str__(self):

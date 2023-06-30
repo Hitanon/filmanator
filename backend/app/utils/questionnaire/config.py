@@ -6,11 +6,11 @@ LIMITED_CRITERIONS = {
 
 UNLIMITED_CRITERIONS = {
     'acting': models.Acting,
-    # 'actor': models.Actor,
+    'actor': models.Actor,
     'amount_of_dialogue': models.AmountOfDialogue,
     'audience': models.Audience,
-    'country': models.Country,
-    # 'director': models.Director,
+    # 'country': models.Country,
+    'director': models.Director,
     'genre': models.Genre,
     'graphics': models.Graphics,
     'intellectuality': models.Intellectuality,
@@ -27,8 +27,8 @@ CRITERIONS = {
 }
 
 NAMED_CRITERIONS = (
-    # 'actor',
-    # 'director',
+    'actor',
+    'director',
 )
 
 CRITERION_TITLES = [
@@ -38,7 +38,7 @@ CRITERION_TITLES = [
 
 QUESTIONS = {
     # 'content_rating': 'Какие возрастные ограничения?',
-    'country': 'Какая страна производства?',
+    # 'country': 'Какая страна производства?',
     'acting': 'Какая игра актеров?',
     'amount_of_dialogue': 'Какое количество диалогов?',
     'audience': 'Какая вы аудитория?',
@@ -50,14 +50,14 @@ QUESTIONS = {
     'viewing_time': 'Какое время просмотра?',
     'visual_atmosphere': 'Какая визуальная атмосфера?',
     'genre': 'Какой жанр предпочитаете?',
-    # 'director': 'Какой режиссер вас интересует?',
-    # 'actor': 'Какой актер вас интересует?',
+    'director': 'Какой режиссер вас интересует?',
+    'actor': 'Какой актер вас интересует?',
 }
 
 CATEGORIES = {
     'genre': 10,
     # 'content_rating': 9,
-    'country': 8,
+    # 'country': 8,
     'acting': 7,
     'amount_of_dialogue': 6,
     'audience': 5,
@@ -68,8 +68,8 @@ CATEGORIES = {
     'viewing_method': 1,
     'viewing_time': 1,
     'visual_atmosphere': 1,
-    # 'director': 10,
-    # 'actor': 20,
+    'director': 10,
+    'actor': 20,
 }
 
 DEFAULT_CUSTOM_QUESTION_PRIORITY = 100

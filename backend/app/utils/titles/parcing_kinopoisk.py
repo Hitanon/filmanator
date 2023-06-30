@@ -36,8 +36,7 @@ def check_params(data: dict) -> bool:
     :return: bool
     """
     if 'id' in data:
-        if data['name'] and data['genres'] and data['year'] and data['rating'] and data['votes'] and \
-                data['countries'] and data['persons']:
+        if (data['name'] or data['alternativeName'] or data['enName']) and data['year']:
             return True
     return False
 
@@ -48,31 +47,30 @@ def check_constraints(data: dict) -> bool:
     :param data: словарь с одним фильмом
     :return: bool
     """
+    if 'imdb' in data['rating']:
+        if data['rating']['imdb'] is None:
+            data['rating']['imdb'] = 0
+    if 'imdb' in data['votes']:
+        if data['votes']['imdb'] is None:
+            data['votes']['imdb'] = 0
     if 1896 <= data['year'] <= timezone.now().year and 0 <= data['rating']['imdb'] <= 10 and data['votes']['imdb'] >= 0:
         return True
     return False
 
 
-def check_duration(data: dict) -> bool:
+def change_name(data: dict) -> str:
     """
-    Проверка того что фильм имеет продолжительность
-    :param data: словарь с одним фильмом
-    :return: bool
+    Изменение основного названия фильма
+    :param data: словарь с одним экземпляром
+    :return:
     """
-    if not data['isSeries'] and not data['movieLength']:
-        return False
-    return True
-
-
-def check_seasons(data: dict) -> bool:
-    """
-    Проверка того что сериал имеет сезоны
-    :param data: словарь с одним фильмом
-    :return: bool
-    """
-    if data['isSeries'] and not data['seasonsInfo']:
-        return False
-    return True
+    if data['name']:
+        name = data['name']
+    elif data['alternativeName']:
+        name = data['alternativeName']
+    else:
+        name = data['enName']
+    return name
 
 
 def add_title(data: dict) -> None:
@@ -81,16 +79,24 @@ def add_title(data: dict) -> None:
     :param data: словарь с одним экземпляром
     :return:
     """
+    name = change_name(data)
+
+    if 'movieLength' in data:
+        duration = data['movieLength']
+    else:
+        duration = None
+
     if data['isSeries']:
-        seasons_count = data['seasonsInfo'][-1]['number']
-        if seasons_count == 0 and len(data['seasonsInfo']) > 1:
-            seasons_count = data['seasonsInfo'][-2]['number']
+        if data['seasonsInfo']:
+            seasons_count = data['seasonsInfo'][-1]['number']
+            if seasons_count == 0 and len(data['seasonsInfo']) > 1:
+                seasons_count = data['seasonsInfo'][-2]['number']
         else:
-            raise IndexError
+            seasons_count = None
 
         title, _ = Title.objects.get_or_create(
             id=data['id'],
-            title=data['name'],
+            title=name,
             year=data['year'],
             imdb_rating=data['rating']['imdb'],
             votes_count=data['votes']['imdb'],
@@ -100,12 +106,12 @@ def add_title(data: dict) -> None:
     else:
         title, _ = Title.objects.get_or_create(
             id=data['id'],
-            title=data['name'],
+            title=name,
             year=data['year'],
             imdb_rating=data['rating']['imdb'],
             votes_count=data['votes']['imdb'],
             is_movie=True,
-            duration=data['movieLength'],
+            duration=duration,
         )
 
 
@@ -115,11 +121,14 @@ def add_title_genres(data: dict) -> None:
     :param data: словарь с одним экземпляром
     :return:
     """
-    title = Title.objects.get(id=data['id'])
-    for genre in data['genres']:
-        genre, _ = Genre.objects.get_or_create(title=genre['name'])
+    try:
+        title = Title.objects.get(id=data['id'])
+        for genre in data['genres']:
+            genre, _ = Genre.objects.get_or_create(title=genre['name'])
 
-        title.genre.add(genre)
+            title.genre.add(genre)
+    except (IndexError, DataError):
+        pass
 
 
 def add_title_directors(data: dict) -> None:
@@ -138,7 +147,6 @@ def add_title_directors(data: dict) -> None:
                                                              name=director['name'],
                                                              count_awards=None,
                                                              )
-
             title.director.add(director)
 
 
@@ -148,11 +156,14 @@ def add_title_countries(data: dict) -> None:
     :param data: словарь с одним экземпляром
     :return:
     """
-    title = Title.objects.get(id=data['id'])
-    for country in data['countries']:
-        country, _ = Country.objects.get_or_create(title=country['name'])
+    try:
+        title = Title.objects.get(id=data['id'])
+        for country in data['countries']:
+            country, _ = Country.objects.get_or_create(title=country['name'])
 
-        title.country.add(country)
+            title.country.add(country)
+    except (IndexError, DataError):
+        pass
 
 
 def add_title_actors(data: dict) -> None:
@@ -184,13 +195,16 @@ def add_title_content_rating(data: dict) -> None:
     :param data: словарь с одним экземпляром
     :return:
     """
-    title = Title.objects.get(id=data['id'])
-    if data['ageRating']:
-        age_rating, _ = ContentRating.objects.get_or_create(
-            value=data['ageRating'],
-        )
-        title.content_rating = age_rating
-        title.save()
+    try:
+        title = Title.objects.get(id=data['id'])
+        if data['ageRating']:
+            age_rating, _ = ContentRating.objects.get_or_create(
+                value=data['ageRating'],
+            )
+            title.content_rating = age_rating
+            title.save()
+    except (IndexError, DataError):
+        pass
 
 
 def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> int:
@@ -249,15 +263,22 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
     else:
         try:
             add_title(data)
-            add_title_genres(data)
-            add_title_countries(data)
-            add_title_actors(data)
-            add_title_directors(data)
-            add_title_content_rating(data)
-            add_similar_titles(data, update_mode, cnt_changes)
-            print(f"Фильм {data['name']} - успешно добавлен!")
         except (IndexError, DataError):
-            print('[ERROR] Недостаточно данных для добавления сериала!')
+            if 'name' in data:
+                film_name = data['name']
+                print(f'[ERROR] Недостаточно данных для добавления фильма {film_name}!')
+            else:
+                print('[ERROR] Недостаточно данных для добавления фильма None!')
+            return cnt_changes
+
+        add_title_genres(data)
+        add_title_countries(data)
+        add_title_actors(data)
+        add_title_directors(data)
+        add_title_content_rating(data)
+        add_similar_titles(data, update_mode, cnt_changes)
+        print(f"Фильм {data['name']} - успешно добавлен!")
+
     return cnt_changes
 
 
@@ -312,7 +333,7 @@ def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> int:
     :param cnt_changes: кол-во добавленных похожих фильмов
     :return:
     """
-    if check_params(film) and check_duration(film) and check_seasons(film):
+    if check_params(film):
         cnt_changes = add_film_to_database(film, cnt, update_mode, cnt_changes)
     else:
         if not update_mode:
@@ -384,6 +405,27 @@ def add_count_awards(headers):
         add_count_awards_to_persons(headers, model)
 
 
+def add_seasons_count_to_database(limit, page, headers):
+    """
+    Добавление кол-ва сезонов
+    :param limit: кол-во получаемых из api сериалов за один раз
+    :param page: номер страницы из api с сериалами
+    :param headers: заголовок запроса
+    :return:
+    """
+    url = f'https://api.kinopoisk.dev/v1/season?selectFields=movieId number&sortField=number&sortType=1&' \
+          f'limit={limit}&page={page}'
+    data = read_data_from_kinopoisk(url, headers)
+    serials = data['docs']
+    for serial in serials:
+        try:
+            title = Title.objects.get(pk=serial['movieId'])
+            title.seasons_count = serial['number']
+            title.save()
+        except (Title.DoesNotExist, KeyError):
+            pass
+
+
 def read_and_write_films(limit, page, update_mode, headers, cnt):
     """
     Чтение и запись в базу данных фильмов
@@ -394,8 +436,8 @@ def read_and_write_films(limit, page, update_mode, headers, cnt):
     :param cnt: номер обработанного фильма
     :return:
     """
-    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name similarMovies.id isSeries ' \
-          'year rating.imdb votes.imdb movieLength countries ageRating director persons.id seasonsInfo ' \
+    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name enName alternativeName similarMovies.id ' \
+          'isSeries year rating.imdb votes.imdb movieLength countries ageRating persons.id seasonsInfo ' \
           f'persons.name persons.profession genres&limit={limit}&page={page}'
 
     data = read_data_from_kinopoisk(url, headers)
@@ -428,6 +470,12 @@ def main():
         print('---Началось заполнение кол-во наград актеров и режиссеров---')
         add_count_awards(headers)
         print('---Закончилось заполнение кол-во наград актеров и режиссеров---')
+
+        print('---Началось заполнение кол-во сезонов сериалов---')
+        for page in range(start_page, end_page + 1):
+            add_seasons_count_to_database(limit, page, headers)
+        print('---Закончилось заполнение кол-во сезонов сериалов---')
+
     for page in range(start_page, end_page + 1):
         cnt = read_and_write_films(limit, page, update_mode, headers, cnt)
 
