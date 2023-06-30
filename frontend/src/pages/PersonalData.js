@@ -4,7 +4,7 @@ const PersonalData = () => {
     return (
         <>
             <Navbar />
-            <h1>Peronal Data Processing Agreement Page</h1>
+            <h1 className="info-title">Соглашение на обработку персональных данных</h1>
         </>
     );
 }

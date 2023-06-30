@@ -4,6 +4,7 @@ body {
     margin: 0;
     display: flex;
     background-color: var(--bg-color);
+    overflow-x: hidden;
 }
 
 
@@ -88,8 +89,8 @@ button:hover {
 /* container for filmanator */
 .image-container {
     position: relative;
-    width: 99vw;
-    height: 47.4vw;
+    width: 100vw;
+    height: 47.85vw;
 }
 
 .image-container .text-button {
@@ -101,7 +102,7 @@ button:hover {
 
 /* pages */
 .home-page {
-    aspect-ratio: 16/9;
+    width: 100%;
     background-image: url('../public/img/home_bg.webp');
     background-size: 110%;
     background-position: center;
@@ -159,3 +160,11 @@ button:hover {
     z-index: 1000;
 }
 
+.info-title {
+    margin-left: 15vw;
+    font-size: 40px;
+}
+
+.show-scrollbar {
+    overflow-x: auto;
+  }

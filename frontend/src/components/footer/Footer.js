@@ -8,7 +8,7 @@ const Footer = () => {
         <footer className={styles.footer}>
             <Link to={PRIVACY_POLICY_ROUTE}>Политика конфиденциальности</Link>
             <Link to={PERSONAL_DATA_ROUTE}>Соглашение на обработку персональных данных</Link>
-            <Link to={ABOUT_ROUTE}>© 2023 Filmanator - All rights reserved</Link>
+            <Link to={ABOUT_ROUTE}>© 2023 Filmanator - Все права защищены</Link>
         </footer>
      );
 }
