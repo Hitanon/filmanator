@@ -23,7 +23,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
     def get_answers(self, obj):
-        answers = AnswerSerializer(obj.answer.all(), many=True)
+        answers = AnswerSerializer(obj.answer.order_by('is_skip'), many=True)
         return answers.data
 
 
