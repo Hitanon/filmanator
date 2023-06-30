@@ -21,6 +21,10 @@ class Session(models.Model):
 
     start_at = models.DateTimeField()
 
+    question_num = models.SmallIntegerField(
+        default=1,
+    )
+
     class Meta:
         constraints = (
             UniqueConstraint(

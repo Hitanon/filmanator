@@ -42,6 +42,7 @@ def start_session(user: User | AnonymousUser) -> models.Session:
 
 
 def write_result(session: models.Session, answer: models.Answer) -> None:
+    update_question_num(session)
     session_state = get_session_state(session)
     question = session_state.question
     category = question.category_set.first()
@@ -174,6 +175,11 @@ def update_session_state(session: models.Session) -> None:
     session_state = get_session_state(session)
     session_state.question = question
     session_state.save()
+
+
+def update_question_num(session: models.Session) -> None:
+    session.question_num += 1
+    session.save(update_fields=('question_num', ))
 
 
 # ----------------------------------------------------------------------------------------------------
