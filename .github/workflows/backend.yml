@@ -23,6 +23,8 @@
     LIMIT: ${{ secrets.LIMIT }}
     UPDATE: ${{ secrets.UPDATE }}
 
+    CATEGORIES_LIMIT: ${{ secrets.CATEGORIES_LIMIT }}
+
     REDIS_HOST: ${{ secrets.REDIS_HOST }}
     REDIS_PORT: ${{ secrets.REDIS_PORT }}
 
