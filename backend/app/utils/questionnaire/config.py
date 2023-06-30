@@ -1,7 +1,7 @@
 from titles import models
 
 LIMITED_CRITERIONS = {
-    'content_rating': models.ContentRating,
+    # 'content_rating': models.ContentRating,
 }
 
 UNLIMITED_CRITERIONS = {
@@ -37,7 +37,7 @@ CRITERION_TITLES = [
 ]
 
 QUESTIONS = {
-    'content_rating': 'Какие возрастные ограничения?',
+    # 'content_rating': 'Какие возрастные ограничения?',
     'country': 'Какая страна производства?',
     'acting': 'Какая игра актеров?',
     'amount_of_dialogue': 'Какое количество диалогов?',
@@ -56,7 +56,7 @@ QUESTIONS = {
 
 CATEGORIES = {
     'genre': 10,
-    'content_rating': 9,
+    # 'content_rating': 9,
     'country': 8,
     'acting': 7,
     'amount_of_dialogue': 6,
