@@ -18,6 +18,10 @@
     DB_PORT: ${{ secrets.DB_PORT }}
 
     TOKEN: ${{ secrets.TOKEN }}
+    START_PAGE: ${{ secrets.START_PAGE }}
+    END_PAGE: ${{ secrets.END_PAGE }}
+    LIMIT: ${{ secrets.LIMIT }}
+    UPDATE: ${{ secrets.UPDATE }}
 
     REDIS_HOST: ${{ secrets.REDIS_HOST }}
     REDIS_PORT: ${{ secrets.REDIS_PORT }}
