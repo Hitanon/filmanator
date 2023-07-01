@@ -13,6 +13,11 @@ class ResultCriterions:
     def data(self):
         return self._data
 
+    def get_data(self):
+        for key, value in self._data.items():
+            self._data[key] = tuple(set(self._data[key]))
+        return self._data
+
     def update_data(self, key, value):
         if key in self.data:
             self.data[key].append(value)
