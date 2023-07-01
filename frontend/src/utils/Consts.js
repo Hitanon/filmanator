@@ -12,3 +12,5 @@ export const SIGNIN_ROUTE = "/signin";
 export const PERSONAL_ACCOUNT = "/personal_account";
 
 export const QUESTIONNAIRE_REQUEST = "http://localhost:8000/api/v1/questionnaire/"
+
+export const AUTH_API_BASE_URL = "http://localhost:8000"

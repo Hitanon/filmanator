@@ -1,46 +1,26 @@
 import { makeAutoObservable } from "mobx";
 
+export default class UserStore {
 
-class UserStore {
-    constructor({
-        email = "",
-        history = [""],
-        liked_titles = [""],
-        dislike_titles = [""],
-        prefered_genres = [""],
-        active_tab = 'history'
-    } = {}) {
-        this.data = {
-            email,
-            history,
-            liked_titles,
-            dislike_titles,
-            prefered_genres,
-            active_tab
-        }
-        makeAutoObservable(this);
-    }
+  constructor() {
+    this._isAuth = false;
+    this._email = '';
+    makeAutoObservable(this);
+  }
 
-    setEmail(email) {
-        this.data.email = email;
-    }
+  setIsAuth(isAuth) {
+    this._isAuth = isAuth;
+  }
 
-    get email() {
-        return this.data.email;
-    }
+  setEmail(email) {
+    this._email = email;
+  }
 
-    setActiveTab(active_tab) {
-        this.data.active_tab = active_tab;
-    }
+  get isAuth() {
+    return this._isAuth;
+  }
 
-    get active_tab() {
-        return this.data.active_tab;
-    }
+  get email() {
+    return this._email;
+  }
 }
-
-
-const userStore = new UserStore({
-    email: 'test_email@email.com'
-});
-
-export default userStore;

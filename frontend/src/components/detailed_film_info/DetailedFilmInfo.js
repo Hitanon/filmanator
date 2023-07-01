@@ -15,7 +15,7 @@ import SharePopup from "../share_popup/SharePopup";
 const ICON_HEIGHT = "45px";
 const SMALL_ICON_HEIGHT = "35px";
 const SQUARE_BUTTON_SIZE = "50px";
-const BIG_SQUARE_BUTTON_SIZE = "80px";
+// const BIG_SQUARE_BUTTON_SIZE = "80px";
 const ICON_FONT_SIZE = "18px";
 const SMALL_ICON_FONT_SIZE = "16px";
 
@@ -43,9 +43,9 @@ const DetailedFilmInfo = observer(() => {
         navigate(-1);
     };
 
-    const handleShareClick = () => {
-        setIsSharePopupOpen(true);
-    };
+    // const handleShareClick = () => {
+    //     setIsSharePopupOpen(true);
+    // };
 
     const handleSharePopupClose = () => {
         setIsSharePopupOpen(false);
@@ -79,11 +79,10 @@ const DetailedFilmInfo = observer(() => {
                     <div className="poster">
                         <BigPoster imageUrl={filmInfoStore.currentMovie.posterUrl} />
                     </div>
-                    <div className="rate-buttons-big-container">
-                        <SquareButtonBig icon="/img/like_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="like" />
-                        <SquareButtonBig icon="/img/dislike_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="dislike" />
+                    {/* <div className="rate-buttons-big-container">
+                        <p className="p">Поделиться: </p>
                         <SquareButtonBig onClick={handleShareClick} icon="/img/share_icon.svg" size={BIG_SQUARE_BUTTON_SIZE} alt_text="share" />
-                    </div>
+                    </div> */}
                 </div>
 
 

@@ -36,15 +36,6 @@ const handleForwardsLeave = (setIconSrc) => {
     setIconSrc('/img/forwards_button.svg');
 };
 
-//like button
-const handleLikeClick = () => {
-    console.log("pressed like")
-};
-
-const handleDislikeClick = () => {
-    console.log("pressed dislike")
-};
-
 
 const handleWatchClick = () => {
     filmInfoStore.redirectKinopoisk();
@@ -144,15 +135,10 @@ const FilmInfo = observer(() => {
                 </div>
 
                 <div className="rate_buttons-container">
-                    <SquareButton onClick={handleLikeClick} icon="/img/like_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="like" />
-                    <SquareButton onClick={handleDislikeClick} icon="/img/dislike_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="dislike" />
+                    <SquareButton onClick={handleWatchClick} icon="/img/kinopoisk_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="link" />
                     <SquareButton onClick={handleShareClick} icon="/img/share_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="share" />
                 </div>
 
-                <div className="watch_buttons-container">
-                    <p>Смотреть: </p>
-                    <SquareButton onClick={handleWatchClick} icon="/img/kinopoisk_icon.svg" size={SQUARE_BUTTON_SIZE} alt_text="link" />
-                </div>
 
                 <div className="actions_container">
                     {filmInfoStore.currentMovieIndex > 0 ? (
