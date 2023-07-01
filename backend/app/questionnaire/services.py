@@ -154,7 +154,7 @@ def get_criterions(session: models.Session) -> dict:
     result_criterions = ResultCriterions()
     for result in models.Result.objects.filter(session=session, criterion__isnull=False):
         result_criterions.add_result(result)
-    return result_criterions.data
+    return result_criterions.get_data()
 
 
 def select_session_titles(session: models.Session):
