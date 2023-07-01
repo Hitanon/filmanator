@@ -16,6 +16,8 @@ class ResultCriterions:
     def update_data(self, key, value):
         if key in self.data:
             self.data[key].append(value)
+        elif type(value) == tuple:
+            self.data[key] = value
         else:
             self.data[key] = [value]
 
@@ -24,8 +26,8 @@ class ResultCriterions:
 
     def get_unlimited_criterion(self, criterion):
         if criterion.title == 'director' or criterion.title == 'actor':
-            return [self.criterions[criterion.title].objects.get(name=criterion.body).id]
-        return [self.criterions[criterion.title].objects.get(title=criterion.body).id]
+            return self.criterions[criterion.title].objects.get(name=criterion.body).id
+        return self.criterions[criterion.title].objects.get(title=criterion.body).id
 
     def get_single_criterion(self, criterion):
         if criterion.has_limits:
