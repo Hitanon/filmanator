@@ -58,28 +58,28 @@ def check_constraints(data: dict) -> bool:
     return False
 
 
-def change_name(data: dict) -> str:
+def change_name(data: dict) -> dict:
     """
     Изменение основного названия фильма
     :param data: словарь с одним экземпляром
     :return:
     """
     if data['name']:
-        name = data['name']
+        pass
     elif data['alternativeName']:
-        name = data['alternativeName']
+        data['name'] = data['alternativeName']
     else:
-        name = data['enName']
-    return name
+        data['name'] = data['enName']
+    return data
 
 
-def add_title(data: dict) -> None:
+def add_title(data: dict) -> Title:
     """
     Добавление фильма или сериала в БД
     :param data: словарь с одним экземпляром
     :return:
     """
-    name = change_name(data)
+    data = change_name(data)
 
     if 'movieLength' in data:
         duration = data['movieLength']
@@ -96,7 +96,7 @@ def add_title(data: dict) -> None:
 
         title, _ = Title.objects.get_or_create(
             id=data['id'],
-            title=name,
+            title=data['name'],
             year=data['year'],
             imdb_rating=data['rating']['imdb'],
             votes_count=data['votes']['imdb'],
@@ -106,23 +106,24 @@ def add_title(data: dict) -> None:
     else:
         title, _ = Title.objects.get_or_create(
             id=data['id'],
-            title=name,
+            title=data['name'],
             year=data['year'],
             imdb_rating=data['rating']['imdb'],
             votes_count=data['votes']['imdb'],
             is_movie=True,
             duration=duration,
         )
+    return title
 
 
-def add_title_genres(data: dict) -> None:
+def add_title_genres(data: dict, title: Title) -> None:
     """
     Добавление жанров и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
+    :param title: экземпляр фильма
     :return:
     """
     try:
-        title = Title.objects.get(id=data['id'])
         for genre in data['genres']:
             genre, _ = Genre.objects.get_or_create(title=genre['name'])
 
@@ -131,13 +132,13 @@ def add_title_genres(data: dict) -> None:
         pass
 
 
-def add_title_directors(data: dict) -> None:
+def add_title_directors(data: dict, title: Title) -> None:
     """
     Добавление режиссеров и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
+    :param title: экземпляр фильма
     :return:
     """
-    title = Title.objects.get(id=data['id'])
     for director in data['persons']:
         if director['profession'] == 'режиссеры' and director['name']:
             try:
@@ -150,14 +151,14 @@ def add_title_directors(data: dict) -> None:
             title.director.add(director)
 
 
-def add_title_countries(data: dict) -> None:
+def add_title_countries(data: dict, title: Title) -> None:
     """
     Добавление стран и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
+    :param title: экземпляр фильма
     :return:
     """
     try:
-        title = Title.objects.get(id=data['id'])
         for country in data['countries']:
             country, _ = Country.objects.get_or_create(title=country['name'])
 
@@ -166,13 +167,13 @@ def add_title_countries(data: dict) -> None:
         pass
 
 
-def add_title_actors(data: dict) -> None:
+def add_title_actors(data: dict, title: Title) -> None:
     """
     Добавление актера и их связей с фильмом в БД
     :param data: словарь с одним экземпляром
+    :param title: экземпляр фильма
     :return:
     """
-    title = Title.objects.get(id=data['id'])
     cnt = 0
     for actor in data['persons']:
         if actor['profession'] == 'актеры' and actor['name']:
@@ -189,14 +190,14 @@ def add_title_actors(data: dict) -> None:
             cnt += 1
 
 
-def add_title_content_rating(data: dict) -> None:
+def add_title_content_rating(data: dict, title: Title) -> None:
     """
     Добавление возрастного ограничения и его связи с фильмом в БД
     :param data: словарь с одним экземпляром
+    :param title: экземпляр фильма
     :return:
     """
     try:
-        title = Title.objects.get(id=data['id'])
         if data['ageRating']:
             age_rating, _ = ContentRating.objects.get_or_create(
                 value=data['ageRating'],
@@ -262,7 +263,7 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
         cnt_changes = add_similar_titles(data, update_mode, cnt_changes)
     else:
         try:
-            add_title(data)
+            title = add_title(data)
         except (IndexError, DataError):
             if 'name' in data:
                 film_name = data['name']
@@ -271,11 +272,11 @@ def fill_database(data: dict, update_mode: bool, cnt_changes: int) -> int:
                 print('[ERROR] Недостаточно данных для добавления фильма None!')
             return cnt_changes
 
-        add_title_genres(data)
-        add_title_countries(data)
-        add_title_actors(data)
-        add_title_directors(data)
-        add_title_content_rating(data)
+        add_title_genres(data, title)
+        add_title_countries(data, title)
+        add_title_actors(data, title)
+        add_title_directors(data, title)
+        add_title_content_rating(data, title)
         add_similar_titles(data, update_mode, cnt_changes)
         print(f"Фильм {data['name']} - успешно добавлен!")
 
@@ -345,7 +346,7 @@ def add_film(film: dict, cnt: int, update_mode: bool, cnt_changes: int) -> int:
     return cnt_changes
 
 
-def add_count_awards_to_database(headers, model, list_persons, count_people):
+def add_count_awards_to_database(headers: dict, model, list_persons, count_people: int) -> None:
     """
     Добавление кол-ва наград определенному кол-ву человек
     :param headers: заголовок запроса
@@ -368,7 +369,7 @@ def add_count_awards_to_database(headers, model, list_persons, count_people):
             pass
 
 
-def add_count_awards_to_persons(headers, model):
+def add_count_awards_to_persons(headers: dict, model) -> None:
     """
     Добавление кол-ва наград определенной модели людей
     :param headers: заголовок запроса
@@ -394,7 +395,7 @@ def add_count_awards_to_persons(headers, model):
             list_persons = all_persons[start_num-1:]
 
 
-def add_count_awards(headers):
+def add_count_awards(headers: dict) -> None:
     """
     Добавление кол-ва наград
     :param headers: заголовок запроса
@@ -405,7 +406,7 @@ def add_count_awards(headers):
         add_count_awards_to_persons(headers, model)
 
 
-def add_seasons_count_to_database(limit, page, headers):
+def add_seasons_count_to_database(limit: int, page: int, headers: dict) -> None:
     """
     Добавление кол-ва сезонов
     :param limit: кол-во получаемых из api сериалов за один раз
@@ -426,7 +427,7 @@ def add_seasons_count_to_database(limit, page, headers):
             pass
 
 
-def read_and_write_films(limit, page, update_mode, headers, cnt):
+def read_and_write_films(limit: int, page: int, update_mode: bool, headers: dict, cnt: int) -> int:
     """
     Чтение и запись в базу данных фильмов
     :param limit: кол-во получаемых из api фильмов за один раз

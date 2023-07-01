@@ -150,6 +150,9 @@ def remove_filter(criteria):
 
 
 def add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles):
+    """
+    Добавление похожих фильмов в результат (временный вариант)
+    """
     similar_filtered_titles = set()
     for similar_title in similar_titles:
         similar_filtered_titles = set(title for title in filtered_titles_to_100 if title.pk != similar_title.pk)
