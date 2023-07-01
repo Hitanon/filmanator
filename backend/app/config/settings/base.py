@@ -30,8 +30,12 @@ env = environ.Env(
     FULL_PATH_TO_FILES=(str, 'PATH'),
 
     # Questionnaire
-    QUESTIONNAIRE_FILE_PATH=(str, 'PATH'),
+    QUESTIONNAIRE_FILE_PATH=(str, ''),
     CATEGORIES_LIMIT=(int, 0),
+
+    # Redis
+    REDIS_PORT=(int, 6379),
+    REDIS_HOST=(str, '0.0.0.0'),
 )
 
 env.read_env(BASE_DIR.parent / '.env')
@@ -65,6 +69,14 @@ CORS_ALLOWED_ORIGINS = [
 QUESTIONNAIRE_FILE_PATH = env('QUESTIONNAIRE_FILE_PATH')
 CATEGORIES_LIMIT = env('CATEGORIES_LIMIT')
 SESSION_LIFETIME = timedelta(hours=1)
+
+# Redis
+REDIS_PORT = env('REDIS_PORT')
+REDIS_HOST = env('REDIS_HOST')
+
+# Celery
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/1'
 
 INSTALLED_APPS = [
     # Встроенные django приложения
@@ -109,7 +121,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
 
 DATABASES = {
     'default': {

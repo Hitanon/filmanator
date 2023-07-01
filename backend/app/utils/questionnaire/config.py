@@ -1,26 +1,29 @@
 from titles import models
 
+LIMITED_CRITERIONS = {
+    # 'content_rating': models.ContentRating,
+}
+
+UNLIMITED_CRITERIONS = {
+    'acting': models.Acting,
+    # 'actor': models.Actor,
+    'amount_of_dialogue': models.AmountOfDialogue,
+    'audience': models.Audience,
+    'country': models.Country,
+    # 'director': models.Director,
+    'genre': models.Genre,
+    'graphics': models.Graphics,
+    'intellectuality': models.Intellectuality,
+    'mood': models.Mood,
+    'narrative_method': models.NarrativeMethod,
+    'viewing_method': models.ViewingMethod,
+    'viewing_time': models.ViewingTime,
+    'visual_atmosphere': models.VisualAtmosphere,
+}
 
 CRITERIONS = {
-    True: {
-        'content_rating': models.ContentRating,
-    },
-    False: {
-        'acting': models.Acting,
-        # 'actor': models.Actor,
-        'amount_of_dialogue': models.AmountOfDialogue,
-        'audience': models.Audience,
-        # 'country': models.Country,
-        # 'director': models.Director,
-        'genre': models.Genre,
-        'graphics': models.Graphics,
-        'intellectuality': models.Intellectuality,
-        'mood': models.Mood,
-        'narrative_method': models.NarrativeMethod,
-        'viewing_method': models.ViewingMethod,
-        'viewing_time': models.ViewingTime,
-        'visual_atmosphere': models.VisualAtmosphere,
-    },
+    True: LIMITED_CRITERIONS,
+    False: UNLIMITED_CRITERIONS,
 }
 
 NAMED_CRITERIONS = (
@@ -28,26 +31,13 @@ NAMED_CRITERIONS = (
     # 'director',
 )
 
-CRITERION_TITLES = (
-    'content_rating',
-    'genre',
-    'country',
-    'acting',
-    'amount_of_dialogue',
-    'audience',
-    'graphics',
-    'intellectuality',
-    'mood',
-    'narrative_method',
-    'viewing_method',
-    'viewing_time',
-    'visual_atmosphere',
-    # 'actor',
-    # 'director',
-)
+CRITERION_TITLES = [
+    *[limited_criterion_key for limited_criterion_key in LIMITED_CRITERIONS.keys()],
+    *[unlimited_criterion_key for unlimited_criterion_key in UNLIMITED_CRITERIONS.keys()],
+]
 
 QUESTIONS = {
-    'content_rating': 'Какие возрастные ограничения?',
+    # 'content_rating': 'Какие возрастные ограничения?',
     'country': 'Какая страна производства?',
     'acting': 'Какая игра актеров?',
     'amount_of_dialogue': 'Какое количество диалогов?',
@@ -66,7 +56,7 @@ QUESTIONS = {
 
 CATEGORIES = {
     'genre': 10,
-    'content_rating': 9,
+    # 'content_rating': 9,
     'country': 8,
     'acting': 7,
     'amount_of_dialogue': 6,
@@ -81,3 +71,5 @@ CATEGORIES = {
     # 'director': 10,
     # 'actor': 20,
 }
+
+DEFAULT_CUSTOM_QUESTION_PRIORITY = 100

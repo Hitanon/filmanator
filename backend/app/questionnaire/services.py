@@ -42,6 +42,7 @@ def start_session(user: User | AnonymousUser) -> models.Session:
 
 
 def write_result(session: models.Session, answer: models.Answer) -> None:
+    update_question_num(session)
     session_state = get_session_state(session)
     question = session_state.question
     category = question.category_set.first()
@@ -69,7 +70,6 @@ def write_result(session: models.Session, answer: models.Answer) -> None:
             temp_result.criterion.set(answer.criterion.all())
 
 
-# Fix type annotation
 def write_result_titles_to_history(user: User, session: models.Session, titles: Any) -> None:
     if not user.is_authenticated:
         return
@@ -129,7 +129,10 @@ def select_question(session: models.Session) -> models.Question:
 
 
 def get_skip_answer(session_state: models.SessionState) -> models.Answer:
-    category = session_state.question.category_set.first()
+    question: models.Question = session_state.question
+    if question.has_skip_answer:
+        return
+    category: models.Category = question.category_set.first()
     temp = models.Result.objects.filter(session=session_state.session, category=category, criterion__isnull=True)
     is_skip = temp.count() or category.question.count() == 1
     return models.Answer.objects.get(is_next=True, is_skip=is_skip)
@@ -147,7 +150,6 @@ def get_finished_session_titles_data(session: models.Session) -> dict:
     return [dict(title) for title in serializer.data]
 
 
-# Fix type annotation
 def get_criterions(session: models.Session) -> dict:
     result_criterions = ResultCriterions()
     for result in models.Result.objects.filter(session=session, criterion__isnull=False):
@@ -173,7 +175,11 @@ def update_session_state(session: models.Session) -> None:
     session_state = get_session_state(session)
     session_state.question = question
     session_state.save()
-    # return session_state
+
+
+def update_question_num(session: models.Session) -> None:
+    session.question_num += 1
+    session.save(update_fields=('question_num', ))
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -210,6 +216,6 @@ def check_answer_id(**kwargs):
 
 def is_end(session: models.Session) -> bool:
     results = models.Result.objects.filter(session=session)
-    answered = results.filter(criterion__isnull=False).count()
-    active = results.filter(Q(is_skipped=True) | Q(criterion__isnull=False)).count()
+    answered = results.exclude(criterion__isnull=True).count()
+    active = results.exclude(Q(criterion__isnull=True) & Q(is_skipped=False)).count()
     return answered == CATEGORIES_LIMIT or active == models.Category.objects.count()

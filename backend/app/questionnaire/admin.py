@@ -30,6 +30,7 @@ class CriterionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Answer)
 class AnswerAdmin(admin.ModelAdmin):
+    search_fields = ('body',)
     list_filter = ('criterion__title',)
 
 

@@ -21,6 +21,10 @@ class Session(models.Model):
 
     start_at = models.DateTimeField()
 
+    question_num = models.SmallIntegerField(
+        default=1,
+    )
+
     class Meta:
         constraints = (
             UniqueConstraint(
@@ -31,7 +35,7 @@ class Session(models.Model):
         )
 
     def __str__(self):
-        return f'{self.id}:{self.user}'
+        return f'{self.id}: {self.user}'
 
 
 class ResultTitle(models.Model):
@@ -50,7 +54,7 @@ class ResultTitle(models.Model):
     )
 
     def __str__(self):
-        return f'{self.title}:{self.match_percentage}'
+        return f'{self.id}) {self.title}:{self.match_percentage}'
 
 
 class Criterion(models.Model):
@@ -77,7 +81,7 @@ class Criterion(models.Model):
     )
 
     def __str__(self):
-        return f'{self.title}: {self.body}'
+        return f'{self.id}) {self.title}: {self.body}'
 
 
 class Answer(models.Model):
@@ -98,22 +102,26 @@ class Answer(models.Model):
     )
 
     def __str__(self):
-        return self.body
+        return f'{self.id}) {self.body}'
 
 
 class Question(models.Model):
     body = models.TextField()
 
     priority = models.SmallIntegerField(
-        default=3,
+        default=1,
     )
 
     answer = models.ManyToManyField(
         Answer,
     )
 
+    has_skip_answer = models.BooleanField(
+        default=False,
+    )
+
     def __str__(self):
-        return f'{self.priority}:{self.body}'
+        return f'{self.id}) {self.priority}:{self.body}'
 
 
 class Category(models.Model):
@@ -131,7 +139,7 @@ class Category(models.Model):
     )
 
     def __str__(self):
-        return f'{self.title} (pr={self.priority})'
+        return f'{self.id}) {self.title} (pr={self.priority})'
 
 
 class SessionState(models.Model):
@@ -179,7 +187,7 @@ class Result(models.Model):
     )
 
     def __str__(self):
-        return f'{self.session.id}:{self.category}'
+        return f'{self.session.id}:{self.category.title}'
 
 
 class SkipAnsweredQuestion:
