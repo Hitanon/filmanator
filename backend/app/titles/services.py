@@ -15,9 +15,9 @@ from utils.titles.parcing_kinopoisk import read_data_from_kinopoisk
 # приоритет категорий
 priority = {
     'seasons_count': 5,
+    'duration': 10,
     'actor': 5,
     'director': 10,
-    'duration': 10,
     'country': 15,
     'votes_count': 15,
     'imdb_rating': 20,
@@ -150,6 +150,9 @@ def remove_filter(criteria):
 
 
 def add_similar_titles(serialized_titles_to_100, filtered_titles_to_100, similar_titles):
+    """
+    Добавление похожих фильмов в результат (временный вариант)
+    """
     similar_filtered_titles = set()
     for similar_title in similar_titles:
         similar_filtered_titles = set(title for title in filtered_titles_to_100 if title.pk != similar_title.pk)
@@ -278,7 +281,7 @@ def check_data(film):
     """
     Проверка наличия всех полей для полной информации
     """
-    needed_data = ['id', 'name', 'alternativeName', 'isSeries', 'year', 'rating', 'rating', 'movieLength',
+    needed_data = ['id', 'isSeries', 'year', 'rating', 'rating', 'movieLength',
                    'countries', 'ageRating', 'persons', 'seasonsInfo', 'persons', 'genres', 'shortDescription',
                    'description', 'budget', 'fees', 'similarMovies', 'videos', 'poster']
     for need in needed_data:
@@ -290,6 +293,20 @@ def check_data(film):
     if film['ageRating'] is None:
         film['ageRating'] = 0
 
+    return film
+
+
+def check_name(film):
+    """
+    Проверка наличия хотя бы одного имени
+    """
+    if 'name' in film and film['name'] is not None:
+        pass
+    elif 'alternativeName' in film and film['alternativeName'] is not None:
+        film['name'] = film['alternativeName']
+    elif 'enName' in film and film['enName'] is not None:
+        film['name'] = film['enName']
+        film['alternativeName'] = film['enName']
     return film
 
 
@@ -381,6 +398,8 @@ def seasons_info(film):
             if seasons_count == 0:
                 seasons_count = film['seasonsInfo'][-2]['number']
             film['seasons_count'] = seasons_count
+        else:
+            film['seasons_count'] = None
     else:
         film['isSeries'] = False
         film['seasons_count'] = None
@@ -393,8 +412,8 @@ def get_full_info_about_titles(titles):
     Получение полной информации о фильмах
     """
     token = settings.TOKEN
-    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name alternativeName isSeries year rating.imdb ' \
-          'rating.kp movieLength countries ageRating persons.id seasonsInfo persons.name ' \
+    url = 'https://api.kinopoisk.dev/v1.3/movie?selectFields=id name alternativeName enName isSeries year ' \
+          'rating.imdb rating.kp movieLength countries ageRating persons.id seasonsInfo persons.name ' \
           'persons.profession genres shortDescription description budget fees.world similarMovies.id ' \
           'similarMovies.name similarMovies.poster.previewUrl videos.trailers.url poster.previewUrl'
     for title in titles:
@@ -405,6 +424,7 @@ def get_full_info_about_titles(titles):
     data = add_link_and_rating_to_similar(headers, data)
     for film in data:
         film = check_data(film)
+        film = check_name(film)
         film = reduce_persons(film)
         film = seasons_info(film)
     add_match_percentage(data, titles)

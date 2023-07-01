@@ -144,7 +144,7 @@ def get_skip_answered_question(session: models.Session) -> models.SkipAnsweredQu
     return models.SkipAnsweredQuestion(session, session_state.question, skip_answer)
 
 
-def get_finished_session_titles_data(session: models.Session) -> dict:
+def get_finished_session_titles_data(session: models.Session) -> list:
     result_titles = models.ResultTitle.objects.filter(session=session)
     serializer = serializers.ResultTitleSerializer(result_titles, many=True)
     return [dict(title) for title in serializer.data]
