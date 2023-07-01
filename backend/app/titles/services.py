@@ -146,7 +146,6 @@ def remove_filter(criteria):
                 criteria = remove_two_values(criteria, key, value)
             elif isinstance(value, list):
                 criteria = remove_list_values(criteria, key, value)
-            print(criteria)
             return criteria
 
 
@@ -437,7 +436,6 @@ def select_titles(criteria, history):
     """
     Выборка фильмов и получение инфы о них
     """
-    print(criteria)
     titles = get_titles_by_attrs(criteria, history)
     full_info = get_full_info_about_titles(titles)
     return full_info
