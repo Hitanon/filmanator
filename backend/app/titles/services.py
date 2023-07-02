@@ -146,6 +146,7 @@ def remove_filter(criteria):
                 criteria = remove_two_values(criteria, key, value)
             elif isinstance(value, list):
                 criteria = remove_list_values(criteria, key, value)
+            print(criteria)
             return criteria
 
 
@@ -367,15 +368,16 @@ def reduce_persons(film):
     """
     Сокращение кол-ва актеров до 10
     """
-    output_actors = []
-    output_directors = []
-    for person in film['persons']:
-        if person['profession'] == 'актеры':
-            if len(output_actors) < 10:
-                output_actors.append(person['name'])
-        elif person['profession'] == 'режиссеры':
-            output_directors.append(person['name'])
-    film = remove_key_persons(film, output_actors, output_directors)
+    if 'persons' in film:
+        output_actors = []
+        output_directors = []
+        for person in film['persons']:
+            if person['profession'] == 'актеры':
+                if len(output_actors) < 10:
+                    output_actors.append(person['name'])
+            elif person['profession'] == 'режиссеры':
+                output_directors.append(person['name'])
+        film = remove_key_persons(film, output_actors, output_directors)
     return film
 
 
@@ -436,6 +438,7 @@ def select_titles(criteria, history):
     """
     Выборка фильмов и получение инфы о них
     """
+    print(criteria)
     titles = get_titles_by_attrs(criteria, history)
     full_info = get_full_info_about_titles(titles)
     return full_info

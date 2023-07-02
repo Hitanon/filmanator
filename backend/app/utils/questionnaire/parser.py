@@ -24,10 +24,7 @@ class QuestionnaireParser:
             )
 
     def _init_unlimited_criterion(self, title, model, is_named=False):
-        if title == 'director' or title == 'actor':
-            entities = model.objects.order_by('-count_awards')[:100]
-        else:
-            entities = model.objects.all()
+        entities = model.objects.all()
         for entity in entities:
             models.Criterion.objects.get_or_create(
                 title=title,
