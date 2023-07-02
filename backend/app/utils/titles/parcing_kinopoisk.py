@@ -131,6 +131,25 @@ def add_title_genres(data: dict, title: Title) -> None:
             pass
 
 
+def add_director(director: dict, title: Title) -> None:
+    """
+    Добавление режиссера и его связи с фильмом в БД
+    :param director: словарь с одним режиссером
+    :param title: экземпляр фильма
+    :return:
+    """
+    if director['profession'] == 'режиссеры' and director['name']:
+        try:
+            director = Director.objects.get(id=director['id'])
+        except ObjectDoesNotExist:
+
+            director, _ = Director.objects.get_or_create(id=director['id'],
+                                                         name=director['name'],
+                                                         count_awards=None,
+                                                         )
+        title.director.add(director)
+
+
 def add_title_directors(data: dict, title: Title) -> None:
     """
     Добавление режиссеров и их связей с фильмом в БД
@@ -139,18 +158,10 @@ def add_title_directors(data: dict, title: Title) -> None:
     :return:
     """
     for director in data['persons']:
-        if director['profession'] == 'режиссеры' and director['name']:
-            try:
-                director = Director.objects.get(id=director['id'])
-            except ObjectDoesNotExist:
-                try:
-                    director, _ = Director.objects.get_or_create(id=director['id'],
-                                                                 name=director['name'],
-                                                                 count_awards=None,
-                                                                 )
-                except DataError:
-                    continue
-            title.director.add(director)
+        try:
+            add_director(director, title)
+        except DataError:
+            pass
 
 
 def add_title_countries(data: dict, title: Title) -> None:
@@ -168,6 +179,23 @@ def add_title_countries(data: dict, title: Title) -> None:
             pass
 
 
+def add_actor(actor: dict, title: Title) -> None:
+    """
+    Добавление актера и их связей с фильмом в БД
+    :param actor: словарь с одним актером
+    :param title: экземпляр фильма
+    :return:
+    """
+    try:
+        actor = Actor.objects.get(id=actor['id'])
+    except ObjectDoesNotExist:
+        actor, _ = Actor.objects.get_or_create(id=actor['id'],
+                                               name=actor['name'],
+                                               count_awards=None,
+                                               )
+    title.actor.add(actor)
+
+
 def add_title_actors(data: dict, title: Title) -> None:
     """
     Добавление актера и их связей с фильмом в БД
@@ -181,17 +209,10 @@ def add_title_actors(data: dict, title: Title) -> None:
             if cnt == 3:
                 break
             try:
-                actor = Actor.objects.get(id=actor['id'])
-            except ObjectDoesNotExist:
-                try:
-                    actor, _ = Actor.objects.get_or_create(id=actor['id'],
-                                                           name=actor['name'],
-                                                           count_awards=None,
-                                                           )
-                except DataError:
-                    continue
-            title.actor.add(actor)
-            cnt += 1
+                add_actor(actor, title)
+                cnt += 1
+            except DataError:
+                pass
 
 
 def add_title_content_rating(data: dict, title: Title) -> None:
