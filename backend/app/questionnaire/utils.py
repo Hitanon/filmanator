@@ -15,7 +15,7 @@ class ResultCriterions:
 
     def get_data(self):
         for key, value in self._data.items():
-            self._data[key] = tuple(set(self._data[key]))
+            self._data[key] = list(set(self._data[key]))
         return self._data
 
     def update_data(self, key, value):

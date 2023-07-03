@@ -123,13 +123,31 @@ def add_title_genres(data: dict, title: Title) -> None:
     :param title: экземпляр фильма
     :return:
     """
-    try:
-        for genre in data['genres']:
+    for genre in data['genres']:
+        try:
             genre, _ = Genre.objects.get_or_create(title=genre['name'])
-
             title.genre.add(genre)
-    except (IndexError, DataError):
-        pass
+        except DataError:
+            pass
+
+
+def add_director(director: dict, title: Title) -> None:
+    """
+    Добавление режиссера и его связи с фильмом в БД
+    :param director: словарь с одним режиссером
+    :param title: экземпляр фильма
+    :return:
+    """
+    if director['profession'] == 'режиссеры' and director['name']:
+        try:
+            director = Director.objects.get(id=director['id'])
+        except ObjectDoesNotExist:
+
+            director, _ = Director.objects.get_or_create(id=director['id'],
+                                                         name=director['name'],
+                                                         count_awards=None,
+                                                         )
+        title.director.add(director)
 
 
 def add_title_directors(data: dict, title: Title) -> None:
@@ -140,15 +158,10 @@ def add_title_directors(data: dict, title: Title) -> None:
     :return:
     """
     for director in data['persons']:
-        if director['profession'] == 'режиссеры' and director['name']:
-            try:
-                director = Director.objects.get(id=director['id'])
-            except ObjectDoesNotExist:
-                director, _ = Director.objects.get_or_create(id=director['id'],
-                                                             name=director['name'],
-                                                             count_awards=None,
-                                                             )
-            title.director.add(director)
+        try:
+            add_director(director, title)
+        except DataError:
+            pass
 
 
 def add_title_countries(data: dict, title: Title) -> None:
@@ -158,13 +171,29 @@ def add_title_countries(data: dict, title: Title) -> None:
     :param title: экземпляр фильма
     :return:
     """
-    try:
-        for country in data['countries']:
+    for country in data['countries']:
+        try:
             country, _ = Country.objects.get_or_create(title=country['name'])
-
             title.country.add(country)
-    except (IndexError, DataError):
-        pass
+        except DataError:
+            pass
+
+
+def add_actor(actor: dict, title: Title) -> None:
+    """
+    Добавление актера и их связей с фильмом в БД
+    :param actor: словарь с одним актером
+    :param title: экземпляр фильма
+    :return:
+    """
+    try:
+        actor = Actor.objects.get(id=actor['id'])
+    except ObjectDoesNotExist:
+        actor, _ = Actor.objects.get_or_create(id=actor['id'],
+                                               name=actor['name'],
+                                               count_awards=None,
+                                               )
+    title.actor.add(actor)
 
 
 def add_title_actors(data: dict, title: Title) -> None:
@@ -180,14 +209,10 @@ def add_title_actors(data: dict, title: Title) -> None:
             if cnt == 3:
                 break
             try:
-                actor = Actor.objects.get(id=actor['id'])
-            except ObjectDoesNotExist:
-                actor, _ = Actor.objects.get_or_create(id=actor['id'],
-                                                       name=actor['name'],
-                                                       count_awards=None,
-                                                       )
-            title.actor.add(actor)
-            cnt += 1
+                add_actor(actor, title)
+                cnt += 1
+            except DataError:
+                pass
 
 
 def add_title_content_rating(data: dict, title: Title) -> None:
@@ -197,15 +222,15 @@ def add_title_content_rating(data: dict, title: Title) -> None:
     :param title: экземпляр фильма
     :return:
     """
-    try:
-        if data['ageRating']:
+    if data['ageRating']:
+        try:
             age_rating, _ = ContentRating.objects.get_or_create(
                 value=data['ageRating'],
             )
             title.content_rating = age_rating
             title.save()
-    except (IndexError, DataError):
-        pass
+        except DataError:
+            pass
 
 
 def add_similar_title(data: dict, update_mode: bool, similar_title: dict, cnt_changes: int) -> int:
@@ -246,7 +271,7 @@ def add_similar_titles(data: dict, update_mode: bool, cnt_changes: int) -> int:
     for similar_title in data['similarMovies']:
         try:
             cnt_changes = add_similar_title(data, update_mode, similar_title, cnt_changes)
-        except ObjectDoesNotExist:
+        except Title.DoesNotExist:
             pass
     return cnt_changes
 
@@ -296,7 +321,7 @@ def add_film_to_database_update_mode(film: dict, update_mode: bool, cnt_changes:
         Title.objects.get(id=film_id)
         if check_constraints(film):
             cnt_changes = fill_database(film, update_mode, cnt_changes)
-    except ObjectDoesNotExist:
+    except Title.DoesNotExist:
         pass
     return cnt_changes
 
@@ -316,7 +341,7 @@ def add_film_to_database(film: dict, cnt: int, update_mode: bool, cnt_changes: i
         try:
             title = Title.objects.get(id=film['id'])
             print(f'[INFO] Фильм {title.title} - уже существует!')
-        except ObjectDoesNotExist:
+        except Title.DoesNotExist:
             print(f'[{cnt}] ', sep='', end='')
             if check_constraints(film):
                 fill_database(film, update_mode, cnt_changes)

@@ -367,15 +367,16 @@ def reduce_persons(film):
     """
     Сокращение кол-ва актеров до 10
     """
-    output_actors = []
-    output_directors = []
-    for person in film['persons']:
-        if person['profession'] == 'актеры':
-            if len(output_actors) < 10:
-                output_actors.append(person['name'])
-        elif person['profession'] == 'режиссеры':
-            output_directors.append(person['name'])
-    film = remove_key_persons(film, output_actors, output_directors)
+    if 'persons' in film:
+        output_actors = []
+        output_directors = []
+        for person in film['persons']:
+            if person['profession'] == 'актеры':
+                if len(output_actors) < 10:
+                    output_actors.append(person['name'])
+            elif person['profession'] == 'режиссеры':
+                output_directors.append(person['name'])
+        film = remove_key_persons(film, output_actors, output_directors)
     return film
 
 
