@@ -10,7 +10,6 @@ export const SIGNIN_ROUTE = "/signin";
 
 // private routes
 export const PERSONAL_ACCOUNT = "/personal_account";
-
-export const QUESTIONNAIRE_REQUEST = "http://localhost:8000/api/v1/questionnaire/"
-
 export const AUTH_API_BASE_URL = "http://localhost:8000"
+
+export const QUESTIONNAIRE_REQUEST = process.env.REACT_APP_API_URL

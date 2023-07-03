@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { publicRoutes, privateRoutes } from "./utils/Routes";
+import { publicRoutes} from "./utils/Routes";
 
 
 const AppRouter = () => {
@@ -8,11 +8,6 @@ const AppRouter = () => {
         <Routes>
             {
                 publicRoutes.map(({ path, element }) =>
-                    <Route key={path} path={path} element={element} exact />
-                )
-            }
-            {
-                privateRoutes.map(({ path, element }) =>
                     <Route key={path} path={path} element={element} exact />
                 )
             }
